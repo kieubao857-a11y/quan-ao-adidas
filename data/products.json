@@ -1,0 +1,179 @@
+[
+  {
+    "id": 1,
+    "name": "Adidas T-Shirt Essentials",
+    "category": "Áo",
+    "price": 850000,
+    "image": "https://tse1.mm.bing.net/th/id/OIP.4TWxco3PUyaf4BTBHW6GtwHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Đen",
+      "Trắng"
+    ],
+    "description": "Áo thun Adidas Essentials phong cách thể thao, thoải mái và năng động."
+  },
+  {
+    "id": 2,
+    "name": "Adidas Performance T-Shirt",
+    "category": "Áo",
+    "price": 950000,
+    "image": "https://tse1.mm.bing.net/th/id/OIP.9vDAQnRIyXh-ZyRIgfspkAHaI4?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Đen",
+      "Xanh"
+    ],
+    "description": "Áo thể thao Adidas phù hợp cho tập luyện và sử dụng hàng ngày."
+  },
+  {
+    "id": 3,
+    "name": "Adidas Training Pants",
+    "category": "Quần",
+    "price": 1200000,
+    "image": "https://tse3.mm.bing.net/th/id/OIP.4m4hz6_7U7tkbrEvnixVOgHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Đen"
+    ],
+    "description": "Quần thể thao Adidas thoải mái, phù hợp tập gym và chạy bộ."
+  },
+  {
+    "id": 4,
+    "name": "Adidas Sports Shorts",
+    "category": "Quần",
+    "price": 750000,
+    "image": "https://tse3.mm.bing.net/th/id/OIP.4m4hz6_7U7tkbrEvnixVOgHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "colors": [
+      "Đen",
+      "Xám"
+    ],
+    "description": "Quần short thể thao Adidas nhẹ và thoáng mát."
+  },
+  {
+    "id": 5,
+    "name": "Adidas Hoodie",
+    "category": "Áo khoác",
+    "price": 1800000,
+    "image": "https://tse3.mm.bing.net/th/id/OIP.p-P4swoPYf2DbVyuA03F6wHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Đen",
+      "Xám"
+    ],
+    "description": "Áo hoodie Adidas phong cách thời trang thể thao."
+  },
+  {
+    "id": 6,
+    "name": "Adidas Track Jacket",
+    "category": "Áo khoác",
+    "price": 2200000,
+    "image": "https://tse3.mm.bing.net/th/id/OIP.p-P4swoPYf2DbVyuA03F6wHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Đen",
+      "Xanh"
+    ],
+    "description": "Áo khoác thể thao Adidas thích hợp sử dụng hàng ngày."
+  },
+  {
+    "id": 7,
+    "name": "Adidas Ultraboost",
+    "category": "Giày",
+    "price": 3500000,
+    "image": "https://tse4.mm.bing.net/th/id/OIP.O_zTtItoPlSQA745tsimtgHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "colors": [
+      "Đen",
+      "Trắng"
+    ],
+    "description": "Giày chạy bộ Adidas với thiết kế hiện đại và năng động."
+  },
+  {
+    "id": 8,
+    "name": "Adidas Superstar",
+    "category": "Giày",
+    "price": 2800000,
+    "image": "https://tse4.mm.bing.net/th/id/OIP.O_zTtItoPlSQA745tsimtgHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "colors": [
+      "Trắng",
+      "Đen"
+    ],
+    "description": "Adidas Superstar với thiết kế cổ điển phù hợp sử dụng hàng ngày."
+  },
+  {
+    "id": 9,
+    "name": "Adidas Running T-Shirt",
+    "category": "Áo",
+    "price": 1100000,
+    "image": "https://tse4.mm.bing.net/th/id/OIP.O_zTtItoPlSQA745tsimtgHaHa?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Xanh",
+      "Đen"
+    ],
+    "description": "Áo chạy bộ Adidas nhẹ, thoáng khí và thoải mái."
+  },
+  {
+    "id": 10,
+    "name": "Adidas Winter Jacket",
+    "category": "Áo khoác",
+    "price": 3200000,
+    "image": "https://tse2.mm.bing.net/th/id/OIP.qS3PewEJmuJqcftR9zR_aQHaJ4?r=0&pid=Api&h=220&P=0",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      "Đen",
+      "Xám"
+    ],
+    "description": "Áo khoác Adidas dành cho thời tiết lạnh."
+  }
+]
