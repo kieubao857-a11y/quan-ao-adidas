@@ -381,3 +381,15 @@ if (maxPrice) {
 // ==========================================
 
 getProducts();
+const sortPrice = document.getElementById("sortPrice");
+
+sortPrice.addEventListener("change", function () {
+    if (this.value === "asc") {
+        products.sort((a, b) => a.price - b.price);
+    } 
+    else if (this.value === "desc") {
+        products.sort((a, b) => b.price - a.price);
+    }
+
+    renderProducts(products);
+});

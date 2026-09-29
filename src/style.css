@@ -901,3 +901,46 @@ select {
         height: 350px;
     }
 }
+.options {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 20px;
+}
+
+.options button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.options button:hover {
+    border-color: black;
+}
+
+.options button.selected {
+    background: black;
+    color: white;
+    border-color: black;
+}
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.quantity button {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.quantity span {
+    min-width: 30px;
+    text-align: center;
+    font-size: 18px;
+}
