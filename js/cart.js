@@ -136,10 +136,22 @@ function increaseQuantity(index) {
 function decreaseQuantity(index) {
 
     if (cart[index].quantity > 1) {
-
         cart[index].quantity--;
-
     }
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    renderCart();
+}
+
+
+// Xóa sản phẩm khỏi giỏ hàng
+function removeItem(index) {
+
+    cart.splice(index, 1);
 
     localStorage.setItem(
         "cart",
