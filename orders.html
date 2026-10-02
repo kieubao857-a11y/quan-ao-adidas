@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Đơn hàng của tôi</title>
+
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="logo">
+            adidas
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.html">Trang chủ</a>
+            <a href="product.html">Sản phẩm</a>
+            <a href="nam.html">Nam</a>
+            <a href="nu.html">Nữ</a>
+            <a href="the-thao.html">Thể thao</a>
+            <a href="sale.html">Sale</a>
+
+        </nav>
+
+        <div class="header-right">
+
+            <a href="cart.html" class="icon">
+                🛒
+            </a>
+
+            <a href="orders.html" class="icon">
+                📦
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <h1>Đơn hàng của tôi</h1>
+
+        <div id="orderList"></div>
+
+    </main>
+
+
+    <!-- POPUP HỦY ĐƠN -->
+
+    <div id="cancelModal" class="cancel-modal">
+
+        <div class="cancel-box">
+
+            <div class="cancel-header">
+
+                <h2>Hủy đơn hàng</h2>
+
+                <button
+                    type="button"
+                    id="closeCancelModal"
+                    class="close-modal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <p class="cancel-description">
+                Vui lòng chọn lý do bạn muốn hủy đơn hàng
+            </p>
+
+
+            <div class="cancel-reasons">
+
+                <button
+                    type="button"
+                    class="cancel-reason"
+                    data-reason="Tôi đổi ý"
+                >
+                    <span>↩</span>
+
+                    <div>
+                        <strong>Tôi đổi ý</strong>
+
+                        <small>
+                            Tôi không muốn mua sản phẩm nữa
+                        </small>
+                    </div>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="cancel-reason"
+                    data-reason="Đặt nhầm sản phẩm"
+                >
+                    <span>🛒</span>
+
+                    <div>
+                        <strong>Đặt nhầm sản phẩm</strong>
+
+                        <small>
+                            Tôi đã chọn nhầm sản phẩm
+                        </small>
+                    </div>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="cancel-reason"
+                    data-reason="Muốn thay đổi sản phẩm"
+                >
+                    <span>✏️</span>
+
+                    <div>
+                        <strong>Muốn thay đổi sản phẩm</strong>
+
+                        <small>
+                            Tôi muốn thay đổi sản phẩm
+                        </small>
+                    </div>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="cancel-reason"
+                    data-reason="Không muốn mua nữa"
+                >
+                    <span>✕</span>
+
+                    <div>
+                        <strong>Không muốn mua nữa</strong>
+
+                        <small>
+                            Tôi không có nhu cầu mua nữa
+                        </small>
+                    </div>
+
+                </button>
+
+            </div>
+
+
+            <div class="other-reason">
+
+                <label>
+                    Lý do khác
+                </label>
+
+                <textarea
+                    id="otherReason"
+                    placeholder="Nhập lý do của bạn..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="cancel-actions">
+
+                <button
+                    type="button"
+                    id="cancelBack"
+                    class="cancel-back"
+                >
+                    Quay lại
+                </button>
+
+                <button
+                    type="button"
+                    id="confirmCancel"
+                    class="confirm-cancel"
+                >
+                    Xác nhận hủy
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <footer class="footer">
+
+        <p>
+            © 2026 Adidas
+        </p>
+
+    </footer>
+
+
+    <script src="./js/orders.js"></script>
+
+</body>
+
+</html>

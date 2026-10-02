@@ -2,10 +2,12 @@ const checkoutForm = document.getElementById("checkoutForm");
 
 checkoutForm.addEventListener("submit", function (event) {
 
-    // Không cho form tự reload trang
     event.preventDefault();
 
-    // Lấy dữ liệu
+    // =========================
+    // LẤY THÔNG TIN KHÁCH HÀNG
+    // =========================
+
     const name = document.getElementById("name").value.trim();
 
     const phone = document.getElementById("phone").value.trim();
@@ -18,85 +20,138 @@ checkoutForm.addEventListener("submit", function (event) {
 
 
     // =========================
-    // KIỂM TRA HỌ TÊN
+    // VALIDATION
     // =========================
 
     if (name === "") {
-
         alert("Vui lòng nhập họ và tên!");
-
         return;
     }
-
-
-    // =========================
-    // KIỂM TRA SỐ ĐIỆN THOẠI
-    // =========================
 
     if (phone === "") {
-
         alert("Vui lòng nhập số điện thoại!");
-
         return;
     }
 
-
-    // Kiểm tra số điện thoại có phải số hay không
     const phoneRegex = /^[0-9]{10,11}$/;
 
     if (!phoneRegex.test(phone)) {
-
         alert("Số điện thoại phải có 10 hoặc 11 chữ số!");
-
         return;
     }
-
-
-    // =========================
-    // KIỂM TRA ĐỊA CHỈ
-    // =========================
 
     if (address === "") {
-
         alert("Vui lòng nhập địa chỉ!");
-
         return;
     }
-
-
-    // =========================
-    // KIỂM TRA THANH TOÁN
-    // =========================
 
     if (!payment) {
-
         alert("Vui lòng chọn phương thức thanh toán!");
+        return;
+    }
+
+
+    // =========================
+    // LẤY GIỎ HÀNG
+    // =========================
+
+    const cart = JSON.parse(
+        localStorage.getItem("cart")
+    ) || [];
+
+
+    // Kiểm tra giỏ hàng
+    if (cart.length === 0) {
+
+        alert("Giỏ hàng đang trống!");
 
         return;
     }
 
 
     // =========================
-    // ĐẶT HÀNG THÀNH CÔNG
+    // TÍNH TỔNG TIỀN
     // =========================
 
-    alert(
-        "Đặt hàng thành công!\n\n" +
-        "Họ tên: " + name + "\n" +
-        "Số điện thoại: " + phone + "\n" +
-        "Địa chỉ: " + address + "\n" +
-        "Phương thức thanh toán: " +
-        (payment.value === "cod"
-            ? "Thanh toán khi nhận hàng"
-            : "Chuyển khoản ngân hàng")
+    let total = 0;
+
+    cart.forEach(function (item) {
+
+        total += item.price * item.quantity;
+
+    });
+
+
+    // =========================
+    // TẠO ĐƠN HÀNG
+    // =========================
+
+    const order = {
+
+        id: Date.now(),
+
+        customer: {
+            name: name,
+            phone: phone,
+            address: address
+        },
+
+        payment:
+            payment.value === "cod"
+                ? "Thanh toán khi nhận hàng"
+                : "Chuyển khoản ngân hàng",
+
+        products: cart,
+
+        total: total,
+
+        status: "Chờ xử lý",
+
+        cancelReason: "",
+
+        createdAt: new Date().toLocaleString("vi-VN")
+
+    };
+
+
+    // =========================
+    // LẤY CÁC ĐƠN HÀNG CŨ
+    // =========================
+
+    let orders = JSON.parse(
+        localStorage.getItem("orders")
+    ) || [];
+
+
+    // Thêm đơn hàng mới
+    orders.push(order);
+
+
+    // Lưu danh sách đơn hàng
+    localStorage.setItem(
+        "orders",
+        JSON.stringify(orders)
     );
 
 
-    // Xóa giỏ hàng sau khi đặt hàng
+    // =========================
+    // XÓA GIỎ HÀNG
+    // =========================
+
     localStorage.removeItem("cart");
 
 
-    // Quay về trang sản phẩm
-    window.location.href = "product.html";
+    // =========================
+    // THÔNG BÁO
+    // =========================
+
+    alert("Đặt hàng thành công!");
+
+
+    // =========================
+    // CHUYỂN SANG TRANG ĐƠN HÀNG
+    // =========================
+
+    window.location.href = "orders.html";
 
 });

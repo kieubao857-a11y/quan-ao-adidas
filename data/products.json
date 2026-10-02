@@ -175,6 +175,141 @@
       "Xám"
     ],
     "description": "Áo khoác Adidas dành cho thời tiết lạnh."
-  }
+  },
   
+    {
+        "id": 11,
+        "name": "Adidas T-Shirt Essentials",
+        "category": "Áo",
+        "gender": "Nam",
+        "price": 850000,
+        "sale": false,
+        "image": "https://tse2.mm.bing.net/th/id/OIP.NGKFK-V7Ou2KQGkZN4Pv5wHaHa?r=0&pid=Api&h=220&P=0",
+        "sizes": ["S", "M", "L", "XL"],
+        "colors": ["Đen", "Trắng"],
+        "description": "Áo thun Adidas Essentials phong cách thể thao, thoải mái và năng động"
+    },
+
+    {
+        "id": 12,
+        "name": "Adidas Performance T-Shirt",
+        "category": "Áo",
+        "gender": "Nam",
+        "price": 2000000,
+        "oldPrice": 3000000,
+        "sale": true,
+        "image": "https://img01.ztat.net/article/spp-media-p1/2610060234d4481288cdda5f4ba7433c/6dfd60f23f214dcdbecce0cc962a8586.jpg?imwidth=762",
+        "sizes": ["S", "M", "L", "XL"],
+        "colors": ["Đen", "Trắng"],
+        "description": "Áo Adidas Performance dành cho hoạt động thể thao"
+    },
+
+    {
+        "id": 13,
+        "name": "Adidas Running Shoes",
+        "category": "Giày",
+        "gender": "Thể thao",
+        "price": 1200000,
+        "sale": false,
+        "image": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/b2f1cd671f244e748ada6a7a7d66f0b2_9366/ID8760_HM8.jpg",
+        "sizes": ["39", "40", "41", "42"],
+        "colors": ["Đen", "Trắng"],
+        "description": "Giày Adidas phù hợp cho chạy bộ và luyện tập"
+    },
+
+    {
+        "id": 14,
+        "name": "Adidas Hoodie",
+        "category": "Áo",
+        "gender": "Nữ",
+        "price": 2000000,
+        "oldPrice": 4000000,
+        "sale": true,
+        "image": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/9feadfde842140539145afd000e1817f_9366/IM4489_01_laydown.jpg",
+        "sizes": ["S", "M", "L"],
+        "colors": ["Đen", "Trắng"],
+        "description": "Áo hoodie Adidas thời trang"
+    },
+
+    {
+        "id": 15,
+        "name": "Adidas Ultraboost",
+        "category": "Giày",
+        "gender": "Thể thao",
+        "price": 1800000,
+        "sale": false,
+        "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitjAWSNZCDakuHO7NwxeVAYd74uxpiGyxNXKamZjVjVi8emh-JB7ONhNns4a5KvRJ27FZT1BTbyz5eHlYyQgkjzauisazSOyAvZrxX6Ubg3anY0jnwz0fRNLUl3qqX66QIIBBDv_Vf4fy2NOlwR4rMylD_Haqah04likvLBpM3wS91t0pwXBTqJaLl0A/s4032/Adidas%20Ultraboost%20Light%20-%20lateral%202.jpg",
+        "sizes": ["39", "40", "41", "42"],
+        "colors": ["Đen", "Trắng"],
+        "description": "Giày chạy bộ Adidas Ultraboost"
+    },
+
+    {
+        "id": 16,
+        "name": "Adidas Training Jacket",
+        "category": "Áo khoác",
+        "gender": "Nam",
+        "price": 1500000,
+        "oldPrice": 2200000,
+        "sale": true,
+        "image": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/c8da7419c2ea47b49d0f775c0de099f4_9366/IJ9959_01_laydown.jpg",
+        "sizes": ["M", "L", "XL"],
+        "colors": ["Đen", "Xám"],
+        "description": "Áo khoác Adidas dành cho luyện tập"
+    },
+
+    {
+        "id": 17,
+        "name": "Adidas Sports Jacket",
+        "category": "Áo khoác",
+        "gender": "Nữ",
+        "price": 3500000,
+        "sale": false,
+        "image": "https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2022/11/ao-khoac-nu-adidas-adicolor-classics-firebird-primeblue-track-jacket-he9528-mau-xanh-navy-size-m-636374707bf35-03112022145736.jpg",
+        "sizes": ["S", "M", "L"],
+        "colors": ["Đen", "Trắng"],
+        "description": "Áo khoác thể thao Adidas"
+    },
+
+    {
+        "id": 18,
+        "name": "Adidas Football Shoes",
+        "category": "Giày",
+        "gender": "Thể thao",
+        "price": 1900000,
+        "oldPrice": 2800000,
+        "sale": true,
+        "image": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/15ffc221e7dc40ef831141ed19fd7194_9366/IE1802_HM3_hover.jpg",
+        "sizes": ["39", "40", "41", "42"],
+        "colors": ["Đen", "Trắng"],
+        "description": "Giày bóng đá Adidas"
+    },
+
+    {
+        "id": 19,
+        "name": "Adidas Women's T-Shirt",
+        "category": "Áo",
+        "gender": "Nữ",
+        "price": 1100000,
+        "sale": false,
+        "image": "https://down-th.img.susercontent.com/file/sg-11134201-82264-mhmtf1z6xqtife",
+        "sizes": ["S", "M", "L"],
+        "colors": ["Hồng", "Trắng"],
+        "description": "Áo thun Adidas dành cho nữ"
+    },
+
+    {
+        "id": 20,
+        "name": "Adidas Sport Pants",
+        "category": "Quần",
+        "gender": "Nam",
+        "price": 2200000,
+        "oldPrice": 3200000,
+        "sale": true,
+        "image": "https://i.pinimg.com/originals/48/07/c8/4807c877099b33fc42649c3ff1d1d0c5.jpg",
+        "sizes": ["M", "L", "XL"],
+        "colors": ["Đen", "Xám"],
+        "description": "Quần thể thao Adidas"
+    }
+
 ]

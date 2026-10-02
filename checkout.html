@@ -31,19 +31,19 @@
                 Sản phẩm
             </a>
 
-            <a href="#">
+            <a href="nam.html">
                 Nam
             </a>
 
-            <a href="#">
+            <a href="nu.html">
                 Nữ
             </a>
 
-            <a href="#">
+            <a href="the-thao.html">
                 Thể thao
             </a>
 
-            <a href="#">
+            <a href="sale.html">
                 Sale
             </a>
 
@@ -136,35 +136,61 @@
 
             <div class="payment-method">
 
-                <label>
+    <label>
+        <input
+            type="radio"
+            name="payment"
+            value="cod"
+        >
+        Thanh toán khi nhận hàng
+    </label>
 
-                    <input
-                        type="radio"
-                        name="payment"
-                        value="cod"
-                    >
+    <br>
 
-                    Thanh toán khi nhận hàng
+    <label>
+        <input
+            type="radio"
+            name="payment"
+            value="bank"
+        >
+        Chuyển khoản ngân hàng
+    </label>
 
-                </label>
+</div>
 
 
-                <br>
+<!-- THÔNG TIN CHUYỂN KHOẢN -->
 
+<div id="bankInfo" style="display: none;">
 
-                <label>
+    <h3>Thông tin chuyển khoản</h3>
 
-                    <input
-                        type="radio"
-                        name="payment"
-                        value="bank"
-                    >
+    <p>
+        Ngân hàng: <strong>Vietcombank</strong>
+    </p>
 
-                    Chuyển khoản ngân hàng
+    <p>
+        Số tài khoản: <strong>0778366446</strong>
+    </p>
 
-                </label>
+    <p>
+        Chủ tài khoản: <strong>NGUYEN CONG DUC ANH</strong>
+    </p>
 
-            </div>
+    <p>
+        Nội dung chuyển khoản:
+        <strong>ADIDAS + SỐ ĐIỆN THOẠI</strong>
+    </p>
+
+    <h3>Quét mã QR để thanh toán</h3>
+
+    <img
+        src="./img/qr-bank.png"
+        alt="Mã QR ngân hàng"
+        width="250"
+    >
+
+</div>
 
 
             <br>

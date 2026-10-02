@@ -1,49 +1,61 @@
-// ==========================================
-// HIỂN THỊ VÀ LỌC DANH SÁCH SẢN PHẨM
-// ==========================================
+let products = [];
 
-// Lấy các phần tử HTML
 const productList = document.getElementById("productList");
 const searchInput = document.getElementById("searchInput");
 const categoryFilter = document.getElementById("categoryFilter");
 const minPrice = document.getElementById("minPrice");
 const maxPrice = document.getElementById("maxPrice");
-
-// Mảng chứa toàn bộ sản phẩm
-let products = [];
+const sortPrice = document.getElementById("sortPrice");
 
 
-// ==========================================
-// FORMAT GIÁ TIỀN
-// ==========================================
+// =====================================
+// TẢI SẢN PHẨM
+// =====================================
 
-function formatPrice(price) {
-    return Number(price).toLocaleString("vi-VN") + " VNĐ";
+async function loadProducts() {
+
+    try {
+
+        const response = await fetch("./data/products.json");
+
+        if (!response.ok) {
+            throw new Error("Không tải được products.json");
+        }
+
+        products = await response.json();
+
+        renderProducts(products);
+
+    } catch (error) {
+
+        console.error(error);
+
+        productList.innerHTML = `
+            <div class="error-message">
+                <h3>Lỗi tải sản phẩm</h3>
+                <p>Không thể tải danh sách sản phẩm.</p>
+            </div>
+        `;
+
+    }
+
 }
 
 
-// ==========================================
+// =====================================
 // HIỂN THỊ SẢN PHẨM
-// ==========================================
+// =====================================
 
 function renderProducts(list) {
 
-    if (!productList) {
-        return;
-    }
-
-    // Xóa danh sách cũ
     productList.innerHTML = "";
 
-    // Nếu không có sản phẩm
     if (list.length === 0) {
 
         productList.innerHTML = `
             <div class="empty-message">
                 <h3>Không tìm thấy sản phẩm</h3>
-                <p>
-                    Hãy thử từ khóa, danh mục hoặc khoảng giá khác.
-                </p>
+                <p>Hãy thử tìm kiếm với từ khóa khác.</p>
             </div>
         `;
 
@@ -51,345 +63,231 @@ function renderProducts(list) {
     }
 
 
-    // Tạo Fragment để render nhanh hơn
-    const fragment = document.createDocumentFragment();
+    list.forEach(function (product) {
 
+        productList.innerHTML += `
 
-    // Duyệt từng sản phẩm
-    list.forEach(product => {
-
-        const card = document.createElement("article");
-
-        card.className = "product-card";
-
-
-        card.innerHTML = `
-
-            <!-- Hình ảnh sản phẩm -->
-            <a
-                class="product-image"
-                href="detail.html?id=${encodeURIComponent(product.id)}"
-            >
-
-                <img
-                    src="${product.image}"
-                    alt="${product.name}"
-                    loading="lazy"
-                    onerror="
-                        this.onerror=null;
-                        this.src='https://via.placeholder.com/500x500?text=Adidas';
-                    "
-                >
-
-            </a>
-
-
-            <!-- Thông tin sản phẩm -->
-            <div class="product-info">
-
-                <p class="product-category">
-                    ${product.category}
-                </p>
-
-
-                <h3 class="product-name">
-                    ${product.name}
-                </h3>
-
-
-                <p class="product-price">
-                    ${formatPrice(product.price)}
-                </p>
-
+            <div class="product-card">
 
                 <a
-                    class="product-button"
-                    href="detail.html?id=${encodeURIComponent(product.id)}"
+                    href="detail.html?id=${product.id}"
+                    class="product-image"
                 >
-                    Xem chi tiết
+
+                    <img
+                        src="${product.image}"
+                        alt="${product.name}"
+                    >
+
                 </a>
 
+
+                <div class="product-info">
+
+                    <div class="product-category">
+                        ${product.category}
+                    </div>
+
+
+                    <h3 class="product-name">
+                        ${product.name}
+                    </h3>
+
+
+                    <p class="product-price">
+                        ${Number(product.price).toLocaleString("vi-VN")} VNĐ
+                    </p>
+
+
+                    <a
+                        href="detail.html?id=${product.id}"
+                        class="product-button"
+                    >
+                        XEM CHI TIẾT
+                    </a>
+
+                </div>
+
             </div>
+
         `;
-
-
-        fragment.appendChild(card);
 
     });
 
-
-    // Đưa tất cả sản phẩm lên trang
-    productList.appendChild(fragment);
 }
 
 
-// ==========================================
-// TÌM KIẾM + LỌC SẢN PHẨM
-// ==========================================
+// =====================================
+// LỌC + TÌM KIẾM + GIÁ
+// =====================================
 
-function filterProducts() {
+function applyFilters() {
 
-    // Từ khóa tìm kiếm
+    // Lấy từ khóa tìm kiếm
+
     const keyword =
-        (searchInput?.value || "")
-        .trim()
-        .toLowerCase();
-
-
-    // Danh mục
-    const category =
-        categoryFilter?.value || "all";
-
-
-    // Giá thấp nhất
-    const minText =
-        (minPrice?.value || "").trim();
-
-
-    // Giá cao nhất
-    const maxText =
-        (maxPrice?.value || "").trim();
-
-
-    // Nếu bỏ trống giá thì dùng giá mặc định
-    const min =
-        minText === ""
-            ? 0
-            : Number(minText);
-
-
-    const max =
-        maxText === ""
-            ? Infinity
-            : Number(maxText);
-
-
-    // Kiểm tra giá nhập vào
-    if (
-        !Number.isFinite(min) ||
-        min < 0 ||
-        (!Number.isFinite(max) && max !== Infinity) ||
-        max < 0 ||
-        min > max
-    ) {
-
-        renderProducts([]);
-
-        return;
-    }
-
-
-    // Lọc sản phẩm
-    const result = products.filter(product => {
-
-        const name =
-            String(product.name || "")
+        searchInput.value
+            .trim()
             .toLowerCase();
 
 
-        const price =
+    // Lấy danh mục
+
+    const category =
+        categoryFilter.value;
+
+
+    // Lấy giá từ
+
+    const min =
+        minPrice.value === ""
+            ? 0
+            : Number(minPrice.value);
+
+
+    // Lấy giá đến
+
+    const max =
+        maxPrice.value === ""
+            ? Infinity
+            : Number(maxPrice.value);
+
+
+    // Lọc sản phẩm
+
+    let result = products.filter(function (product) {
+
+        const productName =
+            String(product.name || "")
+                .toLowerCase();
+
+
+        const productCategory =
+            String(product.category || "");
+
+
+        const productPrice =
             Number(product.price);
 
 
-        const matchName =
-            name.includes(keyword);
+        // Tìm kiếm tên sản phẩm
 
+        const matchSearch =
+            productName.includes(keyword);
+
+
+        // Lọc danh mục
 
         const matchCategory =
             category === "all" ||
-            product.category === category;
+            productCategory === category;
 
 
-        const matchPrice =
-            price >= min &&
-            price <= max;
+        // Lọc giá
+
+        const matchMinPrice =
+            productPrice >= min;
+
+
+        const matchMaxPrice =
+            productPrice <= max;
 
 
         return (
-            matchName &&
+            matchSearch &&
             matchCategory &&
-            matchPrice
+            matchMinPrice &&
+            matchMaxPrice
         );
 
     });
 
 
-    // Hiển thị kết quả
+    // =====================================
+    // SẮP XẾP GIÁ
+    // =====================================
+
+    if (sortPrice.value === "asc") {
+
+        result.sort(function (a, b) {
+
+            return Number(a.price) - Number(b.price);
+
+        });
+
+    }
+
+
+    if (sortPrice.value === "desc") {
+
+        result.sort(function (a, b) {
+
+            return Number(b.price) - Number(a.price);
+
+        });
+
+    }
+
+
+    // Hiển thị
+
     renderProducts(result);
-}
-
-
-// ==========================================
-// ĐỌC FILE products.json
-// ==========================================
-
-async function getProducts() {
-
-    if (!productList) {
-        return;
-    }
-
-
-    // Hiển thị loading
-    productList.innerHTML = `
-        <div class="loading-message">
-            Đang tải sản phẩm...
-        </div>
-    `;
-
-
-    try {
-
-        // Đọc file JSON
-        const response = await fetch(
-            "./data/products.json",
-            {
-                cache: "no-store"
-            }
-        );
-
-
-        // Kiểm tra lỗi HTTP
-        if (!response.ok) {
-
-            throw new Error(
-                `Không thể tải products.json (HTTP ${response.status}).`
-            );
-
-        }
-
-
-        // Chuyển JSON thành JavaScript
-        const data =
-            await response.json();
-
-
-        // Kiểm tra JSON có phải mảng hay không
-        if (!Array.isArray(data)) {
-
-            throw new Error(
-                "products.json phải chứa một mảng sản phẩm."
-            );
-
-        }
-
-
-        // Lưu sản phẩm
-        products = data;
-
-
-        // Hiển thị sản phẩm
-        renderProducts(products);
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Lỗi tải sản phẩm:",
-            error
-        );
-
-
-        productList.innerHTML = `
-
-            <div class="error-message">
-
-                <h3>
-                    Không thể tải sản phẩm
-                </h3>
-
-
-                <p>
-                    ${error.message}
-                </p>
-
-
-                <p class="error-note">
-                    Hãy chạy project bằng Live Server
-                    thay vì mở trực tiếp file HTML.
-                </p>
-
-            </div>
-
-        `;
-
-    }
 
 }
 
 
-// ==========================================
-// SỰ KIỆN TÌM KIẾM
-// ==========================================
+// =====================================
+// TÌM KIẾM
+// =====================================
 
-if (searchInput) {
-
-    searchInput.addEventListener(
-        "input",
-        filterProducts
-    );
-
-}
+searchInput.addEventListener(
+    "input",
+    applyFilters
+);
 
 
-// ==========================================
-// SỰ KIỆN LỌC DANH MỤC
-// ==========================================
+// =====================================
+// DANH MỤC
+// =====================================
 
-if (categoryFilter) {
-
-    categoryFilter.addEventListener(
-        "change",
-        filterProducts
-    );
-
-}
+categoryFilter.addEventListener(
+    "change",
+    applyFilters
+);
 
 
-// ==========================================
-// SỰ KIỆN LỌC GIÁ TỪ
-// ==========================================
+// =====================================
+// GIÁ TỪ
+// =====================================
 
-if (minPrice) {
-
-    minPrice.addEventListener(
-        "input",
-        filterProducts
-    );
-
-}
+minPrice.addEventListener(
+    "input",
+    applyFilters
+);
 
 
-// ==========================================
-// SỰ KIỆN LỌC GIÁ ĐẾN
-// ==========================================
+// =====================================
+// GIÁ ĐẾN
+// =====================================
 
-if (maxPrice) {
-
-    maxPrice.addEventListener(
-        "input",
-        filterProducts
-    );
-
-}
+maxPrice.addEventListener(
+    "input",
+    applyFilters
+);
 
 
-// ==========================================
-// CHẠY CHƯƠNG TRÌNH
-// ==========================================
+// =====================================
+// SẮP XẾP
+// =====================================
 
-getProducts();
-const sortPrice = document.getElementById("sortPrice");
+sortPrice.addEventListener(
+    "change",
+    applyFilters
+);
 
-sortPrice.addEventListener("change", function () {
-    if (this.value === "asc") {
-        products.sort((a, b) => a.price - b.price);
-    } 
-    else if (this.value === "desc") {
-        products.sort((a, b) => b.price - a.price);
-    }
 
-    renderProducts(products);
-});
+// =====================================
+// CHẠY
+// =====================================
+
+loadProducts();

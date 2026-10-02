@@ -153,9 +153,13 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 cart.push(cartItem);
 
 // Lưu giỏ hàng vào LocalStorage
-localStorage.setItem("cart", JSON.stringify(cart));
+localStorage.setItem(
+    "cart",
+    JSON.stringify(cart)
+);
 
-alert("Đã thêm sản phẩm vào giỏ hàng!");
+// Chuyển sang trang giỏ hàng
+window.location.href = "cart.html";
 
 });
 
