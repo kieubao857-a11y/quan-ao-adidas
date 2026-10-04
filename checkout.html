@@ -136,61 +136,107 @@
 
             <div class="payment-method">
 
-    <label>
-        <input
-            type="radio"
-            name="payment"
-            value="cod"
-        >
-        Thanh toán khi nhận hàng
-    </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="cod"
+                        checked
+                    >
 
-    <br>
-
-    <label>
-        <input
-            type="radio"
-            name="payment"
-            value="bank"
-        >
-        Chuyển khoản ngân hàng
-    </label>
-
-</div>
+                    Thanh toán khi nhận hàng
+                </label>
 
 
-<!-- THÔNG TIN CHUYỂN KHOẢN -->
+                <br>
 
-<div id="bankInfo" style="display: none;">
 
-    <h3>Thông tin chuyển khoản</h3>
+                <label>
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="bank"
+                    >
 
-    <p>
-        Ngân hàng: <strong>Vietcombank</strong>
-    </p>
+                    Chuyển khoản ngân hàng
+                </label>
 
-    <p>
-        Số tài khoản: <strong>0778366446</strong>
-    </p>
+            </div>
 
-    <p>
-        Chủ tài khoản: <strong>NGUYEN CONG DUC ANH</strong>
-    </p>
 
-    <p>
-        Nội dung chuyển khoản:
-        <strong>ADIDAS + SỐ ĐIỆN THOẠI</strong>
-    </p>
+            <!-- THÔNG TIN CHUYỂN KHOẢN -->
 
-    <h3>Quét mã QR để thanh toán</h3>
+            <div
+                id="bankInfo"
+                class="bank-info"
+            >
 
-    <img
-        src="./img/qr-bank.png"
-        alt="Mã QR ngân hàng"
-        width="250"
-    >
+                <h3>
+                    Thông tin chuyển khoản
+                </h3>
 
-</div>
+
+                <p>
+                    Ngân hàng:
+                    <strong>
+                        Vietcombank
+                    </strong>
+                </p>
+
+
+                <p>
+                    Số tài khoản:
+                    <strong>
+                        0778366446
+                    </strong>
+                </p>
+
+
+                <p>
+                    Chủ tài khoản:
+                    <strong>
+                        NGUYỄN CÔNG ĐỨC ANH
+                    </strong>
+                </p>
+
+
+                <p>
+                    Số tiền:
+                    <strong id="qrAmount">
+                        0 VNĐ
+                    </strong>
+                </p>
+
+
+                <p>
+                    Nội dung chuyển khoản:
+                    <strong>
+                        ADIDAS + SỐ ĐIỆN THOẠI
+                    </strong>
+                </p>
+
+
+                <h3>
+                    Quét mã QR để thanh toán
+                </h3>
+
+
+                <div class="qr-box">
+
+                    <img
+                        id="bankQR"
+                        src=""
+                        alt="Mã QR chuyển khoản"
+                    >
+
+                </div>
+
+
+                <p class="qr-note">
+                    Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
+                </p>
+
+            </div>
 
 
             <br>
