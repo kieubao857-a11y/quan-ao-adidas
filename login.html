@@ -1,0 +1,1378 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Đăng nhập - Adidas Store</title>
+
+    <!-- Google Login -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #111;
+
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+          #fff;
+
+        background-size: 32px 32px;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .page {
+        min-height: 100vh;
+        padding: 22px 5vw 45px;
+      }
+
+      /* =========================
+       NAVBAR
+    ========================= */
+
+      .navbar {
+        width: min(1180px, 100%);
+        margin: auto;
+
+        min-height: 64px;
+        padding: 10px 14px 10px 22px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 999px;
+
+        background: rgba(255, 255, 255, 0.9);
+
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+
+        backdrop-filter: blur(12px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+
+        font-size: 19px;
+        font-weight: 900;
+
+        color: #111;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 50%;
+
+        display: grid;
+        place-items: center;
+
+        background: #111;
+        color: #fff;
+
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 5px;
+      }
+
+      .nav-links a {
+        padding: 11px 17px;
+
+        border-radius: 999px;
+
+        color: #666;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        transition: 0.2s;
+      }
+
+      .nav-links a:hover {
+        background: #f1f1f1;
+        color: #111;
+      }
+
+      .nav-button {
+        border: 0;
+        border-radius: 999px;
+
+        padding: 12px 20px;
+
+        background: #111;
+        color: #fff;
+
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      /* =========================
+       MAIN
+    ========================= */
+
+      .main {
+        width: min(1180px, 100%);
+        margin: 65px auto 0;
+
+        display: grid;
+        grid-template-columns: 1fr 440px;
+
+        gap: 70px;
+
+        align-items: center;
+      }
+
+      /* =========================
+       LEFT
+    ========================= */
+
+      .intro {
+        position: relative;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 8px 13px;
+
+        border: 1px solid #ddd;
+        border-radius: 999px;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        margin-bottom: 25px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #111;
+      }
+
+      .intro h1 {
+        max-width: 680px;
+
+        font-size: clamp(48px, 7vw, 88px);
+
+        line-height: 0.92;
+
+        letter-spacing: -6px;
+
+        margin-bottom: 25px;
+      }
+
+      .intro h1 span {
+        color: #315bea;
+      }
+
+      .intro p {
+        max-width: 590px;
+
+        color: #666;
+
+        font-size: 17px;
+        line-height: 1.7;
+      }
+
+      /* FLOATING BOX */
+
+      .floating {
+        position: absolute;
+
+        width: 62px;
+        height: 62px;
+
+        border-radius: 20px;
+
+        display: grid;
+        place-items: center;
+
+        background: #fff;
+
+        border: 1px solid #e5e5e5;
+
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.09);
+
+        font-weight: 900;
+      }
+
+      .floating.one {
+        right: 12%;
+        top: 4%;
+
+        transform: rotate(8deg);
+      }
+
+      .floating.two {
+        left: 48%;
+        bottom: -20%;
+
+        transform: rotate(-8deg);
+      }
+
+      .floating.three {
+        left: 4%;
+        bottom: -8%;
+
+        transform: rotate(7deg);
+      }
+
+      /* =========================
+       LOGIN CARD
+    ========================= */
+
+      .login-card {
+        width: 100%;
+
+        padding: 34px;
+
+        background: rgba(255, 255, 255, 0.97);
+
+        border: 1px solid #e6e6e6;
+
+        border-radius: 30px;
+
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.1);
+      }
+
+      .login-card h2 {
+        font-size: 30px;
+
+        letter-spacing: -1px;
+
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        color: #777;
+
+        font-size: 14px;
+
+        line-height: 1.5;
+
+        margin-bottom: 24px;
+      }
+
+      /* =========================
+       LOGIN / REGISTER TABS
+    ========================= */
+
+      .mode {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        background: #f2f2f2;
+
+        padding: 4px;
+
+        border-radius: 14px;
+
+        margin-bottom: 22px;
+      }
+
+      .mode button {
+        border: 0;
+
+        padding: 11px;
+
+        border-radius: 11px;
+
+        background: transparent;
+
+        cursor: pointer;
+
+        font-weight: 700;
+
+        color: #777;
+      }
+
+      .mode button.active {
+        background: #fff;
+
+        color: #111;
+
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      }
+
+      /* =========================
+       MESSAGE
+    ========================= */
+
+      .message {
+        display: none;
+
+        padding: 11px 13px;
+
+        border-radius: 11px;
+
+        margin-bottom: 15px;
+
+        font-size: 13px;
+
+        line-height: 1.45;
+      }
+
+      .message.show {
+        display: block;
+      }
+
+      .message.error {
+        color: #b42318;
+
+        background: #fff1f0;
+
+        border: 1px solid #ffd6d2;
+      }
+
+      .message.success {
+        color: #147a43;
+
+        background: #effaf3;
+
+        border: 1px solid #c9efd8;
+      }
+
+      /* =========================
+       FORM
+    ========================= */
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        font-size: 13px;
+
+        font-weight: 700;
+      }
+
+      .input-wrap {
+        position: relative;
+      }
+
+      .form-group input {
+        width: 100%;
+
+        height: 48px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 13px;
+
+        outline: none;
+
+        padding: 0 45px 0 14px;
+
+        font-size: 14px;
+
+        transition: 0.2s;
+      }
+
+      .form-group input:focus {
+        border-color: #111;
+
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .show-password {
+        position: absolute;
+
+        right: 12px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        border: 0;
+
+        background: transparent;
+
+        cursor: pointer;
+
+        color: #666;
+
+        font-size: 12px;
+
+        font-weight: 700;
+      }
+
+      .forgot {
+        text-align: right;
+
+        color: #315bea;
+
+        font-size: 13px;
+
+        margin: -4px 0 18px;
+
+        cursor: pointer;
+      }
+
+      /* =========================
+       BUTTON
+    ========================= */
+
+      .primary-button {
+        width: 100%;
+
+        height: 50px;
+
+        border: 0;
+
+        border-radius: 14px;
+
+        background: #111;
+
+        color: #fff;
+
+        font-size: 15px;
+
+        font-weight: 800;
+
+        cursor: pointer;
+
+        transition: 0.2s;
+      }
+
+      .primary-button:hover {
+        background: #222;
+
+        transform: translateY(-1px);
+      }
+
+      /* =========================
+       GOOGLE
+    ========================= */
+
+      .divider {
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        margin: 20px 0;
+
+        color: #999;
+
+        font-size: 12px;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+
+        height: 1px;
+
+        background: #e5e5e5;
+
+        flex: 1;
+      }
+
+      .google-button {
+        min-height: 44px;
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+      }
+
+      /* =========================
+       OTHER
+    ========================= */
+
+      .terms {
+        text-align: center;
+
+        color: #999;
+
+        font-size: 11px;
+
+        line-height: 1.5;
+
+        margin-top: 18px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .footer {
+        text-align: center;
+
+        margin-top: 50px;
+
+        color: #999;
+
+        font-size: 12px;
+      }
+
+      /* =========================
+       MOBILE
+    ========================= */
+
+      @media (max-width: 900px) {
+        .main {
+          grid-template-columns: 1fr;
+
+          gap: 40px;
+
+          margin-top: 45px;
+        }
+
+        .intro {
+          text-align: center;
+        }
+
+        .intro p {
+          margin: auto;
+        }
+
+        .floating {
+          display: none;
+        }
+
+        .nav-links {
+          display: none;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .page {
+          padding: 15px;
+        }
+
+        .login-card {
+          padding: 24px 20px;
+
+          border-radius: 22px;
+        }
+
+        .intro h1 {
+          font-size: 52px;
+
+          letter-spacing: -4px;
+        }
+
+        .brand {
+          font-size: 16px;
+        }
+
+        .nav-button {
+          padding: 10px 14px;
+
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <!-- =========================
+       NAVBAR
+  ========================== -->
+
+      <nav class="navbar">
+        <a href="./index.html" class="brand">
+          <span class="brand-mark"> A </span>
+
+          <span> ADIDAS STORE </span>
+        </a>
+
+        <div class="nav-links">
+          <a href="./index.html"> Trang chủ </a>
+
+          <a href="./product.html"> Sản phẩm </a>
+
+          <a href="./cart.html"> Giỏ hàng </a>
+        </div>
+
+        <button class="nav-button" type="button" onclick="scrollToLogin()">
+          Tài khoản
+        </button>
+      </nav>
+
+      <!-- =========================
+       MAIN
+  ========================== -->
+
+      <main class="main">
+        <!-- LEFT -->
+
+        <section class="intro">
+          <div class="eyebrow">
+            <span class="dot"></span>
+
+            ADIDAS SPORT COLLECTION
+          </div>
+
+          <h1>
+            Bắt đầu hành trình
+
+            <span> thể thao. </span>
+          </h1>
+
+          <p>
+            Đăng nhập để quản lý tài khoản, theo dõi đơn hàng và khám phá các
+            sản phẩm thể thao Adidas.
+          </p>
+
+          <div class="floating one">A</div>
+
+          <div class="floating two">+</div>
+
+          <div class="floating three">01</div>
+        </section>
+
+        <!-- LOGIN -->
+
+        <section class="login-card" id="loginCard">
+          <h2 id="formTitle">Đăng nhập</h2>
+
+          <p class="subtitle" id="formSubtitle">
+            Đăng nhập để tiếp tục mua sắm tại Adidas Store.
+          </p>
+
+          <!-- LOGIN / REGISTER -->
+
+          <div class="mode">
+            <button type="button" id="loginMode" class="active">
+              Đăng nhập
+            </button>
+
+            <button type="button" id="registerMode">Đăng ký</button>
+          </div>
+
+          <!-- MESSAGE -->
+
+          <div id="message" class="message"></div>
+
+          <!-- FORM -->
+
+          <form id="loginForm">
+            <!-- NAME -->
+
+            <div id="nameGroup" class="form-group hidden">
+              <label for="name"> Họ và tên </label>
+
+              <div class="input-wrap">
+                <input id="name" type="text" placeholder="Nhập họ và tên" />
+              </div>
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+              <label for="email"> Email </label>
+
+              <div class="input-wrap">
+                <input
+                  id="email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="example@gmail.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+              <label for="password"> Mật khẩu </label>
+
+              <div class="input-wrap">
+                <input
+                  id="password"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="Nhập mật khẩu"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="show-password"
+                  onclick="togglePassword('password', this)"
+                >
+                  Hiện
+                </button>
+              </div>
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div id="confirmGroup" class="form-group hidden">
+              <label for="confirmPassword"> Xác nhận mật khẩu </label>
+
+              <div class="input-wrap">
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Nhập lại mật khẩu"
+                />
+
+                <button
+                  type="button"
+                  class="show-password"
+                  onclick="togglePassword('confirmPassword', this)"
+                >
+                  Hiện
+                </button>
+              </div>
+            </div>
+
+            <!-- FORGOT -->
+
+            <div id="forgotPassword" class="forgot">Quên mật khẩu?</div>
+
+            <!-- SUBMIT -->
+
+            <button id="submitButton" class="primary-button" type="submit">
+              Đăng nhập
+            </button>
+          </form>
+
+          <!-- GOOGLE -->
+
+          <div class="divider">hoặc</div>
+
+          <div id="googleButton" class="google-button"></div>
+
+          <p class="terms">
+            Bằng việc tiếp tục, bạn đồng ý với các điều khoản sử dụng của cửa
+            hàng.
+          </p>
+        </section>
+      </main>
+
+      <div class="footer">© 2026 Adidas Store · Website đồ án sinh viên</div>
+    </div>
+
+    <script>
+      /*
+=========================================================
+ GOOGLE CLIENT ID
+=========================================================
+
+ DÁN GOOGLE CLIENT ID CỦA BẠN VÀO ĐÂY.
+
+ Ví dụ:
+
+ const GOOGLE_CLIENT_ID =
+ "123456789-xxxxxxxx.apps.googleusercontent.com";
+
+ KHÔNG DÁN CLIENT SECRET VÀO ĐÂY.
+=========================================================
+*/
+
+      const GOOGLE_CLIENT_ID =
+        "669021582869-228t2uhuuh14hu7hi0mpebhcusu01lem.apps.googleusercontent.com";
+
+      /*
+=========================================================
+ LOCAL STORAGE
+=========================================================
+*/
+
+      const USERS_KEY = "adidasUsers";
+
+      const CURRENT_USER_KEY = "currentUser";
+
+      let isRegisterMode = false;
+
+      /*
+=========================================================
+ ELEMENT
+=========================================================
+*/
+
+      const loginForm = document.getElementById("loginForm");
+
+      const loginMode = document.getElementById("loginMode");
+
+      const registerMode = document.getElementById("registerMode");
+
+      const formTitle = document.getElementById("formTitle");
+
+      const formSubtitle = document.getElementById("formSubtitle");
+
+      const submitButton = document.getElementById("submitButton");
+
+      const nameGroup = document.getElementById("nameGroup");
+
+      const confirmGroup = document.getElementById("confirmGroup");
+
+      const nameInput = document.getElementById("name");
+
+      const confirmPassword = document.getElementById("confirmPassword");
+
+      const forgotPassword = document.getElementById("forgotPassword");
+
+      const message = document.getElementById("message");
+
+      const googleButton = document.getElementById("googleButton");
+
+      /*
+=========================================================
+ USERS
+=========================================================
+*/
+
+      function getUsers() {
+        try {
+          return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function saveUsers(users) {
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      }
+
+      /*
+=========================================================
+ MESSAGE
+=========================================================
+*/
+
+      function showMessage(text, type = "error") {
+        message.textContent = text;
+
+        message.className = "message show " + type;
+      }
+
+      function clearMessage() {
+        message.textContent = "";
+
+        message.className = "message";
+      }
+
+      /*
+=========================================================
+ LOGIN / REGISTER MODE
+=========================================================
+*/
+
+      function setMode(register) {
+        isRegisterMode = register;
+
+        clearMessage();
+
+        loginMode.classList.toggle("active", !register);
+
+        registerMode.classList.toggle("active", register);
+
+        nameGroup.classList.toggle("hidden", !register);
+
+        confirmGroup.classList.toggle("hidden", !register);
+
+        forgotPassword.classList.toggle("hidden", register);
+
+        nameInput.required = register;
+
+        confirmPassword.required = register;
+
+        if (register) {
+          formTitle.textContent = "Tạo tài khoản";
+
+          formSubtitle.textContent = "Đăng ký tài khoản để bắt đầu mua sắm.";
+
+          submitButton.textContent = "Đăng ký";
+        } else {
+          formTitle.textContent = "Đăng nhập";
+
+          formSubtitle.textContent =
+            "Đăng nhập để tiếp tục mua sắm tại Adidas Store.";
+
+          submitButton.textContent = "Đăng nhập";
+        }
+      }
+
+      loginMode.addEventListener("click", function () {
+        setMode(false);
+      });
+
+      registerMode.addEventListener("click", function () {
+        setMode(true);
+      });
+
+      /*
+=========================================================
+ FORM LOGIN / REGISTER
+=========================================================
+*/
+
+      loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        clearMessage();
+
+        const email = document
+          .getElementById("email")
+          .value.trim()
+          .toLowerCase();
+
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          showMessage("Vui lòng nhập đầy đủ email và mật khẩu.");
+
+          return;
+        }
+
+        const users = getUsers();
+
+        /*
+    ============================
+    REGISTER
+    ============================
+    */
+
+        if (isRegisterMode) {
+          const name = nameInput.value.trim();
+
+          const confirm = confirmPassword.value;
+
+          if (!name) {
+            showMessage("Vui lòng nhập họ và tên.");
+
+            return;
+          }
+
+          if (password.length < 6) {
+            showMessage("Mật khẩu phải có ít nhất 6 ký tự.");
+
+            return;
+          }
+
+          if (password !== confirm) {
+            showMessage("Mật khẩu xác nhận không khớp.");
+
+            return;
+          }
+
+          const existingUser = users.find((user) => user.email === email);
+
+          if (existingUser) {
+            showMessage("Email này đã được đăng ký.");
+
+            return;
+          }
+
+          const newUser = {
+            id: "user_" + Date.now(),
+
+            name: name,
+
+            email: email,
+
+            password: password,
+
+            provider: "local",
+
+            createdAt: new Date().toISOString(),
+          };
+
+          users.push(newUser);
+
+          saveUsers(users);
+
+          localStorage.setItem(
+            CURRENT_USER_KEY,
+            JSON.stringify({
+              id: newUser.id,
+
+              name: newUser.name,
+
+              email: newUser.email,
+
+              provider: "local",
+            }),
+          );
+
+          showMessage(
+            "Đăng ký thành công. Đang chuyển vào trang chủ...",
+            "success",
+          );
+
+          setTimeout(function () {
+            window.location.href = "./index.html";
+          }, 600);
+
+          return;
+        }
+
+        /*
+    ============================
+    LOGIN
+    ============================
+    */
+
+        const user = users.find(
+          (item) => item.email === email && item.password === password,
+        );
+
+        if (!user) {
+          showMessage("Email hoặc mật khẩu không chính xác.");
+
+          return;
+        }
+
+        /*
+    LƯU PHIÊN ĐĂNG NHẬP
+    */
+
+        localStorage.setItem(
+          CURRENT_USER_KEY,
+          JSON.stringify({
+            id: user.id,
+
+            name: user.name,
+
+            email: user.email,
+
+            picture: user.picture || "",
+
+            provider: user.provider || "local",
+          }),
+        );
+
+        showMessage(
+          "Đăng nhập thành công. Đang chuyển vào trang chủ...",
+          "success",
+        );
+
+        setTimeout(function () {
+          window.location.href = "./index.html";
+        }, 500);
+      });
+
+      /*
+=========================================================
+ SHOW / HIDE PASSWORD
+=========================================================
+*/
+
+      function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+
+        if (input.type === "password") {
+          input.type = "text";
+
+          button.textContent = "Ẩn";
+        } else {
+          input.type = "password";
+
+          button.textContent = "Hiện";
+        }
+      }
+
+      /*
+=========================================================
+ FORGOT PASSWORD
+=========================================================
+*/
+
+      forgotPassword.addEventListener("click", function () {
+        const email = document.getElementById("email").value.trim();
+
+        if (!email) {
+          showMessage("Hãy nhập email trước khi chọn Quên mật khẩu.");
+
+          return;
+        }
+
+        showMessage(
+          "Đây là chức năng demo của đồ án. Hệ thống chưa có backend để gửi email đặt lại mật khẩu.",
+          "success",
+        );
+      });
+
+      /*
+=========================================================
+ GOOGLE JWT
+=========================================================
+*/
+
+      function decodeGoogleJWT(token) {
+        try {
+          const payload = token
+            .split(".")[1]
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+
+          const json = decodeURIComponent(
+            atob(payload)
+              .split("")
+
+              .map(function (character) {
+                return (
+                  "%" + ("00" + character.charCodeAt(0).toString(16)).slice(-2)
+                );
+              })
+
+              .join(""),
+          );
+
+          return JSON.parse(json);
+        } catch (error) {
+          return null;
+        }
+      }
+
+      /*
+=========================================================
+ GOOGLE LOGIN CALLBACK
+=========================================================
+*/
+
+      function handleGoogleLogin(response) {
+        clearMessage();
+
+        if (!response || !response.credential) {
+          showMessage("Google không trả về thông tin đăng nhập.");
+
+          return;
+        }
+
+        const googleUser = decodeGoogleJWT(response.credential);
+
+        if (!googleUser) {
+          showMessage("Không thể đọc thông tin tài khoản Google.");
+
+          return;
+        }
+
+        const googleId = googleUser.sub;
+
+        const email = googleUser.email || "";
+
+        const name = googleUser.name || email || "Google User";
+
+        const picture = googleUser.picture || "";
+
+        const users = getUsers();
+
+        /*
+  TÌM USER CŨ
+  */
+
+        let user = users.find(
+          (item) => item.googleId === googleId || item.email === email,
+        );
+
+        /*
+  TẠO USER MỚI
+  */
+
+        if (!user) {
+          user = {
+            id: "google_" + Date.now(),
+
+            googleId: googleId,
+
+            name: name,
+
+            email: email,
+
+            picture: picture,
+
+            provider: "google",
+
+            createdAt: new Date().toISOString(),
+          };
+
+          users.push(user);
+        } else {
+          user.googleId = googleId;
+
+          user.name = name;
+
+          user.email = email;
+
+          user.picture = picture;
+
+          user.provider = "google";
+        }
+
+        saveUsers(users);
+
+        /*
+  LƯU PHIÊN
+  */
+
+        localStorage.setItem(
+          CURRENT_USER_KEY,
+          JSON.stringify({
+            id: user.id,
+
+            name: user.name,
+
+            email: user.email,
+
+            picture: user.picture,
+
+            provider: "google",
+          }),
+        );
+
+        showMessage(
+          "Đăng nhập Google thành công. Đang chuyển vào trang chủ...",
+          "success",
+        );
+
+        setTimeout(function () {
+          window.location.href = "./index.html";
+        }, 500);
+      }
+
+      /*
+=========================================================
+ GOOGLE BUTTON
+=========================================================
+*/
+
+      function setupGoogleLogin() {
+        /*
+  Google chưa tải xong
+  */
+
+        if (
+          !window.google ||
+          !window.google.accounts ||
+          !window.google.accounts.id
+        ) {
+          setTimeout(setupGoogleLogin, 500);
+
+          return;
+        }
+
+        /*
+  CHƯA NHẬP CLIENT ID
+  */
+
+        if (
+          !GOOGLE_CLIENT_ID ||
+          GOOGLE_CLIENT_ID === "DAN_GOOGLE_CLIENT_ID_CUA_BAN_VAO_DAY"
+        ) {
+          googleButton.innerHTML = `
+
+      <div
+        style="
+          width:100%;
+          padding:12px;
+          border:1px dashed #ccc;
+          border-radius:12px;
+          color:#777;
+          font-size:12px;
+          text-align:center;
+        "
+      >
+
+        Hãy nhập Google Client ID
+        vào login.html
+
+      </div>
+
+    `;
+
+          return;
+        }
+
+        /*
+  GOOGLE INITIALIZE
+  */
+
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+
+          callback: handleGoogleLogin,
+
+          auto_select: false,
+
+          cancel_on_tap_outside: true,
+        });
+
+        /*
+  RENDER GOOGLE BUTTON
+  */
+
+        googleButton.innerHTML = "";
+
+        google.accounts.id.renderButton(
+          googleButton,
+
+          {
+            theme: "outline",
+
+            size: "large",
+
+            shape: "pill",
+
+            text: "continue_with",
+
+            width: 360,
+
+            logo_alignment: "left",
+          },
+        );
+      }
+
+      /*
+=========================================================
+ SCROLL LOGIN
+=========================================================
+*/
+
+      function scrollToLogin() {
+        document.getElementById("loginCard").scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+
+      /*
+=========================================================
+ START GOOGLE
+=========================================================
+*/
+
+      window.addEventListener("load", setupGoogleLogin);
+    </script>
+  </body>
+</html>
