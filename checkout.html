@@ -47,6 +47,10 @@
                 Sale
             </a>
 
+            <a href="voucher.html">
+                🎁 Voucher
+            </a>
+
         </nav>
 
         <div class="header-right">
@@ -74,6 +78,7 @@
 
 
         <form id="checkoutForm">
+
 
             <!-- THÔNG TIN NGƯỜI NHẬN -->
 
@@ -127,6 +132,65 @@
             </div>
 
 
+            <!-- MÃ GIẢM GIÁ -->
+
+            <h2>
+                🎁 Mã giảm giá
+            </h2>
+
+
+            <div class="checkout-voucher">
+
+                <div class="voucher-input-row">
+
+                    <input
+                        type="text"
+                        id="voucherInput"
+                        placeholder="Nhập mã giảm giá"
+                    >
+
+                    <button
+                        type="button"
+                        id="applyVoucher">
+                        ÁP DỤNG
+                    </button>
+
+                </div>
+
+
+                <p id="voucherMessage"></p>
+
+            </div>
+
+
+            <!-- HIỂN THỊ TIỀN -->
+
+            <div class="checkout-total">
+
+                <p>
+                    Tổng tiền:
+                    <strong id="checkoutTotal">
+                        0 VNĐ
+                    </strong>
+                </p>
+
+                <p id="discountRow" style="display: none;">
+                    Giảm giá:
+                    <strong id="discountAmount">
+                        0 VNĐ
+                    </strong>
+                </p>
+
+                <p class="final-total">
+                    Thành tiền:
+                    <strong id="finalTotal">
+                        0 VNĐ
+                    </strong>
+                </p>
+
+            </div>
+
+
             <!-- PHƯƠNG THỨC THANH TOÁN -->
 
             <h2>
@@ -137,6 +201,7 @@
             <div class="payment-method">
 
                 <label>
+
                     <input
                         type="radio"
                         name="payment"
@@ -145,6 +210,7 @@
                     >
 
                     Thanh toán khi nhận hàng
+
                 </label>
 
 
@@ -152,6 +218,7 @@
 
 
                 <label>
+
                     <input
                         type="radio"
                         name="payment"
@@ -159,6 +226,7 @@
                     >
 
                     Chuyển khoản ngân hàng
+
                 </label>
 
             </div>
@@ -177,42 +245,57 @@
 
 
                 <p>
+
                     Ngân hàng:
+
                     <strong>
                         Vietcombank
                     </strong>
+
                 </p>
 
 
                 <p>
+
                     Số tài khoản:
+
                     <strong>
                         0778366446
                     </strong>
+
                 </p>
 
 
                 <p>
+
                     Chủ tài khoản:
+
                     <strong>
                         NGUYỄN CÔNG ĐỨC ANH
                     </strong>
+
                 </p>
 
 
                 <p>
+
                     Số tiền:
+
                     <strong id="qrAmount">
                         0 VNĐ
                     </strong>
+
                 </p>
 
 
                 <p>
+
                     Nội dung chuyển khoản:
+
                     <strong>
                         ADIDAS + SỐ ĐIỆN THOẠI
                     </strong>
+
                 </p>
 
 
@@ -233,7 +316,9 @@
 
 
                 <p class="qr-note">
+
                     Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
+
                 </p>
 
             </div>
@@ -248,6 +333,7 @@
             >
                 ĐẶT HÀNG
             </button>
+
 
         </form>
 

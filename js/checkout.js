@@ -1,11 +1,15 @@
+// ==========================================
 // LẤY GIỎ HÀNG
+// ==========================================
 
 let cart = JSON.parse(
     localStorage.getItem("cart")
 ) || [];
 
 
+// ==========================================
 // LẤY CÁC PHẦN TỬ
+// ==========================================
 
 const checkoutForm =
     document.getElementById("checkoutForm");
@@ -33,8 +37,70 @@ const bankQR =
 const qrAmount =
     document.getElementById("qrAmount");
 
+const voucherInput =
+    document.getElementById("voucherInput");
 
-// TÍNH TỔNG TIỀN
+const applyVoucher =
+    document.getElementById("applyVoucher");
+
+const voucherMessage =
+    document.getElementById("voucherMessage");
+
+const checkoutTotal =
+    document.getElementById("checkoutTotal");
+
+const discountRow =
+    document.getElementById("discountRow");
+
+const discountAmount =
+    document.getElementById("discountAmount");
+
+const finalTotal =
+    document.getElementById("finalTotal");
+
+
+// ==========================================
+// DANH SÁCH MÃ GIẢM GIÁ
+// ==========================================
+
+const voucherList = {
+
+    ADIDAS10: {
+        type: "percent",
+        value: 10,
+        text: "Giảm 10%"
+    },
+
+    ADIDAS15: {
+        type: "percent",
+        value: 15,
+        text: "Giảm 15%"
+    },
+
+    ADIDAS20: {
+        type: "percent",
+        value: 20,
+        text: "Giảm 20%"
+    },
+
+    ADIDAS25: {
+        type: "percent",
+        value: 25,
+        text: "Giảm 25%"
+    },
+
+    FREESHIP: {
+        type: "shipping",
+        value: 0,
+        text: "Miễn phí vận chuyển"
+    }
+
+};
+
+
+// ==========================================
+// TÍNH TỔNG TIỀN BAN ĐẦU
+// ==========================================
 
 let totalAmount = 0;
 
@@ -47,7 +113,209 @@ cart.forEach(function (item) {
 });
 
 
+// ==========================================
+// BIẾN GIẢM GIÁ
+// ==========================================
+
+let currentVoucher = "";
+
+let discountValue = 0;
+
+let finalAmount = totalAmount;
+
+
+// ==========================================
+// HIỂN THỊ TỔNG TIỀN
+// ==========================================
+
+function updateTotalDisplay() {
+
+    checkoutTotal.textContent =
+        totalAmount.toLocaleString("vi-VN")
+        + " VNĐ";
+
+
+    discountAmount.textContent =
+        discountValue.toLocaleString("vi-VN")
+        + " VNĐ";
+
+
+    finalTotal.textContent =
+        finalAmount.toLocaleString("vi-VN")
+        + " VNĐ";
+
+
+    if (discountValue > 0) {
+
+        discountRow.style.display =
+            "block";
+
+    } else {
+
+        discountRow.style.display =
+            "none";
+
+    }
+
+}
+
+
+// ==========================================
+// ÁP DỤNG MÃ GIẢM GIÁ
+// ==========================================
+
+function applyVoucherCode() {
+
+    if (!voucherInput) {
+        return;
+    }
+
+
+    const code =
+        voucherInput.value
+        .trim()
+        .toUpperCase();
+
+
+    // Không nhập mã
+
+    if (code === "") {
+
+        voucherMessage.textContent =
+            "Vui lòng nhập mã giảm giá!";
+
+        voucherMessage.style.color =
+            "red";
+
+        return;
+    }
+
+
+    // Mã không tồn tại
+
+    if (!voucherList[code]) {
+
+        voucherMessage.textContent =
+            "❌ Mã giảm giá không hợp lệ!";
+
+        voucherMessage.style.color =
+            "red";
+
+        discountValue = 0;
+
+        finalAmount = totalAmount;
+
+        currentVoucher = "";
+
+        updateTotalDisplay();
+
+        updateBankQR();
+
+        return;
+    }
+
+
+    const voucher =
+        voucherList[code];
+
+
+    // Mã phần trăm
+
+    if (voucher.type === "percent") {
+
+        discountValue =
+            Math.round(
+                totalAmount *
+                voucher.value /
+                100
+            );
+
+    }
+
+
+    // FREESHIP
+    // Hiện tại shop chưa tính phí ship
+    // nên mã này không trừ tiền sản phẩm
+
+    else {
+
+        discountValue = 0;
+
+    }
+
+
+    finalAmount =
+        totalAmount -
+        discountValue;
+
+
+    currentVoucher =
+        code;
+
+
+    localStorage.setItem(
+        "appliedVoucher",
+        code
+    );
+
+
+    voucherMessage.textContent =
+        "✅ Áp dụng " +
+        code +
+        " thành công - " +
+        voucher.text;
+
+    voucherMessage.style.color =
+        "green";
+
+
+    updateTotalDisplay();
+
+    updateBankQR();
+
+}
+
+
+// ==========================================
+// NÚT ÁP DỤNG
+// ==========================================
+
+if (applyVoucher) {
+
+    applyVoucher.addEventListener(
+        "click",
+        applyVoucherCode
+    );
+
+}
+
+
+// ==========================================
+// TỰ ĐIỀN MÃ ĐÃ QUAY
+// ==========================================
+
+if (voucherInput) {
+
+    const savedVoucher =
+        localStorage.getItem("voucherCode");
+
+
+    if (
+        savedVoucher &&
+        voucherList[savedVoucher]
+    ) {
+
+        voucherInput.value =
+            savedVoucher;
+
+    }
+
+}
+
+
+// ==========================================
 // HIỂN THỊ QR NGÂN HÀNG
+// ==========================================
 
 function updateBankQR() {
 
@@ -66,21 +334,20 @@ function updateBankQR() {
 
     if (selectedPayment.value === "bank") {
 
-        bankInfo.style.display = "block";
+        bankInfo.style.display =
+            "block";
 
 
         qrAmount.textContent =
-            totalAmount.toLocaleString("vi-VN")
+            finalAmount.toLocaleString("vi-VN")
             + " VNĐ";
 
-
-        // TẠO QR VIETQR
 
         const qrUrl =
             "https://img.vietqr.io/image/" +
             "VCB-0778366446-compact2.png" +
             "?amount=" +
-            totalAmount +
+            finalAmount +
             "&addInfo=" +
             encodeURIComponent(
                 "ADIDAS " +
@@ -92,7 +359,8 @@ function updateBankQR() {
             );
 
 
-        bankQR.src = qrUrl;
+        bankQR.src =
+            qrUrl;
 
     }
 
@@ -101,16 +369,20 @@ function updateBankQR() {
 
     else {
 
-        bankInfo.style.display = "none";
+        bankInfo.style.display =
+            "none";
 
-        bankQR.src = "";
+        bankQR.src =
+            "";
 
     }
 
 }
 
 
-// KHI ĐỔI PHƯƠNG THỨC THANH TOÁN
+// ==========================================
+// ĐỔI PHƯƠNG THỨC THANH TOÁN
+// ==========================================
 
 paymentMethods.forEach(function (method) {
 
@@ -122,8 +394,9 @@ paymentMethods.forEach(function (method) {
 });
 
 
-// KHI NHẬP SỐ ĐIỆN THOẠI
-// CẬP NHẬT NỘI DUNG QR
+// ==========================================
+// NHẬP SỐ ĐIỆN THOẠI
+// ==========================================
 
 phoneInput.addEventListener(
     "input",
@@ -148,7 +421,9 @@ phoneInput.addEventListener(
 );
 
 
+// ==========================================
 // KIỂM TRA GIỎ HÀNG
+// ==========================================
 
 if (cart.length === 0) {
 
@@ -161,7 +436,9 @@ if (cart.length === 0) {
 }
 
 
+// ==========================================
 // ĐẶT HÀNG
+// ==========================================
 
 checkoutForm.addEventListener(
     "submit",
@@ -242,7 +519,7 @@ checkoutForm.addEventListener(
         }
 
 
-        // XÁC ĐỊNH PHƯƠNG THỨC THANH TOÁN
+        // XÁC ĐỊNH PHƯƠNG THỨC
 
         let payment = "";
 
@@ -262,7 +539,7 @@ checkoutForm.addEventListener(
         }
 
 
-        // LẤY DANH SÁCH ĐƠN HÀNG CŨ
+        // LẤY ĐƠN HÀNG CŨ
 
         let orders = JSON.parse(
             localStorage.getItem("orders")
@@ -289,7 +566,11 @@ checkoutForm.addEventListener(
 
             products: cart,
 
-            total: totalAmount,
+            total: finalAmount,
+
+            voucher: currentVoucher,
+
+            discount: discountValue,
 
             status: "Chờ xử lý",
 
@@ -305,7 +586,9 @@ checkoutForm.addEventListener(
 
         // THÊM ĐƠN HÀNG
 
-        orders.push(newOrder);
+        orders.push(
+            newOrder
+        );
 
 
         // LƯU ĐƠN HÀNG
@@ -323,6 +606,21 @@ checkoutForm.addEventListener(
         );
 
 
+        // XÓA MÃ ĐÃ DÙNG
+
+        localStorage.removeItem(
+            "voucherCode"
+        );
+
+        localStorage.removeItem(
+            "voucherText"
+        );
+
+        localStorage.removeItem(
+            "appliedVoucher"
+        );
+
+
         // THÔNG BÁO
 
         alert(
@@ -330,7 +628,7 @@ checkoutForm.addEventListener(
         );
 
 
-        // CHUYỂN SANG TRANG ĐƠN HÀNG
+        // CHUYỂN SANG ĐƠN HÀNG
 
         window.location.href =
             "orders.html";
@@ -339,6 +637,10 @@ checkoutForm.addEventListener(
 );
 
 
+// ==========================================
 // CHẠY KHI MỞ TRANG
+// ==========================================
+
+updateTotalDisplay();
 
 updateBankQR();
