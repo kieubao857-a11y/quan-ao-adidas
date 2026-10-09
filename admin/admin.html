@@ -1,0 +1,1755 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Quản trị viên - Adidas Shop</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f6f8;
+        color: #171717;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font-family: inherit;
+      }
+
+      .admin-shell {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+
+      .sidebar {
+        width: 250px;
+        background: #111;
+        color: white;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+
+        padding: 25px 16px;
+      }
+
+      .brand {
+        font-size: 27px;
+        font-weight: 900;
+        padding: 8px 12px 30px;
+      }
+
+      .brand small {
+        display: block;
+        font-size: 11px;
+        color: #999;
+        margin-top: 5px;
+        letter-spacing: 1px;
+      }
+
+      .nav button {
+        width: 100%;
+
+        border: 0;
+        background: transparent;
+        color: #ccc;
+
+        text-align: left;
+
+        padding: 14px;
+        margin: 4px 0;
+
+        border-radius: 10px;
+
+        cursor: pointer;
+
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      .nav button:hover,
+      .nav button.active {
+        background: white;
+        color: #111;
+      }
+
+      .side-bottom {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 20px;
+      }
+
+      .logout {
+        width: 100%;
+
+        padding: 12px;
+
+        background: #1e1e1e;
+        color: white;
+
+        border: 1px solid #444;
+        border-radius: 10px;
+
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .logout:hover {
+        background: #333;
+      }
+
+      /* MAIN */
+
+      .main {
+        margin-left: 250px;
+
+        width: calc(100% - 250px);
+
+        padding: 30px 35px;
+      }
+
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 25px;
+      }
+
+      .top h1 {
+        margin: 0;
+        font-size: 30px;
+      }
+
+      .top p {
+        margin: 7px 0 0;
+        color: #777;
+      }
+
+      .admin-user {
+        background: white;
+        border: 1px solid #e5e5e5;
+
+        padding: 11px 15px;
+
+        border-radius: 12px;
+
+        font-weight: 700;
+      }
+
+      /* VIEW */
+
+      .view {
+        display: none;
+      }
+
+      .view.active {
+        display: block;
+      }
+
+      /* STAT */
+
+      .cards {
+        display: grid;
+
+        grid-template-columns: repeat(4, 1fr);
+
+        gap: 16px;
+
+        margin-bottom: 25px;
+      }
+
+      .stat {
+        background: white;
+
+        border: 1px solid #e5e5e5;
+
+        border-radius: 16px;
+
+        padding: 22px;
+      }
+
+      .stat span {
+        color: #777;
+        font-size: 13px;
+      }
+
+      .stat strong {
+        display: block;
+
+        font-size: 28px;
+
+        margin-top: 8px;
+      }
+
+      /* PANEL */
+
+      .panel {
+        background: white;
+
+        border: 1px solid #e5e5e5;
+
+        border-radius: 16px;
+
+        padding: 20px;
+
+        margin-bottom: 20px;
+      }
+
+      .panel-head {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 10px;
+
+        margin-bottom: 16px;
+      }
+
+      .panel h2 {
+        margin: 0;
+
+        font-size: 19px;
+      }
+
+      /* TABLE */
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        min-width: 750px;
+      }
+
+      th,
+      td {
+        text-align: left;
+
+        padding: 13px;
+
+        border-bottom: 1px solid #eee;
+
+        font-size: 14px;
+      }
+
+      th {
+        color: #777;
+
+        font-size: 12px;
+
+        text-transform: uppercase;
+      }
+
+      .badge {
+        display: inline-block;
+
+        padding: 5px 9px;
+
+        border-radius: 999px;
+
+        background: #eee;
+
+        font-size: 12px;
+      }
+
+      /* BUTTON */
+
+      .btn {
+        border: 0;
+
+        border-radius: 8px;
+
+        padding: 9px 12px;
+
+        cursor: pointer;
+
+        font-weight: 700;
+      }
+
+      .btn-black {
+        background: #111;
+        color: white;
+      }
+
+      .btn-light {
+        background: #eee;
+        color: #111;
+      }
+
+      .btn-danger {
+        background: #fff0f0;
+        color: #b42318;
+      }
+
+      .btn:hover {
+        opacity: 0.85;
+      }
+
+      /* SEARCH */
+
+      .search {
+        width: 270px;
+
+        padding: 10px 12px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 9px;
+
+        outline: none;
+      }
+
+      /* FORM */
+
+      .form {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 14px;
+      }
+
+      .form .full {
+        grid-column: 1 / -1;
+      }
+
+      .form label {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 6px;
+
+        font-size: 13px;
+
+        font-weight: 700;
+      }
+
+      .form input,
+      .form select,
+      .form textarea {
+        width: 100%;
+
+        padding: 11px 12px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 9px;
+
+        outline: none;
+
+        font-size: 14px;
+      }
+
+      .form textarea {
+        min-height: 100px;
+
+        resize: vertical;
+      }
+
+      .product-img {
+        width: 55px;
+        height: 55px;
+
+        object-fit: cover;
+
+        border-radius: 8px;
+
+        border: 1px solid #eee;
+      }
+
+      .actions {
+        display: flex;
+
+        gap: 7px;
+
+        flex-wrap: wrap;
+      }
+
+      .empty {
+        padding: 30px;
+
+        text-align: center;
+
+        color: #777;
+      }
+
+      .notice {
+        background: #fff8df;
+
+        border: 1px solid #f1dc8b;
+
+        padding: 13px;
+
+        border-radius: 10px;
+
+        color: #705b12;
+
+        margin-bottom: 18px;
+
+        font-size: 13px;
+
+        line-height: 1.5;
+      }
+
+      /* MOBILE */
+
+      @media (max-width: 1000px) {
+        .cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 700px) {
+        .sidebar {
+          position: static;
+
+          width: 100%;
+
+          height: auto;
+        }
+
+        .admin-shell {
+          display: block;
+        }
+
+        .side-bottom {
+          position: static;
+
+          margin-top: 20px;
+        }
+
+        .main {
+          margin: 0;
+
+          width: 100%;
+
+          padding: 18px;
+        }
+
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        .form {
+          grid-template-columns: 1fr;
+        }
+
+        .form .full {
+          grid-column: auto;
+        }
+
+        .top {
+          flex-direction: column;
+
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="admin-shell">
+      <!-- SIDEBAR -->
+
+      <aside class="sidebar">
+        <div class="brand">
+          adidas
+
+          <small> ADMIN MANAGEMENT </small>
+        </div>
+
+        <nav class="nav">
+          <button class="active" data-view="dashboard">📊 Tổng quan</button>
+
+          <button data-view="customers">👥 Khách hàng</button>
+
+          <button data-view="orders">📦 Đơn hàng</button>
+
+          <button data-view="products">👟 Sản phẩm</button>
+        </nav>
+
+        <div class="side-bottom">
+          <button class="logout" id="adminLogout">🚪 Đăng xuất</button>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+
+      <main class="main">
+        <div class="top">
+          <div>
+            <h1 id="pageTitle">Tổng quan</h1>
+
+            <p>Quản lý dữ liệu và hoạt động của Adidas Shop.</p>
+          </div>
+
+          <div class="admin-user" id="adminUser">Quản trị viên</div>
+        </div>
+
+        <!-- DASHBOARD -->
+
+        <section class="view active" id="view-dashboard">
+          <div class="notice">
+            Đây là hệ thống quản trị dành cho đồ án. Dữ liệu hiện được lưu bằng
+            LocalStorage trên trình duyệt.
+          </div>
+
+          <div class="cards">
+            <div class="stat">
+              <span> Khách hàng </span>
+
+              <strong id="statUsers"> 0 </strong>
+            </div>
+
+            <div class="stat">
+              <span> Đơn hàng </span>
+
+              <strong id="statOrders"> 0 </strong>
+            </div>
+
+            <div class="stat">
+              <span> Sản phẩm </span>
+
+              <strong id="statProducts"> 0 </strong>
+            </div>
+
+            <div class="stat">
+              <span> Doanh thu </span>
+
+              <strong id="statRevenue"> 0 ₫ </strong>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Đơn hàng gần đây</h2>
+
+              <button class="btn btn-black" data-go="orders">Xem tất cả</button>
+            </div>
+
+            <div id="recentOrders"></div>
+          </div>
+        </section>
+
+        <!-- CUSTOMERS -->
+
+        <section class="view" id="view-customers">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Danh sách khách hàng</h2>
+
+              <input
+                class="search"
+                id="customerSearch"
+                placeholder="Tìm tên hoặc email..."
+              />
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Khách hàng</th>
+
+                    <th>Email</th>
+
+                    <th>Phương thức</th>
+
+                    <th>Ngày tạo</th>
+
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+
+                <tbody id="customerRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ORDERS -->
+
+        <section class="view" id="view-orders">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Quản lý đơn hàng</h2>
+
+              <select id="orderFilter">
+                <option value="all">Tất cả trạng thái</option>
+
+                <option value="Mới">Mới</option>
+
+                <option value="Đã xác nhận">Đã xác nhận</option>
+
+                <option value="Đang giao">Đang giao</option>
+
+                <option value="Đã giao">Đã giao</option>
+
+                <option value="Đã hủy">Đã hủy</option>
+              </select>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Mã đơn</th>
+
+                    <th>Khách hàng</th>
+
+                    <th>Sản phẩm</th>
+
+                    <th>Tổng</th>
+
+                    <th>Trạng thái</th>
+
+                    <th>Thời gian</th>
+
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+
+                <tbody id="orderRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRODUCTS -->
+
+        <section class="view" id="view-products">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Quản lý sản phẩm</h2>
+
+              <button class="btn btn-black" id="addProductBtn">
+                + Thêm sản phẩm
+              </button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ảnh</th>
+
+                    <th>Sản phẩm</th>
+
+                    <th>Danh mục</th>
+
+                    <th>Giá</th>
+
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+
+                <tbody id="productRows"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PRODUCT FORM -->
+
+          <div class="panel" id="productFormPanel" style="display: none">
+            <div class="panel-head">
+              <h2 id="productFormTitle">Thêm sản phẩm</h2>
+
+              <button class="btn btn-light" id="cancelProduct">Đóng</button>
+            </div>
+
+            <form id="productForm" class="form">
+              <input type="hidden" id="pId" />
+
+              <label>
+                Tên sản phẩm
+
+                <input id="pName" required />
+              </label>
+
+              <label>
+                Danh mục
+
+                <select id="pCategory">
+                  <option>Áo</option>
+
+                  <option>Quần</option>
+
+                  <option>Áo khoác</option>
+
+                  <option>Giày</option>
+                </select>
+              </label>
+
+              <label>
+                Giá
+
+                <input id="pPrice" type="number" min="0" required />
+              </label>
+
+              <label>
+                Ảnh sản phẩm
+
+                <input id="pImage" placeholder="URL ảnh" required />
+              </label>
+
+              <label class="full">
+                Mô tả
+
+                <textarea id="pDescription"></textarea>
+              </label>
+
+              <label>
+                Size
+
+                <input id="pSizes" value="S,M,L,XL" />
+              </label>
+
+              <label>
+                Màu
+
+                <input id="pColors" value="Đen,Trắng" />
+              </label>
+
+              <div class="full">
+                <button class="btn btn-black" type="submit">
+                  Lưu sản phẩm
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./sv3-admin.js"></script>
+    <script src="./sv3-admin-fix.js"></script>
+    <script src="./sv3-customers.js"></script>
+    <script src="./sv3-customer-actions.js"></script>
+    <script src="./sv3-customer-actions2.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        function renderCustomers() {
+          const customerRows = document.getElementById("customerRows");
+
+          if (!customerRows) {
+            console.log("Không tìm thấy customerRows");
+            return;
+          }
+
+          let users = [];
+
+          try {
+            users = JSON.parse(localStorage.getItem("adidasUsers") || "[]");
+          } catch (error) {
+            console.error("Không đọc được adidasUsers:", error);
+            return;
+          }
+
+          const customers = users.filter(function (user) {
+            return user.role !== "admin";
+          });
+
+          console.log("Đang hiển thị", customers.length, "khách hàng");
+
+          if (customers.length === 0) {
+            customerRows.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align:center;padding:30px;">
+                        Chưa có khách hàng
+                    </td>
+                </tr>
+            `;
+            return;
+          }
+
+          customerRows.innerHTML = customers
+            .map(function (user, index) {
+              return `
+                <tr>
+                    <td>${index + 1}</td>
+
+                    <td>
+                        <strong>${user.name || "Chưa cập nhật"}</strong>
+                    </td>
+
+                    <td>
+                        ${user.email || "Chưa có email"}
+                    </td>
+
+                    <td>
+                        ${user.phone || "Chưa cập nhật"}
+                    </td>
+
+                    <td>
+                        ${user.provider || "local"}
+                    </td>
+
+                    <td>
+                        <button
+                            type="button"
+                            class="btn"
+                            onclick="alert(
+                                'Họ tên: ${String(user.name || "").replace(/'/g, "\\'")}\\n' +
+                                'Email: ${String(user.email || "").replace(/'/g, "\\'")}\\n' +
+                                'Số điện thoại: ${String(user.phone || "Chưa cập nhật").replace(/'/g, "\\'")}'
+                            )">
+                            Xem
+                        </button>
+                    </td>
+                </tr>
+            `;
+            })
+            .join("");
+        }
+
+        // Hiển thị ngay khi trang tải
+        renderCustomers();
+
+        // Hiển thị lại khi bấm mục Khách hàng
+        const customerButton = document.querySelector(
+          '.nav button[data-view="customers"]',
+        );
+
+        if (customerButton) {
+          customerButton.addEventListener("click", function () {
+            setTimeout(function () {
+              renderCustomers();
+            }, 100);
+          });
+        }
+      });
+    </script>
+    <script>
+      (function () {
+        function showCustomers() {
+          const tbody = document.getElementById("customerRows");
+
+          if (!tbody) {
+            console.log("Không tìm thấy #customerRows");
+            return;
+          }
+
+          let users = [];
+
+          try {
+            const data = localStorage.getItem("adidasUsers");
+            console.log("adidasUsers:", data);
+
+            users = data ? JSON.parse(data) : [];
+          } catch (error) {
+            console.error("Lỗi đọc adidasUsers:", error);
+            users = [];
+          }
+
+          console.log("Danh sách users:", users);
+
+          // Lấy tất cả tài khoản không phải admin
+          const customers = users.filter(function (user) {
+            return user.role !== "admin";
+          });
+
+          console.log("Khách hàng:", customers);
+
+          if (customers.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align:center;padding:30px;">
+                        Chưa có khách hàng
+                    </td>
+                </tr>
+            `;
+            return;
+          }
+
+          tbody.innerHTML = "";
+
+          customers.forEach(function (user, index) {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${index + 1}</td>
+
+                <td>
+                    <strong>${user.name || "Chưa cập nhật"}</strong>
+                </td>
+
+                <td>
+                    ${user.email || "Chưa có email"}
+                </td>
+
+                <td>
+                    ${user.phone || "Chưa cập nhật"}
+                </td>
+
+                <td>
+                    ${user.provider || "local"}
+                </td>
+
+                <td>
+                    <button
+                        type="button"
+                        class="btn"
+                        data-email="${user.email || ""}">
+                        Xem
+                    </button>
+                </td>
+            `;
+
+            const viewButton = row.querySelector("button");
+
+            viewButton.addEventListener("click", function () {
+              alert(
+                "THÔNG TIN KHÁCH HÀNG\n\n" +
+                  "Họ tên: " +
+                  (user.name || "Chưa cập nhật") +
+                  "\n" +
+                  "Email: " +
+                  (user.email || "Chưa có") +
+                  "\n" +
+                  "Số điện thoại: " +
+                  (user.phone || "Chưa cập nhật") +
+                  "\n" +
+                  "Phương thức: " +
+                  (user.provider || "local"),
+              );
+            });
+
+            tbody.appendChild(row);
+          });
+        }
+
+        // Chạy sau khi toàn bộ HTML tải xong
+        window.addEventListener("load", function () {
+          showCustomers();
+
+          // Khi chuyển sang mục Khách hàng
+          const customerButton = document.querySelector(
+            '.nav button[data-view="customers"]',
+          );
+
+          if (customerButton) {
+            customerButton.addEventListener("click", function () {
+              setTimeout(function () {
+                showCustomers();
+              }, 100);
+            });
+          }
+        });
+      })();
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const customerRows = document.getElementById("customerRows");
+
+        if (!customerRows) return;
+
+        function loadCustomers() {
+          let users = [];
+
+          try {
+            users = JSON.parse(localStorage.getItem("adidasUsers")) || [];
+          } catch (e) {
+            users = [];
+          }
+
+          // Chỉ lấy khách hàng, không lấy admin
+          const customers = users.filter((user) => user.role !== "admin");
+
+          if (customers.length === 0) {
+            customerRows.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align:center;padding:30px;">
+                        Chưa có khách hàng
+                    </td>
+                </tr>
+            `;
+            return;
+          }
+
+          customerRows.innerHTML = customers
+            .map((user, index) => {
+              const name = user.name || "Chưa cập nhật";
+              const email = user.email || "Chưa có email";
+              const phone = user.phone || "Chưa cập nhật";
+
+              return `
+                <tr>
+                    <td>${index + 1}</td>
+
+                    <td>
+                        <strong>${escapeCustomerHTML(name)}</strong>
+                    </td>
+
+                    <td>
+                        ${escapeCustomerHTML(email)}
+                    </td>
+
+                    <td>
+                        ${escapeCustomerHTML(phone)}
+                    </td>
+
+                    <td>
+                        ${user.provider || "local"}
+                    </td>
+
+                    <td>
+                        <button
+                            type="button"
+                            onclick="viewCustomerInfo('${escapeCustomerAttr(email)}')"
+                            class="btn">
+                            Xem
+                        </button>
+                    </td>
+                </tr>
+            `;
+            })
+            .join("");
+        }
+
+        function escapeCustomerHTML(text) {
+          return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        function escapeCustomerAttr(text) {
+          return String(text).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        }
+
+        window.viewCustomerInfo = function (email) {
+          let users = [];
+
+          try {
+            users = JSON.parse(localStorage.getItem("adidasUsers")) || [];
+          } catch (e) {
+            users = [];
+          }
+
+          const user = users.find((u) => u.email === email);
+
+          if (!user) {
+            alert("Không tìm thấy thông tin khách hàng.");
+            return;
+          }
+
+          alert(
+            "THÔNG TIN KHÁCH HÀNG\n\n" +
+              "Họ tên: " +
+              (user.name || "Chưa cập nhật") +
+              "\n" +
+              "Email: " +
+              (user.email || "Chưa có") +
+              "\n" +
+              "Số điện thoại: " +
+              (user.phone || "Chưa cập nhật") +
+              "\n" +
+              "Phương thức: " +
+              (user.provider || "local"),
+          );
+        };
+
+        loadCustomers();
+
+        // Khi bấm mục "Khách hàng" thì tải lại dữ liệu
+        const customerButton = document.querySelector(
+          '.nav button[data-view="customers"]',
+        );
+
+        if (customerButton) {
+          customerButton.addEventListener("click", function () {
+            setTimeout(loadCustomers, 50);
+          });
+        }
+      });
+    </script>
+    <!-- SV3: NÚT QUAY VỀ CỬA HÀNG -->
+    <div id="sv3BackHome">
+      <a href="../index.html">← Quay về cửa hàng</a>
+    </div>
+
+    <style>
+      #sv3BackHome {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 999999;
+      }
+
+      #sv3BackHome a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 11px 18px;
+        background: #111;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
+        transition: 0.2s;
+      }
+
+      #sv3BackHome a:hover {
+        transform: translateY(-2px);
+        background: #333;
+      }
+    </style>
+    <script>
+      (function () {
+        function renderCustomerTable() {
+          const customerRows = document.getElementById("customerRows");
+
+          if (!customerRows) {
+            console.log("Không tìm thấy #customerRows");
+            return;
+          }
+
+          let users = [];
+
+          try {
+            users = JSON.parse(localStorage.getItem("adidasUsers") || "[]");
+          } catch (error) {
+            console.error("Lỗi đọc adidasUsers:", error);
+            return;
+          }
+
+          // Không hiển thị tài khoản admin
+          const customers = users.filter(function (user) {
+            return user.role !== "admin";
+          });
+
+          console.log("Khách hàng cần hiển thị:", customers);
+
+          if (customers.length === 0) {
+            customerRows.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align:center;padding:30px;">
+                        Chưa có khách hàng
+                    </td>
+                </tr>
+            `;
+
+            return;
+          }
+
+          customerRows.innerHTML = customers
+            .map(function (user) {
+              const name = user.name || "Chưa cập nhật";
+
+              const email = user.email || "Chưa có email";
+
+              const provider = user.provider || "local";
+
+              let createdAt = "Chưa có";
+
+              if (user.createdAt) {
+                try {
+                  createdAt = new Date(user.createdAt).toLocaleString("vi-VN");
+                } catch (error) {
+                  createdAt = user.createdAt;
+                }
+              }
+
+              return `
+                <tr>
+
+                    <td>
+                        <strong>${escapeHTML(name)}</strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(email)}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(provider)}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(createdAt)}
+                    </td>
+
+                    <td>
+
+                        <button
+                            type="button"
+                            class="btn"
+                            data-customer-email="${escapeHTML(email)}">
+                            Xem
+                        </button>
+
+                    </td>
+
+                </tr>
+            `;
+            })
+            .join("");
+
+          // Gắn nút Xem
+          customerRows
+            .querySelectorAll("[data-customer-email]")
+            .forEach(function (button) {
+              button.addEventListener("click", function () {
+                const email = button.getAttribute("data-customer-email");
+
+                showCustomerDetail(email);
+              });
+            });
+        }
+
+        function showCustomerDetail(email) {
+          let users = [];
+
+          try {
+            users = JSON.parse(localStorage.getItem("adidasUsers") || "[]");
+          } catch (error) {
+            return;
+          }
+
+          const user = users.find(function (item) {
+            return item.email === email;
+          });
+
+          if (!user) {
+            alert("Không tìm thấy khách hàng.");
+
+            return;
+          }
+
+          alert(
+            "THÔNG TIN KHÁCH HÀNG\n\n" +
+              "Họ tên: " +
+              (user.name || "Chưa cập nhật") +
+              "\n\nEmail: " +
+              (user.email || "Chưa có") +
+              "\n\nPhương thức: " +
+              (user.provider || "local") +
+              "\n\nNgày tạo: " +
+              (user.createdAt
+                ? new Date(user.createdAt).toLocaleString("vi-VN")
+                : "Chưa có"),
+          );
+        }
+
+        function escapeHTML(value) {
+          return String(value)
+            .replace(/&/g, "&amp;")
+
+            .replace(/</g, "&lt;")
+
+            .replace(/>/g, "&gt;")
+
+            .replace(/"/g, "&quot;")
+
+            .replace(/'/g, "&#039;");
+        }
+
+        window.addEventListener("load", function () {
+          // Hiển thị lần đầu
+          renderCustomerTable();
+
+          // Khi bấm "Khách hàng"
+          const customerButton = document.querySelector(
+            '.nav button[data-view="customers"]',
+          );
+
+          if (customerButton) {
+            customerButton.addEventListener("click", function () {
+              setTimeout(renderCustomerTable, 100);
+            });
+          }
+
+          // Tìm kiếm khách hàng
+          const search = document.getElementById("customerSearch");
+
+          if (search) {
+            search.addEventListener("input", function () {
+              const keyword = search.value.toLowerCase().trim();
+
+              const rows = document.querySelectorAll("#customerRows tr");
+
+              rows.forEach(function (row) {
+                const text = row.textContent.toLowerCase();
+
+                row.style.display = text.includes(keyword) ? "" : "none";
+              });
+            });
+          }
+        });
+      })();
+    </script>
+    <script src="./sv3-orders-products.js"></script>
+    <script src="./sv3-admin-tabs.js"></script>
+    <script>
+      /* =====================================================
+         SV3 - FIX HIỂN THỊ TOÀN BỘ SẢN PHẨM ADMIN
+         Không sửa code cũ
+      ===================================================== */
+
+      (function () {
+        "use strict";
+
+        const PRODUCT_KEY = "adidasProducts";
+        const JSON_URL = "../data/products.json";
+
+        async function sv3LoadAllProducts() {
+          try {
+            console.log("SV3 PRODUCT FIX: Bắt đầu tải sản phẩm...");
+
+            // 1. Đọc products.json
+            const response = await fetch(JSON_URL);
+
+            if (!response.ok) {
+              throw new Error(
+                "Không đọc được products.json: HTTP " + response.status,
+              );
+            }
+
+            const jsonProducts = await response.json();
+
+            if (!Array.isArray(jsonProducts)) {
+              throw new Error("products.json không phải mảng");
+            }
+
+            // 2. Đọc LocalStorage
+            let localProducts = [];
+
+            try {
+              localProducts = JSON.parse(
+                localStorage.getItem(PRODUCT_KEY) || "[]",
+              );
+
+              if (!Array.isArray(localProducts)) {
+                localProducts = [];
+              }
+            } catch (error) {
+              console.warn("SV3 PRODUCT FIX: LocalStorage sản phẩm lỗi.");
+
+              localProducts = [];
+            }
+
+            // 3. Ghép sản phẩm theo ID
+            const productMap = new Map();
+
+            // Ưu tiên sản phẩm đang có trong LocalStorage
+            localProducts.forEach(function (product) {
+              if (product && product.id != null) {
+                productMap.set(String(product.id), product);
+              }
+            });
+
+            // Bổ sung những sản phẩm còn thiếu từ JSON
+            jsonProducts.forEach(function (product) {
+              if (
+                product &&
+                product.id != null &&
+                !productMap.has(String(product.id))
+              ) {
+                productMap.set(String(product.id), product);
+              }
+            });
+
+            // 4. Chuyển lại thành mảng
+            const allProducts = Array.from(productMap.values());
+
+            // 5. Lưu lại
+            localStorage.setItem(PRODUCT_KEY, JSON.stringify(allProducts));
+
+            console.log("SV3 PRODUCT FIX: Tổng sản phẩm =", allProducts.length);
+
+            // 6. Render trực tiếp vào bảng
+            sv3RenderProducts(allProducts);
+
+            // 7. Cập nhật số sản phẩm trên Dashboard
+            const statProducts = document.getElementById("statProducts");
+
+            if (statProducts) {
+              statProducts.textContent = allProducts.length;
+            }
+          } catch (error) {
+            console.error("SV3 PRODUCT FIX LỖI:", error);
+
+            // Nếu JSON không tải được thì vẫn thử hiển thị LocalStorage
+            try {
+              const localProducts = JSON.parse(
+                localStorage.getItem(PRODUCT_KEY) || "[]",
+              );
+
+              if (Array.isArray(localProducts)) {
+                sv3RenderProducts(localProducts);
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }
+
+        function sv3RenderProducts(products) {
+          const tbody = document.getElementById("productRows");
+
+          if (!tbody) {
+            console.error("SV3 PRODUCT FIX: Không tìm thấy #productRows");
+            return;
+          }
+
+          if (!products || products.length === 0) {
+            tbody.innerHTML = `
+              <tr>
+                <td colspan="5" style="
+                  text-align:center;
+                  padding:30px;
+                  color:#777;
+                ">
+                  Chưa có sản phẩm
+                </td>
+              </tr>
+            `;
+            return;
+          }
+
+          tbody.innerHTML = "";
+
+          products.forEach(function (product) {
+            const tr = document.createElement("tr");
+
+            const image = product.image || "https://via.placeholder.com/55";
+
+            const name = product.name || "Chưa có tên";
+
+            const category = product.category || "Chưa phân loại";
+
+            const price = Number(product.price) || 0;
+
+            tr.innerHTML = `
+              <td>
+                <img
+                  src="${sv3EscapeAttr(image)}"
+                  class="product-img"
+                  alt="${sv3EscapeAttr(name)}"
+                  onerror="
+                    this.src='https://via.placeholder.com/55';
+                  "
+                >
+              </td>
+
+              <td>
+                <strong>
+                  ${sv3EscapeHTML(name)}
+                </strong>
+              </td>
+
+              <td>
+                <span class="badge">
+                  ${sv3EscapeHTML(category)}
+                </span>
+              </td>
+
+              <td>
+                <strong>
+                  ${price.toLocaleString("vi-VN")} ₫
+                </strong>
+              </td>
+
+              <td>
+                <div class="actions">
+
+                  <button
+                    type="button"
+                    class="btn btn-light sv3-edit-product"
+                    data-id="${sv3EscapeAttr(product.id)}"
+                  >
+                    Sửa
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-danger sv3-delete-product"
+                    data-id="${sv3EscapeAttr(product.id)}"
+                  >
+                    Xóa
+                  </button>
+
+                </div>
+              </td>
+            `;
+
+            tbody.appendChild(tr);
+          });
+
+          console.log(
+            "SV3 PRODUCT FIX: Đã render",
+            products.length,
+            "sản phẩm.",
+          );
+
+          // Gắn nút Sửa
+          tbody
+            .querySelectorAll(".sv3-edit-product")
+            .forEach(function (button) {
+              button.addEventListener("click", function () {
+                const id = String(button.getAttribute("data-id"));
+
+                sv3EditProduct(id);
+              });
+            });
+
+          // Gắn nút Xóa
+          tbody
+            .querySelectorAll(".sv3-delete-product")
+            .forEach(function (button) {
+              button.addEventListener("click", function () {
+                const id = String(button.getAttribute("data-id"));
+
+                sv3DeleteProduct(id);
+              });
+            });
+        }
+
+        function sv3EditProduct(id) {
+          const products = JSON.parse(
+            localStorage.getItem(PRODUCT_KEY) || "[]",
+          );
+
+          const product = products.find(function (item) {
+            return String(item.id) === String(id);
+          });
+
+          if (!product) {
+            alert("Không tìm thấy sản phẩm.");
+            return;
+          }
+
+          const formPanel = document.getElementById("productFormPanel");
+
+          if (formPanel) {
+            formPanel.style.display = "block";
+          }
+
+          const title = document.getElementById("productFormTitle");
+
+          if (title) {
+            title.textContent = "Sửa sản phẩm";
+          }
+
+          const fields = {
+            pId: product.id || "",
+            pName: product.name || "",
+            pCategory: product.category || "",
+            pPrice: product.price || "",
+            pImage: product.image || "",
+            pDescription: product.description || "",
+            pSizes: Array.isArray(product.sizes)
+              ? product.sizes.join(",")
+              : product.sizes || "S,M,L,XL",
+            pColors: Array.isArray(product.colors)
+              ? product.colors.join(",")
+              : product.colors || "Đen,Trắng",
+          };
+
+          Object.keys(fields).forEach(function (id) {
+            const element = document.getElementById(id);
+
+            if (element) {
+              element.value = fields[id];
+            }
+          });
+        }
+
+        function sv3DeleteProduct(id) {
+          const products = JSON.parse(
+            localStorage.getItem(PRODUCT_KEY) || "[]",
+          );
+
+          const product = products.find(function (item) {
+            return String(item.id) === String(id);
+          });
+
+          if (!product) {
+            alert("Không tìm thấy sản phẩm.");
+            return;
+          }
+
+          const confirmed = confirm(
+            "Bạn có chắc muốn xóa sản phẩm:\n\n" +
+              product.name +
+              "\n\nKhông thể hoàn tác.",
+          );
+
+          if (!confirmed) {
+            return;
+          }
+
+          const newProducts = products.filter(function (item) {
+            return String(item.id) !== String(id);
+          });
+
+          localStorage.setItem(PRODUCT_KEY, JSON.stringify(newProducts));
+
+          sv3RenderProducts(newProducts);
+
+          const statProducts = document.getElementById("statProducts");
+
+          if (statProducts) {
+            statProducts.textContent = newProducts.length;
+          }
+
+          console.log("SV3 PRODUCT FIX: Đã xóa sản phẩm", id);
+        }
+
+        function sv3EscapeHTML(value) {
+          return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        function sv3EscapeAttr(value) {
+          return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        // Chạy khi trang tải
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            sv3LoadAllProducts();
+          }, 300);
+        });
+
+        // Khi bấm menu Sản phẩm
+        document.addEventListener("DOMContentLoaded", function () {
+          const productButton = document.querySelector(
+            '.nav button[data-view="products"]',
+          );
+
+          if (productButton) {
+            productButton.addEventListener("click", function () {
+              setTimeout(function () {
+                sv3LoadAllProducts();
+              }, 100);
+            });
+          }
+        });
+      })();
+    </script>
+    <script>
+      /* =====================================================
+   SV3 - XỬ LÝ NÚT SỬA SẢN PHẨM
+   Chỉ bổ sung, không sửa code cũ
+===================================================== */
+
+      document.addEventListener("click", function (event) {
+        const button = event.target.closest(".sv3-edit-product");
+
+        if (!button) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const productId = button.getAttribute("data-id");
+
+        console.log("SV3: Click sửa sản phẩm:", productId);
+
+        let products = [];
+
+        try {
+          products = JSON.parse(localStorage.getItem("adidasProducts") || "[]");
+        } catch (error) {
+          console.error("SV3: Không đọc được adidasProducts", error);
+          return;
+        }
+
+        const product = products.find(function (item) {
+          return String(item.id) === String(productId);
+        });
+
+        if (!product) {
+          alert("Không tìm thấy sản phẩm.");
+          return;
+        }
+
+        console.log("SV3: Sản phẩm cần sửa:", product);
+
+        /* Mở form */
+
+        const panel = document.getElementById("productFormPanel");
+
+        if (panel) {
+          panel.style.display = "block";
+        }
+
+        /* Đổi tiêu đề */
+
+        const title = document.getElementById("productFormTitle");
+
+        if (title) {
+          title.textContent = "Sửa sản phẩm";
+        }
+
+        /* Đổ dữ liệu vào form */
+
+        const fields = {
+          pId: product.id || "",
+          pName: product.name || "",
+          pCategory: product.category || "",
+          pPrice: product.price || "",
+          pImage: product.image || "",
+          pDescription: product.description || "",
+          pSizes: Array.isArray(product.sizes)
+            ? product.sizes.join(", ")
+            : product.sizes || "",
+          pColors: Array.isArray(product.colors)
+            ? product.colors.join(", ")
+            : product.colors || "",
+        };
+
+        Object.keys(fields).forEach(function (id) {
+          const input = document.getElementById(id);
+
+          if (input) {
+            input.value = fields[id];
+          }
+        });
+
+        /* Cuộn tới form */
+
+        if (panel) {
+          panel.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
