@@ -1,272 +1,157 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Thanh toán</title>
 
-    <link rel="stylesheet" href="./src/style.css">
-</head>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
 
-<body>
-
+  <body>
     <!-- HEADER -->
 
     <header class="header">
+      <div class="logo">adidas</div>
 
-        <div class="logo">
-            adidas
-        </div>
+      <nav class="menu">
+        <a href="index.html"> Trang chủ </a>
 
-        <nav class="menu">
+        <a href="product.html"> Sản phẩm </a>
 
-            <a href="index.html">
-                Trang chủ
-            </a>
+        <a href="nam.html"> Nam </a>
 
-            <a href="product.html">
-                Sản phẩm
-            </a>
+        <a href="nu.html"> Nữ </a>
 
-            <a href="nam.html">
-                Nam
-            </a>
+        <a href="the-thao.html"> Thể thao </a>
 
-            <a href="nu.html">
-                Nữ
-            </a>
+        <a href="sale.html"> Sale </a>
+      </nav>
 
-            <a href="the-thao.html">
-                Thể thao
-            </a>
+      <div class="header-right">
+        <a href="cart.html" class="icon"> 🛒 </a>
 
-            <a href="sale.html">
-                Sale
-            </a>
-
-        </nav>
-
-        <div class="header-right">
-
-            <a href="cart.html" class="icon">
-                🛒
-            </a>
-
-            <a href="#" class="icon">
-                👤
-            </a>
-
-        </div>
-
+        <a href="#" class="icon"> 👤 </a>
+      </div>
     </header>
-
 
     <!-- THANH TOÁN -->
 
     <main class="container">
+      <h1>Thanh toán</h1>
 
-        <h1>
-            Thanh toán
-        </h1>
+      <form id="checkoutForm">
+        <!-- THÔNG TIN NGƯỜI NHẬN -->
 
+        <h2>Thông tin người nhận</h2>
 
-        <form id="checkoutForm">
+        <div class="form-group">
+          <label for="name"> Họ và tên </label>
 
-            <!-- THÔNG TIN NGƯỜI NHẬN -->
+          <input type="text" id="name" placeholder="Nhập họ và tên" />
+        </div>
 
-            <h2>
-                Thông tin người nhận
-            </h2>
+        <div class="form-group">
+          <label for="phone"> Số điện thoại </label>
 
+          <input type="text" id="phone" placeholder="Nhập số điện thoại" />
+        </div>
 
-            <div class="form-group">
+        <div class="form-group">
+          <label for="address"> Địa chỉ </label>
 
-                <label for="name">
-                    Họ và tên
-                </label>
+          <input
+            type="text"
+            id="address"
+            placeholder="Nhập địa chỉ nhận hàng"
+          />
+        </div>
 
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Nhập họ và tên"
-                >
+        <!-- PHƯƠNG THỨC THANH TOÁN -->
 
-            </div>
+        <h2>Phương thức thanh toán</h2>
 
+        <div class="payment-method">
+          <label>
+            <input type="radio" name="payment" value="cod" checked />
 
-            <div class="form-group">
+            Thanh toán khi nhận hàng
+          </label>
 
-                <label for="phone">
-                    Số điện thoại
-                </label>
+          <br />
 
-                <input
-                    type="text"
-                    id="phone"
-                    placeholder="Nhập số điện thoại"
-                >
+          <label>
+            <input type="radio" name="payment" value="bank" />
 
-            </div>
+            Chuyển khoản ngân hàng
+          </label>
+        </div>
 
+        <!-- THÔNG TIN CHUYỂN KHOẢN -->
 
-            <div class="form-group">
+        <div id="bankInfo" class="bank-info">
+          <h3>Thông tin chuyển khoản</h3>
 
-                <label for="address">
-                    Địa chỉ
-                </label>
+          <p>
+            Ngân hàng:
+            <strong> Vietcombank </strong>
+          </p>
 
-                <input
-                    type="text"
-                    id="address"
-                    placeholder="Nhập địa chỉ nhận hàng"
-                >
+          <p>
+            Số tài khoản:
+            <strong> 0778366446 </strong>
+          </p>
 
-            </div>
+          <p>
+            Chủ tài khoản:
+            <strong> NGUYỄN CÔNG ĐỨC ANH </strong>
+          </p>
 
+          <p>
+            Số tiền:
+            <strong id="qrAmount"> 0 VNĐ </strong>
+          </p>
 
-            <!-- PHƯƠNG THỨC THANH TOÁN -->
+          <p>
+            Nội dung chuyển khoản:
+            <strong> ADIDAS + SỐ ĐIỆN THOẠI </strong>
+          </p>
 
-            <h2>
-                Phương thức thanh toán
-            </h2>
+          <h3>Quét mã QR để thanh toán</h3>
 
+          <div class="qr-box">
+            <img id="bankQR" src="" alt="Mã QR chuyển khoản" />
+          </div>
 
-            <div class="payment-method">
+          <p class="qr-note">
+            Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
+          </p>
+        </div>
 
-                <label>
-                    <input
-                        type="radio"
-                        name="payment"
-                        value="cod"
-                        checked
-                    >
+        <br />
 
-                    Thanh toán khi nhận hàng
-                </label>
-
-
-                <br>
-
-
-                <label>
-                    <input
-                        type="radio"
-                        name="payment"
-                        value="bank"
-                    >
-
-                    Chuyển khoản ngân hàng
-                </label>
-
-            </div>
-
-
-            <!-- THÔNG TIN CHUYỂN KHOẢN -->
-
-            <div
-                id="bankInfo"
-                class="bank-info"
-            >
-
-                <h3>
-                    Thông tin chuyển khoản
-                </h3>
-
-
-                <p>
-                    Ngân hàng:
-                    <strong>
-                        Vietcombank
-                    </strong>
-                </p>
-
-
-                <p>
-                    Số tài khoản:
-                    <strong>
-                        0778366446
-                    </strong>
-                </p>
-
-
-                <p>
-                    Chủ tài khoản:
-                    <strong>
-                        NGUYỄN CÔNG ĐỨC ANH
-                    </strong>
-                </p>
-
-
-                <p>
-                    Số tiền:
-                    <strong id="qrAmount">
-                        0 VNĐ
-                    </strong>
-                </p>
-
-
-                <p>
-                    Nội dung chuyển khoản:
-                    <strong>
-                        ADIDAS + SỐ ĐIỆN THOẠI
-                    </strong>
-                </p>
-
-
-                <h3>
-                    Quét mã QR để thanh toán
-                </h3>
-
-
-                <div class="qr-box">
-
-                    <img
-                        id="bankQR"
-                        src=""
-                        alt="Mã QR chuyển khoản"
-                    >
-
-                </div>
-
-
-                <p class="qr-note">
-                    Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
-                </p>
-
-            </div>
-
-
-            <br>
-
-
-            <button
-                type="submit"
-                class="btn"
-            >
-                ĐẶT HÀNG
-            </button>
-
-        </form>
-
+        <button type="submit" class="btn">ĐẶT HÀNG</button>
+      </form>
     </main>
-
 
     <!-- FOOTER -->
 
     <footer class="footer">
-
-        <p>
-            © 2026 Adidas
-        </p>
-
+      <p>© 2026 Adidas</p>
     </footer>
 
-
     <script src="./js/checkout.js"></script>
-
-</body>
-
+    <script src="./js/sv3-order-sync.js"></script>
+    <script src="./js/sv3-header-auth.js"></script>
+    <script src="./js/sv3-order-tracker.js"></script>
+    <script src="./js/sv3-checkout-auth.js"></script>
+    <script src="./js/sv3-checkout-guard.js"></script>
+    <script src="./js/sv3-checkout-login.js"></script>
+    <script src="./js/sv3-checkout-block.js"></script>
+    <script src="./js/sv3-checkout-final.js"></script>
+    <script src="./js/sv3-login-required.js"></script>
+    <script src="./js/sv3-checkout-lock.js"></script>
+  </body>
 </html>
