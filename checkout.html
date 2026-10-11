@@ -1,272 +1,714 @@
+
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Thanh toán</title>
+    <title>Thanh toán Adidas</title>
 
     <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <style>
+        .address-section { margin: 20px 0; }
+        .address-section .form-group { margin: 14px 0; }
+        .address-section label { display: block; margin-bottom: 6px; }
+
+        .address-section input,
+        .address-section select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
+        }
+
+        .location-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        .location-actions button {
+            border: none;
+            border-radius: 5px;
+            padding: 12px 15px;
+            background: #111;
+            color: white;
+            cursor: pointer;
+        }
+
+        .location-actions button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        #addressMap {
+            width: 100%;
+            height: 350px;
+            margin: 12px 0;
+            border-radius: 8px;
+        }
+
+        #addressStatus {
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .address-help {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        [hidden] { display: none !important; }
+    </style>
 </head>
 
 <body>
+<header class="header">
+    <div class="logo">adidas</div>
 
-    <!-- HEADER -->
+    <nav class="menu">
+        <a href="index.html">Trang chủ</a>
+        <a href="product.html">Sản phẩm</a>
+        <a href="nam.html">Nam</a>
+        <a href="nu.html">Nữ</a>
+        <a href="the-thao.html">Thể thao</a>
+        <a href="sale.html">Sale</a>
+    </nav>
 
-    <header class="header">
+    <div class="header-right">
+        <a href="cart.html" class="icon">🛒</a>
+        <a href="#" class="icon">👤</a>
+    </div>
+</header>
 
-        <div class="logo">
-            adidas
+<main class="container">
+    <h1>Thanh toán</h1>
+
+    <form id="checkoutForm">
+        <h2>Thông tin người nhận</h2>
+
+        <div class="form-group">
+            <label for="name">Họ và tên</label>
+            <input type="text" id="name"
+                   placeholder="Nhập họ và tên" required>
         </div>
 
-        <nav class="menu">
-
-            <a href="index.html">
-                Trang chủ
-            </a>
-
-            <a href="product.html">
-                Sản phẩm
-            </a>
-
-            <a href="nam.html">
-                Nam
-            </a>
-
-            <a href="nu.html">
-                Nữ
-            </a>
-
-            <a href="the-thao.html">
-                Thể thao
-            </a>
-
-            <a href="sale.html">
-                Sale
-            </a>
-
-        </nav>
-
-        <div class="header-right">
-
-            <a href="cart.html" class="icon">
-                🛒
-            </a>
-
-            <a href="#" class="icon">
-                👤
-            </a>
-
+        <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="tel" id="phone"
+                   placeholder="Nhập số điện thoại" required>
         </div>
 
-    </header>
+        <div class="form-group">
+            <label for="email">Email (không bắt buộc)</label>
+            <input type="email" id="email"
+                   placeholder="Nhập email">
+        </div>
 
-
-    <!-- THANH TOÁN -->
-
-    <main class="container">
-
-        <h1>
-            Thanh toán
-        </h1>
-
-
-        <form id="checkoutForm">
-
-            <!-- THÔNG TIN NGƯỜI NHẬN -->
-
-            <h2>
-                Thông tin người nhận
-            </h2>
-
+        <section class="address-section">
+            <h2>Địa chỉ nhận hàng</h2>
 
             <div class="form-group">
-
-                <label for="name">
-                    Họ và tên
-                </label>
-
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Nhập họ và tên"
-                >
-
+                <label for="province">Tỉnh/Thành phố *</label>
+                <select id="province" required>
+                    <option value="">Đang tải tỉnh/thành phố...</option>
+                </select>
             </div>
-
 
             <div class="form-group">
-
-                <label for="phone">
-                    Số điện thoại
-                </label>
-
-                <input
-                    type="text"
-                    id="phone"
-                    placeholder="Nhập số điện thoại"
-                >
-
+                <label for="ward">Phường/Xã *</label>
+                <select id="ward" required disabled>
+                    <option value="">Chọn tỉnh/thành phố trước</option>
+                </select>
             </div>
-
 
             <div class="form-group">
-
-                <label for="address">
-                    Địa chỉ
-                </label>
-
-                <input
-                    type="text"
-                    id="address"
-                    placeholder="Nhập địa chỉ nhận hàng"
-                >
-
+                <label for="streetAddress">Số nhà, tên đường *</label>
+                <input type="text" id="streetAddress"
+                       placeholder="Ví dụ: 12 Nguyễn Trãi" required>
             </div>
 
+            <div class="location-actions">
+                <button type="button" id="getCurrentLocation">
+                    📍 Lấy địa chỉ hiện tại
+                </button>
 
-            <!-- PHƯƠNG THỨC THANH TOÁN -->
-
-            <h2>
-                Phương thức thanh toán
-            </h2>
-
-
-            <div class="payment-method">
-
-                <label>
-                    <input
-                        type="radio"
-                        name="payment"
-                        value="cod"
-                        checked
-                    >
-
-                    Thanh toán khi nhận hàng
-                </label>
-
-
-                <br>
-
-
-                <label>
-                    <input
-                        type="radio"
-                        name="payment"
-                        value="bank"
-                    >
-
-                    Chuyển khoản ngân hàng
-                </label>
-
+                <button type="button" id="showMap">
+                    🗺️ Chọn trên bản đồ
+                </button>
             </div>
 
+            <p id="addressStatus" role="status" aria-live="polite">
+                Đang tải dữ liệu địa chỉ...
+            </p>
 
-            <!-- THÔNG TIN CHUYỂN KHOẢN -->
+            <p class="address-help">
+                Cho phép trình duyệt truy cập vị trí khi dùng GPS.
+                Bạn cũng có thể bấm trực tiếp lên bản đồ để chọn địa chỉ.
+                Vui lòng kiểm tra lại địa chỉ trước khi đặt hàng.
+            </p>
 
-            <div
-                id="bankInfo"
-                class="bank-info"
-            >
-
-                <h3>
-                    Thông tin chuyển khoản
-                </h3>
-
-
-                <p>
-                    Ngân hàng:
-                    <strong>
-                        Vietcombank
-                    </strong>
+            <div id="mapWrap" hidden>
+                <div id="addressMap"></div>
+                <p class="address-help">
+                    Bấm vào vị trí trên bản đồ để tìm địa chỉ gần nhất.
                 </p>
-
-
-                <p>
-                    Số tài khoản:
-                    <strong>
-                        0778366446
-                    </strong>
-                </p>
-
-
-                <p>
-                    Chủ tài khoản:
-                    <strong>
-                        NGUYỄN CÔNG ĐỨC ANH
-                    </strong>
-                </p>
-
-
-                <p>
-                    Số tiền:
-                    <strong id="qrAmount">
-                        0 VNĐ
-                    </strong>
-                </p>
-
-
-                <p>
-                    Nội dung chuyển khoản:
-                    <strong>
-                        ADIDAS + SỐ ĐIỆN THOẠI
-                    </strong>
-                </p>
-
-
-                <h3>
-                    Quét mã QR để thanh toán
-                </h3>
-
-
-                <div class="qr-box">
-
-                    <img
-                        id="bankQR"
-                        src=""
-                        alt="Mã QR chuyển khoản"
-                    >
-
-                </div>
-
-
-                <p class="qr-note">
-                    Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
-                </p>
-
             </div>
 
+            <input type="hidden" id="address" value="">
+        </section>
+
+        <h2>Phương thức thanh toán</h2>
+
+        <div class="payment-method">
+            <label>
+                <input type="radio" name="payment" value="cod" checked>
+                Thanh toán khi nhận hàng
+            </label>
 
             <br>
 
+            <label>
+                <input type="radio" name="payment" value="bank">
+                Chuyển khoản ngân hàng
+            </label>
+        </div>
 
-            <button
-                type="submit"
-                class="btn"
-            >
-                ĐẶT HÀNG
-            </button>
+        <div id="bankInfo" class="bank-info" style="display: none;">
+            <h3>Thông tin chuyển khoản</h3>
+            <p>Ngân hàng: <strong>Vietcombank</strong></p>
+            <p>Số tài khoản: <strong>0778366446</strong></p>
+            <p>Chủ tài khoản:
+                <strong>NGUYỄN CÔNG ĐỨC ANH</strong>
+            </p>
+            <p>Số tiền: <strong id="qrAmount">0 VNĐ</strong></p>
+            <p>Nội dung chuyển khoản:
+                <strong>ADIDAS + SỐ ĐIỆN THOẠI</strong>
+            </p>
 
-        </form>
+            <h3>Quét mã QR để thanh toán</h3>
+            <div class="qr-box">
+                <img id="bankQR" src="" alt="Mã QR chuyển khoản">
+            </div>
+            <p class="qr-note">
+                Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
+            </p>
+        </div>
 
-    </main>
+        <br>
+        <button type="submit" class="btn">ĐẶT HÀNG</button>
+    </form>
+</main>
 
+<footer class="footer">
+    <p>© 2026 Adidas</p>
+</footer>
 
-    <!-- FOOTER -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <footer class="footer">
+<script>
+(() => {
+    "use strict";
 
-        <p>
-            © 2026 Adidas
-        </p>
+    const provinceSelect = document.getElementById("province");
+    const wardSelect = document.getElementById("ward");
+    const streetInput = document.getElementById("streetAddress");
+    const hiddenAddress = document.getElementById("address");
+    const statusBox = document.getElementById("addressStatus");
+    const gpsButton = document.getElementById("getCurrentLocation");
+    const mapButton = document.getElementById("showMap");
+    const mapWrap = document.getElementById("mapWrap");
 
-    </footer>
+    const API = "https://provinces.open-api.vn/api/v2/";
 
+    let provinces = [];
+    let map = null;
+    let marker = null;
+    let mapReady = false;
+    let searchSequence = 0;
 
-    <script src="./js/checkout.js"></script>
+    function showStatus(message, isError = false) {
+        statusBox.textContent = message;
+        statusBox.style.color = isError ? "#b42318" : "#333";
+    }
 
+    function normalize(value) {
+        return String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[đĐ]/g, "d")
+            .toLowerCase()
+            .replace(
+                /^(tinh|thanh pho|phuong|xa|dac khu)\s+/,
+                ""
+            )
+            .trim();
+    }
+
+    async function fetchJSON(url) {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Lỗi HTTP " + response.status);
+        }
+
+        return response.json();
+    }
+
+    // Tải danh sách tỉnh/thành phố.
+    async function loadProvinces() {
+        provinceSelect.disabled = true;
+
+        provinceSelect.innerHTML =
+            '<option value="">Đang tải tỉnh/thành phố...</option>';
+
+        try {
+            // depth=1: chỉ tải danh sách tỉnh, tránh tải toàn bộ
+            // phường/xã khi chưa cần thiết.
+            const data = await fetchJSON(API + "?depth=1");
+
+            if (!Array.isArray(data) || data.length === 0) {
+                throw new Error("API không có dữ liệu tỉnh/thành phố.");
+            }
+
+            provinces = data;
+
+            provinceSelect.innerHTML =
+                '<option value="">-- Chọn tỉnh/thành phố --</option>';
+
+            provinces.forEach(province => {
+                const option = document.createElement("option");
+                option.value = String(province.code);
+                option.textContent = province.name;
+                provinceSelect.appendChild(option);
+            });
+
+            provinceSelect.disabled = false;
+            showStatus("Đã tải danh sách tỉnh/thành phố.");
+        } catch (error) {
+            console.error("Lỗi tải tỉnh/thành phố:", error);
+
+            provinceSelect.innerHTML =
+                '<option value="">Không tải được dữ liệu</option>';
+
+            provinceSelect.disabled = true;
+
+            showStatus(
+                "Không tải được tỉnh/thành phố. Kiểm tra mạng hoặc API.",
+                true
+            );
+        }
+    }
+
+    function getSelectedProvince() {
+        return provinces.find(
+            province => String(province.code) === provinceSelect.value
+        );
+    }
+
+    // Tải phường/xã của tỉnh đang chọn.
+    async function loadWards(province, preferredNames = []) {
+        wardSelect.disabled = true;
+
+        wardSelect.innerHTML =
+            '<option value="">Đang tải phường/xã...</option>';
+
+        if (!province) {
+            wardSelect.innerHTML =
+                '<option value="">Chọn tỉnh/thành phố trước</option>';
+            return false;
+        }
+
+        try {
+            // API v2 trả phường/xã trực tiếp bên trong tỉnh.
+            // Lấy chi tiết tỉnh với depth=2 để nhận wards.
+            const detail = await fetchJSON(
+                API + "p/" + encodeURIComponent(province.code) + "?depth=2"
+            );
+
+            const wards = Array.isArray(detail.wards)
+                ? detail.wards
+                : Array.isArray(province.wards)
+                    ? province.wards
+                    : [];
+
+            if (String(provinceSelect.value) !== String(province.code)) {
+                return false;
+            }
+
+            if (wards.length === 0) {
+                wardSelect.innerHTML =
+                    '<option value="">Không có dữ liệu phường/xã</option>';
+
+                showStatus(
+                    "API chưa trả về phường/xã cho tỉnh này. Bạn hãy thử tải lại.",
+                    true
+                );
+
+                return false;
+            }
+
+            wardSelect.innerHTML =
+                '<option value="">-- Chọn phường/xã --</option>';
+
+            wards.forEach(ward => {
+                const option = document.createElement("option");
+                option.value = String(ward.code);
+                option.textContent = ward.name;
+                wardSelect.appendChild(option);
+            });
+
+            wardSelect.disabled = false;
+
+            // Tự chọn phường/xã nếu có kết quả gần khớp từ GPS.
+            for (const name of preferredNames) {
+                const wanted = normalize(name);
+                if (!wanted) continue;
+
+                const options = Array.from(wardSelect.options)
+                    .filter(option => option.value);
+
+                const match =
+                    options.find(option =>
+                        normalize(option.textContent) === wanted
+                    ) ||
+                    options.find(option => {
+                        const current = normalize(option.textContent);
+                        return current.length > 0 &&
+                            (current.includes(wanted) ||
+                             wanted.includes(current));
+                    });
+
+                if (match) {
+                    wardSelect.value = match.value;
+                    break;
+                }
+            }
+
+            return true;
+        } catch (error) {
+            console.error("Lỗi tải phường/xã:", error);
+
+            wardSelect.innerHTML =
+                '<option value="">Không tải được phường/xã</option>';
+
+            showStatus(
+                "Không tải được phường/xã. Kiểm tra kết nối mạng hoặc API.",
+                true
+            );
+
+            return false;
+        }
+    }
+
+    function syncAddress() {
+        const province = getSelectedProvince();
+        const ward = wardSelect.selectedOptions[0];
+
+        hiddenAddress.value = [
+            streetInput.value.trim(),
+            ward && ward.value ? ward.textContent.trim() : "",
+            province ? province.name : ""
+        ].filter(Boolean).join(", ");
+    }
+
+    provinceSelect.addEventListener("change", async () => {
+        await loadWards(getSelectedProvince());
+        syncAddress();
+    });
+
+    wardSelect.addEventListener("change", syncAddress);
+    streetInput.addEventListener("input", syncAddress);
+
+    // Tìm địa chỉ gần tọa độ GPS hoặc điểm bấm trên bản đồ.
+    async function reverseGeocode(latitude, longitude) {
+        const photonURL = new URL("https://photon.komoot.io/reverse");
+
+        photonURL.search = new URLSearchParams({
+            lat: String(latitude),
+            lon: String(longitude),
+            lang: "en"
+        }).toString();
+
+        try {
+            const data = await fetchJSON(photonURL.toString());
+            const p = data.features?.[0]?.properties;
+
+            if (p) {
+                return {
+                    display_name: [
+                        p.housenumber,
+                        p.street,
+                        p.district,
+                        p.city,
+                        p.state,
+                        p.country
+                    ].filter(Boolean).join(", "),
+
+                    address: {
+                        house_number: p.housenumber || "",
+                        road: p.street || "",
+                        suburb: p.district || p.suburb || "",
+                        city_district: p.district || "",
+                        city: p.city || p.locality || "",
+                        town: p.town || "",
+                        village: p.village || "",
+                        state: p.state || "",
+                        province: p.province || "",
+                        country: p.country || ""
+                    }
+                };
+            }
+        } catch (error) {
+            console.warn("Photon không phản hồi, thử Nominatim:", error);
+        }
+
+        const url = new URL(
+            "https://nominatim.openstreetmap.org/reverse"
+        );
+
+        url.search = new URLSearchParams({
+            format: "jsonv2",
+            lat: String(latitude),
+            lon: String(longitude),
+            zoom: "18",
+            addressdetails: "1",
+            "accept-language": "vi"
+        }).toString();
+
+        const result = await fetchJSON(url.toString());
+
+        if (!result.address) {
+            throw new Error("Không tìm được địa chỉ.");
+        }
+
+        return result;
+    }
+
+    function findProvince(address) {
+        // Ưu tiên trường cấp tỉnh, tránh khớp nhầm tên phường,
+        // quận hoặc thành phố trực thuộc tỉnh.
+        const names = [
+            address.state,
+            address.province
+        ].filter(Boolean).map(normalize);
+
+        let province = provinces.find(item =>
+            names.includes(normalize(item.name))
+        );
+
+        if (province) return province;
+
+        // Dự phòng khi dịch vụ bản đồ trả tên tỉnh trong city.
+        const fallbackNames = [
+            address.city,
+            address.town
+        ].filter(Boolean).map(normalize);
+
+        province = provinces.find(item =>
+            fallbackNames.includes(normalize(item.name))
+        );
+
+        return province || null;
+    }
+
+    async function fillAddressFromCoordinates(latitude, longitude) {
+        const currentSearch = ++searchSequence;
+
+        showStatus("Đang tìm địa chỉ gần vị trí bạn chọn...");
+
+        if (mapReady && map) {
+            const point = [latitude, longitude];
+
+            if (marker) {
+                marker.setLatLng(point);
+            } else {
+                marker = L.marker(point).addTo(map);
+            }
+
+            map.setView(point, 18);
+            marker.bindPopup("Đang tìm địa chỉ...").openPopup();
+        }
+
+        try {
+            const result = await reverseGeocode(latitude, longitude);
+
+            // Không ghi đè bằng kết quả cũ nếu người dùng bấm điểm khác.
+            if (currentSearch !== searchSequence) return;
+
+            const address = result.address || {};
+            const province = findProvince(address);
+
+            const wardNames = [
+                address.suburb,
+                address.quarter,
+                address.city_district,
+                address.ward,
+                address.village,
+                address.town,
+                address.neighbourhood,
+                address.hamlet,
+                address.district
+            ].filter(Boolean);
+
+            if (province) {
+                provinceSelect.value = String(province.code);
+
+                // Phải đợi API tải xong rồi mới chọn phường/xã.
+                await loadWards(province, wardNames);
+
+                if (currentSearch !== searchSequence) return;
+            }
+
+            const street = [
+                address.house_number,
+                address.road ||
+                address.pedestrian ||
+                address.residential
+            ].filter(Boolean).join(" ");
+
+            if (street) {
+                streetInput.value = street;
+            } else if (result.display_name) {
+                streetInput.value = result.display_name;
+            }
+
+            syncAddress();
+
+            if (mapReady && marker) {
+                marker.bindPopup(
+                    result.display_name || "Vị trí đã chọn"
+                ).openPopup();
+            }
+
+            if (!province) {
+                showStatus(
+                    "Đã tìm địa chỉ gần vị trí chọn nhưng chưa xác định " +
+                    "được tỉnh/thành phố. Vui lòng chọn tỉnh và phường/xã thủ công."
+                );
+            } else {
+                showStatus(
+                    "Đã tìm địa chỉ gần nhất. Hãy kiểm tra lại địa chỉ trước khi đặt hàng."
+                );
+            }
+        } catch (error) {
+            console.error("Lỗi tìm địa chỉ:", error);
+
+            showStatus(
+                "Không tìm được địa chỉ. Hãy thử vị trí khác hoặc nhập địa chỉ thủ công.",
+                true
+            );
+        }
+    }
+
+    // Khởi tạo bản đồ Leaflet.
+    function initializeMap() {
+        if (mapReady) return true;
+
+        if (!window.L) {
+            showStatus("Không tải được thư viện bản đồ.", true);
+            return false;
+        }
+
+        map = L.map("addressMap").setView([21.0285, 105.8542], 12);
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">' +
+                    'OpenStreetMap</a> contributors'
+            }
+        ).addTo(map);
+
+        map.on("click", event => {
+            fillAddressFromCoordinates(
+                event.latlng.lat,
+                event.latlng.lng
+            );
+        });
+
+        mapReady = true;
+        return true;
+    }
+
+    // Nút GPS.
+    gpsButton.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+            showStatus("Trình duyệt không hỗ trợ GPS.", true);
+            return;
+        }
+
+        gpsButton.disabled = true;
+        showStatus("Đang lấy vị trí GPS...");
+
+        navigator.geolocation.getCurrentPosition(
+            async position => {
+                try {
+                    if (mapWrap.hidden) {
+                        mapWrap.hidden = false;
+
+                        if (initializeMap()) {
+                            setTimeout(() => map?.invalidateSize(), 150);
+                        }
+                    }
+
+                    await fillAddressFromCoordinates(
+                        position.coords.latitude,
+                        position.coords.longitude
+                    );
+                } finally {
+                    gpsButton.disabled = false;
+                }
+            },
+            error => {
+                gpsButton.disabled = false;
+
+                const messages = {
+                    1: "Bạn chưa cho phép truy cập vị trí.",
+                    2: "Không xác định được vị trí GPS.",
+                    3: "Lấy vị trí quá lâu. Hãy thử lại."
+                };
+
+                showStatus(
+                    messages[error.code] || "Không lấy được GPS.",
+                    true
+                );
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 60000
+            }
+        );
+    });
+
+    // Nút hiện/ẩn bản đồ.
+    mapButton.addEventListener("click", () => {
+        mapWrap.hidden = !mapWrap.hidden;
+
+        if (!mapWrap.hidden && initializeMap()) {
+            setTimeout(() => map.invalidateSize(), 150);
+            showStatus("Bấm vào bản đồ để tìm địa chỉ gần nhất.");
+        }
+    });
+
+    // Không để checkout.js gắn thêm một trình xử lý GPS trùng lặp,
+    // nếu file đó có kiểm tra thuộc tính data-location-bound.
+    gpsButton.dataset.locationBound = "true";
+
+    loadProvinces();
+})();
+</script>
+
+<script src="./js/checkout.js"></script>
 </body>
-
 </html>
