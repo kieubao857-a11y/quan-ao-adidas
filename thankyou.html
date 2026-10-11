@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cảm ơn bạn đã đặt hàng | Adidas</title>
+
+    <link rel="stylesheet" href="./src/style.css">
+
+    <style>
+        .thankyou-page {
+            max-width: 900px;
+            margin: 40px auto 60px;
+            padding: 0 20px;
+            color: #171717;
+        }
+
+        .thankyou-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 5px 22px #0000000a;
+        }
+
+        .thankyou-header {
+            text-align: center;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #e7f7ec;
+            color: #16803d;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 16px;
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        .thankyou-header h1 {
+            font-size: 28px;
+            margin: 0 0 12px;
+        }
+
+        .thankyou-header p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .order-number {
+            display: inline-block;
+            padding: 10px 14px;
+            margin-top: 10px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .thankyou-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 28px;
+        }
+
+        .thankyou-section h2 {
+            font-size: 18px;
+            margin: 0 0 15px;
+        }
+
+        .thankyou-section p {
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .thankyou-product {
+            display: grid;
+            grid-template-columns: 55px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .thankyou-product img {
+            width: 55px;
+            height: 62px;
+            object-fit: cover;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+
+        .thankyou-product strong {
+            font-size: 13px;
+        }
+
+        .thankyou-product small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .thankyou-total {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .thankyou-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .thankyou-actions a {
+            display: inline-block;
+            padding: 14px 20px;
+            border: 1px solid #111;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .thankyou-actions .primary {
+            background: #111;
+            color: white;
+        }
+
+        .thankyou-actions .secondary {
+            color: #111;
+        }
+
+        .thankyou-error {
+            text-align: center;
+            padding: 25px 0;
+        }
+
+        @media (max-width: 650px) {
+            .thankyou-card {
+                padding: 20px;
+            }
+
+            .thankyou-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .thankyou-header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">adidas</div>
+
+    <nav class="menu">
+        <a href="index.html">Trang chủ</a>
+        <a href="product.html">Sản phẩm</a>
+        <a href="nam.html">Nam</a>
+        <a href="nu.html">Nữ</a>
+        <a href="the-thao.html">Thể thao</a>
+        <a href="sale.html">Sale</a>
+    </nav>
+
+    <div class="header-right">
+        <a href="cart.html" class="icon">🛒</a>
+        <a href="login.html" class="icon">👤</a>
+    </div>
+
+</header>
+
+<main class="thankyou-page">
+
+    <section class="thankyou-card" id="thankyouContent">
+
+        <div class="thankyou-header">
+
+            <div class="success-icon">✓</div>
+
+            <h1>Cảm ơn bạn đã đặt hàng!</h1>
+
+            <p>
+                Đơn hàng của bạn đã được ghi nhận.
+                Cảm ơn bạn đã mua sắm tại Adidas.
+            </p>
+
+            <div class="order-number" id="orderNumber">
+                Mã đơn hàng: —
+            </div>
+
+        </div>
+
+        <div class="thankyou-grid">
+
+            <section class="thankyou-section">
+
+                <h2>Thông tin nhận hàng</h2>
+
+                <div id="customerDetails"></div>
+
+                <h2 style="margin-top: 25px">
+                    Phương thức thanh toán
+                </h2>
+
+                <p id="paymentDetails"></p>
+
+                <p id="orderDate"></p>
+
+                <p id="orderStatus"></p>
+
+            </section>
+
+            <section class="thankyou-section">
+
+                <h2>Chi tiết đơn hàng</h2>
+
+                <div id="thankyouProducts"></div>
+
+                <div class="thankyou-total">
+                    <span>Tổng thanh toán</span>
+                    <span id="thankyouTotal">0 ₫</span>
+                </div>
+
+            </section>
+
+        </div>
+
+        <div class="thankyou-actions">
+
+            <a href="product.html" class="primary">
+                TIẾP TỤC MUA SẮM
+            </a>
+
+            <a href="orders.html" class="secondary">
+                XEM ĐƠN HÀNG
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>© 2026 Adidas</p>
+</footer>
+
+<script src="./js/checkoutModel.js"></script>
+<script src="./js/thankyou.js"></script>
+
+</body>
+</html>
