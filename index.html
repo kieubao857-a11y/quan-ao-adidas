@@ -3,9 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Adidas Shop</title>
 
@@ -17,59 +15,44 @@
     <!-- HEADER -->
     <header class="header">
 
-        <div class="logo">
-            adidas
-        </div>
+        <a href="index.html" class="logo">adidas</a>
 
         <nav class="menu">
-
-            <a href="index.html">
-                Trang chủ
-            </a>
-
-            <a href="product.html">
-                Sản phẩm
-            </a>
-
-            <a href="nam.html">
-                Nam
-            </a>
-
-            <a href="nu.html">
-                Nữ
-            </a>
-
-            <a href="the-thao.html">
-                Thể thao
-            </a>
-
-            <a href="sale.html">
-                Sale
-            </a>
-
+            <a href="index.html">Trang chủ</a>
+            <a href="product.html">Sản phẩm</a>
+            <a href="nam.html">Nam</a>
+            <a href="nu.html">Nữ</a>
+            <a href="the-thao.html">Thể thao</a>
+            <a href="sale.html">Sale</a>
+            <a href="voucher.html">🎁 Voucher</a>
         </nav>
 
         <div class="header-right">
 
+            <!-- TÌM KIẾM -->
             <div class="search-box">
-
                 <input
                     type="text"
                     id="homeSearch"
-                    placeholder="Tìm kiếm..."
+                    placeholder="Tìm kiếm sản phẩm..."
                 >
-
-                <button id="homeSearchBtn">
+                <button type="button" id="homeSearchBtn" aria-label="Tìm kiếm">
                     🔍
                 </button>
-
             </div>
 
-            <a href="cart.html" class="icon">
+            <!-- ĐƠN HÀNG -->
+            <a href="orders.html" class="home-order-link" title="Đơn hàng">
+                📦
+            </a>
+
+            <!-- GIỎ HÀNG -->
+            <a href="cart.html" class="icon" title="Giỏ hàng">
                 🛒
             </a>
 
-            <a href="#" class="icon">
+            <!-- TÀI KHOẢN -->
+            <a href="#" class="icon" title="Đăng nhập / Đăng ký">
                 👤
             </a>
 
@@ -83,9 +66,9 @@
 
         <div class="banner-content">
 
-            <h1>
-                ADIDAS SPORTSWEAR
-            </h1>
+            <p class="banner-label">IMPOSSIBLE IS NOTHING</p>
+
+            <h1>ADIDAS SPORTSWEAR</h1>
 
             <p>
                 Phong cách thể thao - Năng động - Cá tính
@@ -100,67 +83,122 @@
     </section>
 
 
-    <!-- DANH MỤC -->
-    <section class="container">
+    <!-- DANH MỤC SẢN PHẨM -->
+    <section class="category-section">
 
-        <h2 class="section-title">
-            DANH MỤC SẢN PHẨM
-        </h2>
+        <div class="category-heading">
+
+            <p class="category-subtitle">EXPLORE ADIDAS</p>
+
+            <h2 class="category-main-title">
+                KHÁM PHÁ DANH MỤC
+            </h2>
+
+            <p class="category-description">
+                Tìm phong cách phù hợp với bạn
+            </p>
+
+        </div>
+
 
         <div class="category-list">
 
+            <!-- ÁO -->
             <a href="product.html?category=Áo"
-               class="category">
+               class="category category-card">
 
-                <div class="category-icon">
-                    👕
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=85"
+                        alt="Áo thể thao"
+                        loading="lazy"
+                    >
                 </div>
 
-                <h3>
-                    Áo
-                </h3>
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+                    <span class="category-number">01 / COLLECTION</span>
+                    <h3>ÁO THỂ THAO</h3>
+                    <span class="category-explore">
+                        KHÁM PHÁ NGAY ↗
+                    </span>
+                </div>
 
             </a>
 
 
+            <!-- QUẦN -->
             <a href="product.html?category=Quần"
-               class="category">
+               class="category category-card">
 
-                <div class="category-icon">
-                    👖
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1517438476312-10d79c077509?auto=format&fit=crop&w=800&q=85"
+                        alt="Quần thể thao"
+                        loading="lazy"
+                    >
                 </div>
 
-                <h3>
-                    Quần
-                </h3>
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+                    <span class="category-number">02 / COLLECTION</span>
+                    <h3>QUẦN THỂ THAO</h3>
+                    <span class="category-explore">
+                        KHÁM PHÁ NGAY ↗
+                    </span>
+                </div>
 
             </a>
 
 
+            <!-- ÁO KHOÁC -->
             <a href="product.html?category=Áo khoác"
-               class="category">
+               class="category category-card">
 
-                <div class="category-icon">
-                    🧥
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=85"
+                        alt="Áo khoác thể thao"
+                        loading="lazy"
+                    >
                 </div>
 
-                <h3>
-                    Áo khoác
-                </h3>
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+                    <span class="category-number">03 / COLLECTION</span>
+                    <h3>ÁO KHOÁC</h3>
+                    <span class="category-explore">
+                        KHÁM PHÁ NGAY ↗
+                    </span>
+                </div>
 
             </a>
 
 
+            <!-- GIÀY -->
             <a href="product.html?category=Giày"
-               class="category">
+               class="category category-card">
 
-                <div class="category-icon">
-                    👟
+                <div class="category-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=85"
+                        alt="Giày thể thao"
+                        loading="lazy"
+                    >
                 </div>
 
-                <h3>
-                    Giày
-                </h3>
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+                    <span class="category-number">04 / COLLECTION</span>
+                    <h3>GIÀY THỂ THAO</h3>
+                    <span class="category-explore">
+                        KHÁM PHÁ NGAY ↗
+                    </span>
+                </div>
 
             </a>
 
@@ -178,8 +216,7 @@
 
         <div
             id="featuredProducts"
-            class="product-grid"
-        >
+            class="product-grid">
         </div>
 
     </section>
@@ -192,9 +229,7 @@
 
             <div class="footer-column">
 
-                <h3>
-                    ADIDAS SHOP
-                </h3>
+                <h3>ADIDAS SHOP</h3>
 
                 <p>
                     Website bán quần áo thể thao Adidas.
@@ -209,66 +244,37 @@
 
             <div class="footer-column">
 
-                <h3>
-                    CHÍNH SÁCH
-                </h3>
+                <h3>CHÍNH SÁCH</h3>
 
-                <a href="#">
-                    Chính sách đổi trả
-                </a>
-
-                <a href="#">
-                    Chính sách bảo hành
-                </a>
-
-                <a href="#">
-                    Chính sách giao hàng
-                </a>
-
-                <a href="#">
-                    Chính sách bảo mật
-                </a>
+                <a href="#">Chính sách đổi trả</a>
+                <a href="#">Chính sách bảo hành</a>
+                <a href="#">Chính sách giao hàng</a>
+                <a href="#">Chính sách bảo mật</a>
 
             </div>
 
 
             <div class="footer-column">
 
-                <h3>
-                    LIÊN HỆ
-                </h3>
+                <h3>LIÊN HỆ</h3>
 
-                <p>
-                    📍 Hà Nội, Việt Nam
-                </p>
-
-                <p>
-                    📞 0383374104
-                </p>
-
-                <p>
-                    📧 adidas@gmail.com
-                </p>
+                <p>📍 Hà Nội, Việt Nam</p>
+                <p>📞 0383374104</p>
+                <p>📧 adidas@gmail.com</p>
 
             </div>
 
 
             <div class="footer-column">
 
-                <h3>
-                    THEO DÕI
-                </h3>
+                <h3>THEO DÕI</h3>
 
-                <a href="#">
-                    Facebook
-                </a>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">TikTok</a>
 
-                <a href="#">
-                    Instagram
-                </a>
-
-                <a href="#">
-                    TikTok
+                <a href="admin/login.html" class="admin-footer-link">
+                    🔐 Đăng nhập Admin
                 </a>
 
             </div>
@@ -277,18 +283,13 @@
 
 
         <div class="copyright">
-
             © 2026 Adidas Shop
-
         </div>
 
     </footer>
 
 
-    <script
-        type="module"
-        src="./js/home.js">
-    </script>
+    <script type="module" src="./js/home.js"></script>
 
 </body>
 
