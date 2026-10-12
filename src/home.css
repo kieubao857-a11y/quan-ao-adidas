@@ -1,0 +1,855 @@
+/* =====================================
+   ADIDAS SHOP - HOME CSS
+   Chi ap dung cho trang chu
+===================================== */
+
+.home-page {
+    margin: 0;
+    color: #151515;
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
+
+.home-page *,
+.home-page *::before,
+.home-page *::after {
+    box-sizing: border-box;
+}
+
+.home-page a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.home-page button,
+.home-page input {
+    font: inherit;
+}
+
+.home-page .header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    min-height: 74px;
+    padding: 12px 4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    background: #080a0c;
+    color: #fff;
+}
+
+.home-page .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    color: #fff;
+    font-size: 27px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+}
+
+.home-page .logo-mark {
+    font-size: 24px;
+}
+
+.home-page .menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.home-page .menu a {
+    position: relative;
+    padding: 8px 0;
+    color: #eee;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: color .2s;
+}
+
+.home-page .menu a:hover,
+.home-page .menu a.active {
+    color: #fff;
+}
+
+.home-page .menu a.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #e5252a;
+}
+
+.home-page .menu a[href="orders.html"]:hover {
+    color: #ff5555;
+}
+
+.home-page .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.home-page .search-box {
+    width: 210px;
+    height: 38px;
+    display: flex;
+    overflow: hidden;
+    border-radius: 25px;
+    background: #fff;
+}
+
+.home-page .search-box input {
+    width: 100%;
+    min-width: 0;
+    padding: 0 13px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #111;
+    font-size: 12px;
+}
+
+.home-page .search-box button {
+    width: 38px;
+    flex-shrink: 0;
+    border: 0;
+    background: #fff;
+    color: #111;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.home-page .header-action {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+}
+
+.home-page .header-action:hover {
+    background: #303030;
+}
+
+/* HERO */
+
+.home-page .hero {
+    position: relative;
+    isolation: isolate;
+    min-height: 500px;
+    padding: 65px 8%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+    background-color: #280006;
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, .86),
+            rgba(0, 0, 0, .55) 48%,
+            rgba(0, 0, 0, .12)
+        ),
+        url("https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=2000&q=85");
+    background-position: center;
+    background-size: cover;
+}
+
+.home-page .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.home-page .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+}
+
+.home-page .eyebrow {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.home-page .hero .eyebrow {
+    color: #fff;
+}
+
+.home-page .hero h1 {
+    margin: 0 0 18px;
+    color: #fff;
+    font-size: clamp(42px, 6vw, 76px);
+    line-height: .98;
+    font-weight: 900;
+    letter-spacing: -2px;
+}
+
+.home-page .hero-content p {
+    margin: 0 0 27px;
+    color: #eee;
+    font-size: 15px;
+}
+
+.home-page .btn {
+    min-height: 46px;
+    padding: 12px 23px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    font-weight: 800;
+    transition: background .2s, color .2s, transform .2s;
+}
+
+.home-page .btn:hover {
+    transform: translateY(-2px);
+}
+
+.home-page .btn-light {
+    background: #fff;
+    color: #111;
+}
+
+.home-page .btn-light:hover {
+    background: #e5252a;
+    color: #fff;
+}
+
+.home-page .btn-dark {
+    background: #111;
+    color: #fff;
+}
+
+.home-page .btn-dark:hover {
+    background: #e5252a;
+}
+
+.home-page .hero-slogan {
+    position: absolute;
+    right: 7%;
+    bottom: 40px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-size: 19px;
+    line-height: 1.35;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.home-page .hero-three-stripes {
+    color: #e5252a;
+    font-size: 32px;
+}
+
+.home-page .hero-dots {
+    position: absolute;
+    left: 8%;
+    bottom: 22px;
+    display: flex;
+    gap: 8px;
+}
+
+.home-page .hero-dots span {
+    width: 22px;
+    height: 4px;
+    background: rgba(255, 255, 255, .45);
+}
+
+.home-page .hero-dots span:first-child {
+    background: #fff;
+}
+
+/* VOUCHER */
+
+.home-page .voucher-section {
+    padding: 50px 5%;
+    display: grid;
+    grid-template-columns: minmax(200px, .8fr) minmax(0, 2fr);
+    align-items: center;
+    gap: 30px;
+    background: #f5f5f5;
+}
+
+.home-page .voucher-intro h2 {
+    margin: 0 0 12px;
+    font-size: clamp(27px, 3vw, 38px);
+    line-height: 1.15;
+    font-weight: 900;
+}
+
+.home-page .voucher-intro h2 span {
+    color: #e5252a;
+}
+
+.home-page .voucher-intro p {
+    margin: 0 0 22px;
+    color: #555;
+    font-size: 13px;
+}
+
+.home-page .voucher-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.home-page .voucher-card {
+    min-width: 0;
+    min-height: 160px;
+    padding: 17px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, .07);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.home-page .voucher-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .13);
+}
+
+.home-page .voucher-red { background: #e5252a; }
+.home-page .voucher-blue { background: #1769aa; }
+.home-page .voucher-black { background: #151515; }
+
+.home-page .voucher-gold {
+    color: #111;
+    background: #f0cc7a;
+}
+
+.home-page .voucher-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.home-page .voucher-main > div > span {
+    font-size: 12px;
+}
+
+.home-page .voucher-card h3 {
+    margin: 0;
+    font-size: 36px;
+    line-height: 1.2;
+    font-weight: 900;
+}
+
+.home-page .voucher-card h3 small {
+    font-size: 20px;
+}
+
+.home-page .voucher-card p {
+    margin: 5px 0 0;
+    font-size: 11px;
+}
+
+.home-page .voucher-brand {
+    font-size: 16px;
+    font-weight: 900;
+    font-style: italic;
+}
+
+.home-page .voucher-card .shipping-title {
+    max-width: 180px;
+    font-size: 23px;
+}
+
+.home-page .shipping-icon {
+    font-size: 27px;
+}
+
+.home-page .voucher-bottom {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px dashed rgba(255, 255, 255, .55);
+}
+
+.home-page .voucher-gold .voucher-bottom {
+    border-top-color: rgba(0, 0, 0, .3);
+}
+
+.home-page .voucher-bottom code {
+    overflow: hidden;
+    font-size: 11px;
+    font-weight: 800;
+    text-overflow: ellipsis;
+}
+
+.home-page .copy-voucher {
+    flex-shrink: 0;
+    padding: 7px 10px;
+    color: #111;
+    background: #fff;
+    border: 0;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.home-page .copy-voucher:hover {
+    background: #e8e8e8;
+}
+
+/* SẢN PHẨM NỔI BẬT */
+
+.home-page .featured-section {
+    width: min(1280px, 92%);
+    margin: 0 auto;
+    padding: 65px 0 80px;
+}
+
+.home-page .section-heading {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.home-page .section-heading .eyebrow {
+    margin-bottom: 8px;
+    color: #e5252a;
+    letter-spacing: 2.5px;
+}
+
+.home-page .section-title {
+    margin: 0 0 10px;
+    color: #111;
+    font-size: clamp(24px, 3vw, 35px);
+    line-height: 1.2;
+    font-weight: 900;
+    letter-spacing: -.8px;
+}
+
+.home-page .section-heading p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+.home-page .view-all {
+    flex-shrink: 0;
+    padding-bottom: 7px;
+    border-bottom: 2px solid #111;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.home-page .view-all:hover {
+    color: #e5252a;
+    border-color: #e5252a;
+}
+
+.home-page #featuredProducts.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 20px;
+}
+
+.home-page #featuredProducts .product {
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .025);
+    transition: transform .25s, box-shadow .25s;
+}
+
+.home-page #featuredProducts .product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .09);
+}
+
+.home-page #featuredProducts .product > a:first-child {
+    display: block;
+    overflow: hidden;
+    background: #f6f6f6;
+}
+
+.home-page #featuredProducts .product img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 10px;
+    object-fit: contain;
+    background: #f6f6f6;
+    transition: transform .3s;
+}
+
+.home-page #featuredProducts .product:hover img {
+    transform: scale(1.04);
+}
+
+.home-page #featuredProducts .product-info {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.home-page #featuredProducts .product-category {
+    margin-bottom: 4px;
+    color: #777;
+    font-size: 12px;
+}
+
+.home-page #featuredProducts .product-name {
+    margin: 0 0 10px;
+    color: #171717;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
+.home-page #featuredProducts .product-price {
+    margin-top: auto;
+    margin-bottom: 13px;
+    color: #d71920;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.home-page #featuredProducts .detail-link {
+    margin-top: 5px;
+    padding: 10px 13px;
+    display: inline-flex;
+    justify-content: center;
+    color: #fff;
+    background: #111;
+    border: 1px solid #111;
+    font-size: 10px;
+    font-weight: 800;
+    transition: background .2s;
+}
+
+.home-page #featuredProducts .detail-link:hover {
+    background: #e5252a;
+    border-color: #e5252a;
+}
+
+.home-page .loading-message,
+.home-page .error-message {
+    grid-column: 1 / -1;
+    padding: 25px 0;
+    color: #666;
+    text-align: center;
+}
+
+/* FOOTER */
+
+.home-page .footer {
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background: #080a0c;
+}
+
+.home-page .footer-container {
+    width: min(1280px, 92%);
+    margin: 0 auto;
+    padding: 45px 0 35px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    gap: 30px;
+}
+
+.home-page .footer-column {
+    min-width: 0;
+}
+
+.home-page .footer-column h3 {
+    margin: 0 0 16px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.home-page .footer-column p,
+.home-page .footer-column > a {
+    display: block;
+    margin: 0 0 10px;
+    color: #c5c5c5;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.home-page .footer-column > a:hover {
+    color: #fff;
+}
+
+.home-page .social-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.home-page .social-links a {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 700;
+}
+
+.home-page .social-links a:hover {
+    color: #111;
+    background: #fff;
+}
+
+.home-page .footer-column .admin-link {
+    margin-top: 16px;
+    color: #fff;
+}
+
+.home-page .copyright {
+    padding: 17px 4%;
+    color: #aaa;
+    border-top: 1px solid #333;
+    text-align: center;
+    font-size: 11px;
+}
+
+/* TABLET */
+
+@media (max-width: 1100px) {
+    .home-page .header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .home-page .menu {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+        gap: 16px;
+    }
+
+    .home-page .voucher-section {
+        grid-template-columns: 1fr;
+    }
+
+    .home-page .voucher-intro {
+        max-width: 500px;
+    }
+
+    .home-page #featuredProducts.product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .home-page .footer-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+    .home-page .header {
+        padding: 12px 4%;
+    }
+
+    .home-page .logo {
+        font-size: 23px;
+    }
+
+    .home-page .header-right {
+        gap: 5px;
+    }
+
+    .home-page .search-box {
+        width: min(43vw, 180px);
+        height: 34px;
+    }
+
+    .home-page .header-action {
+        width: 32px;
+        height: 32px;
+    }
+
+    .home-page .menu {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 17px;
+        padding-bottom: 4px;
+    }
+
+    .home-page .menu a {
+        font-size: 11px;
+    }
+
+    .home-page .hero {
+        min-height: 390px;
+        padding: 45px 6%;
+        background-position: 60% center;
+    }
+
+    .home-page .hero h1 {
+        font-size: clamp(37px, 10vw, 49px);
+        letter-spacing: -1px;
+    }
+
+    .home-page .hero-content p {
+        max-width: 270px;
+        font-size: 12px;
+    }
+
+    .home-page .hero-slogan {
+        right: 5%;
+        bottom: 28px;
+        font-size: 13px;
+    }
+
+    .home-page .hero-three-stripes {
+        font-size: 22px;
+    }
+
+    .home-page .voucher-section {
+        padding: 35px 5%;
+        gap: 22px;
+    }
+
+    .home-page .voucher-list {
+        gap: 10px;
+    }
+
+    .home-page .voucher-card {
+        min-height: 145px;
+        padding: 12px;
+    }
+
+    .home-page .voucher-card h3 {
+        font-size: 30px;
+    }
+
+    .home-page .voucher-card h3 small {
+        font-size: 17px;
+    }
+
+    .home-page .voucher-card .shipping-title {
+        font-size: 17px;
+    }
+
+    .home-page .voucher-brand {
+        display: none;
+    }
+
+    .home-page .voucher-bottom {
+        gap: 5px;
+    }
+
+    .home-page .voucher-bottom code,
+    .home-page .copy-voucher {
+        font-size: 9px;
+    }
+
+    .home-page .copy-voucher {
+        padding: 6px;
+    }
+
+    .home-page .featured-section {
+        padding: 45px 0 55px;
+    }
+
+    .home-page .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .home-page .section-title {
+        font-size: 24px;
+    }
+
+    .home-page #featuredProducts.product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .home-page #featuredProducts .product-info {
+        padding: 11px;
+    }
+
+    .home-page #featuredProducts .product-name {
+        font-size: 12px;
+    }
+
+    .home-page #featuredProducts .product-price {
+        font-size: 13px;
+    }
+
+    .home-page #featuredProducts .detail-link {
+        padding: 9px 10px;
+        font-size: 9px;
+    }
+
+    .home-page .footer-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 25px 18px;
+        padding: 30px 0;
+    }
+
+    .home-page .footer-column p,
+    .home-page .footer-column > a {
+        font-size: 11px;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 380px) {
+    .home-page .search-box {
+        width: 125px;
+    }
+
+    .home-page .voucher-list {
+        grid-template-columns: 1fr;
+    }
+
+    .home-page .hero-slogan {
+        display: none;
+    }
+
+    .home-page .footer-container {
+        grid-template-columns: 1fr;
+    }
+}

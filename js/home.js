@@ -1,167 +1,82 @@
-// ====================================
-// FORMAT GIÁ
-// ====================================
+const productContainer = document.getElementById("featuredProducts");
 
 function formatPrice(price) {
-    return price.toLocaleString("vi-VN") + " ₫";
+    return Number(price || 0).toLocaleString("vi-VN") + " ₫";
 }
 
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
 
-// ====================================
-// TẠO CARD SẢN PHẨM
-// ====================================
+function renderFeaturedProducts(products) {
+    if (!productContainer) return;
 
-function createProductCard(product) {
+    if (!Array.isArray(products) || products.length === 0) {
+        productContainer.innerHTML =
+            '<p class="error-message">Chưa có sản phẩm để hiển thị.</p>';
+        return;
+    }
 
-    return `
-        <div class="product">
+    productContainer.innerHTML = products.slice(0, 8).map(product => {
+        const id = encodeURIComponent(product.id);
+        const name = escapeHTML(product.name || "Sản phẩm Adidas");
+        const category = escapeHTML(product.category || "Thể thao");
+        const image = escapeHTML(product.image || "");
+        const price = formatPrice(product.price);
 
-            <a href="detail.html?id=${product.id}">
-                <img
-                    src="${product.image}"
-                    alt="${product.name}"
-                    onerror="this.src='https://placehold.co/600x600?text=No+Image'"
-                >
-            </a>
-
-            <div class="product-info">
-
-                <p class="product-category">
-                    ${product.category}
-                </p>
-
-                <h3 class="product-name">
-                    ${product.name}
-                </h3>
-
-                <p class="product-price">
-                    ${formatPrice(product.price)}
-                </p>
-
-                <a
-                    href="detail.html?id=${product.id}"
-                    class="product-button"
-                >
-                    XEM CHI TIẾT
+        return `
+            <article class="product">
+                <a href="detail.html?id=${id}" aria-label="Xem ${name}">
+                    <img
+                        src="${image}"
+                        alt="${name}"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='https://placehold.co/500x500/f5f5f5/222?text=Adidas';"
+                    >
                 </a>
 
-            </div>
-
-        </div>
-    `;
+                <div class="product-info">
+                    <span class="product-category">${category}</span>
+                    <h3 class="product-name">${name}</h3>
+                    <p class="product-price">${price}</p>
+                    <a class="detail-link" href="detail.html?id=${id}">
+                        XEM CHI TIẾT
+                    </a>
+                </div>
+            </article>
+        `;
+    }).join("");
 }
 
-
-// ====================================
-// LẤY DỮ LIỆU TỪ JSON
-// ====================================
-
-async function loadProducts() {
+async function loadFeaturedProducts() {
+    if (!productContainer) return;
 
     try {
-
-        const response =
-            await fetch("./data/products.json");
+        const response = await fetch("./data/products.json");
 
         if (!response.ok) {
-            throw new Error("Không tìm thấy products.json");
+            throw new Error("Không thể tải products.json");
         }
 
-        const products =
-            await response.json();
-
-
-        // ====================================
-        // HIỂN THỊ SẢN PHẨM NỔI BẬT
-        // ====================================
-
-        const featuredProducts =
-            document.getElementById("featuredProducts");
-
-        if (featuredProducts) {
-
-            const featured =
-                products.slice(0, 6);
-
-            featuredProducts.innerHTML =
-                featured
-                    .map(product => createProductCard(product))
-                    .join("");
-        }
-
-
+        const products = await response.json();
+        renderFeaturedProducts(products);
     } catch (error) {
+        console.error("Lỗi tải sản phẩm:", error);
 
-        console.error(error);
-
-        const featuredProducts =
-            document.getElementById("featuredProducts");
-
-        if (featuredProducts) {
-
-            featuredProducts.innerHTML = `
-                <p>
-                    Không thể tải sản phẩm.
-                </p>
-            `;
-        }
+        productContainer.innerHTML = `
+            <p class="error-message">
+                Không tải được sản phẩm. Hãy kiểm tra file
+                <strong>data/products.json</strong> và chạy website bằng
+                Live Server hoặc Vite.
+            </p>
+        `;
     }
 }
 
-
-// ====================================
-// TÌM KIẾM TỪ TRANG CHỦ
-// ====================================
-
-const searchButton =
-    document.getElementById("homeSearchBtn");
-
-const searchInput =
-    document.getElementById("homeSearch");
-
-
-if (searchButton && searchInput) {
-
-    searchButton.addEventListener("click", function () {
-
-        const keyword =
-            searchInput.value.trim();
-
-        if (keyword === "") {
-
-            window.location.href =
-                "product.html";
-
-            return;
-        }
-
-        window.location.href =
-            "product.html?search=" +
-            encodeURIComponent(keyword);
-    });
-
-
-    // ====================================
-    // NHẤN ENTER ĐỂ TÌM KIẾM
-    // ====================================
-
-    searchInput.addEventListener(
-        "keypress",
-        function (event) {
-
-            if (event.key === "Enter") {
-
-                searchButton.click();
-
-            }
-
-        }
-    );
-}
-
-
-// ====================================
-// CHẠY
-// ====================================
-
-loadProducts();
+loadFeaturedProducts();
