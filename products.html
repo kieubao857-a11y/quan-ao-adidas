@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Adidas | Danh sách sản phẩm</title>
+
+    <style>
+        /* ==============================
+           RESET
+        ============================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --black: #080808;
+            --red: #e30613;
+            --gray: #f5f5f5;
+            --border: #e5e5e5;
+            --text: #111;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff;
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            min-height: 72px;
+            padding: 12px 4%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+
+            background: var(--black);
+            color: #fff;
+            border-bottom: 1px solid #292929;
+        }
+
+        .logo {
+            flex-shrink: 0;
+            color: #fff;
+            font-size: 27px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--red);
+        }
+
+        .site-header nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 23px;
+        }
+
+        .site-header nav a {
+            position: relative;
+            padding: 12px 0;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: color .2s;
+        }
+
+        .site-header nav a:hover {
+            color: #ccc;
+        }
+
+        .site-header nav a.active::after,
+        .site-header nav a:hover::after {
+            content: "";
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-actions a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
+            transition: transform .2s;
+        }
+
+        .header-actions a:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ==============================
+           MAIN
+        ============================== */
+        .container {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+            padding: 42px 0 65px;
+        }
+
+        .page-intro {
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            margin-bottom: 10px;
+            color: #777;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            margin-bottom: 12px;
+            font-size: clamp(26px, 3vw, 36px);
+            font-weight: 900;
+            letter-spacing: -.5px;
+            text-transform: uppercase;
+        }
+
+        .page-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* ==============================
+           BANNER
+        ============================== */
+        .shop-banner {
+            position: relative;
+            min-height: 220px;
+            margin-bottom: 30px;
+            padding: 35px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+
+            overflow: hidden;
+            color: #fff;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(0,0,0,.94),
+                    rgba(0,0,0,.35)
+                ),
+                linear-gradient(135deg, #333, #777, #111);
+        }
+
+        .shop-banner::after {
+            content: "ADIDAS";
+            position: absolute;
+            right: 2%;
+            bottom: -20px;
+            color: rgba(255,255,255,.08);
+            font-size: clamp(65px, 12vw, 140px);
+            font-weight: 900;
+            letter-spacing: -6px;
+            pointer-events: none;
+        }
+
+        .shop-banner > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner-label {
+            margin-bottom: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 3px;
+        }
+
+        .shop-banner h2 {
+            max-width: 650px;
+            font-size: clamp(28px, 4vw, 46px);
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .shop-banner p {
+            margin-top: 12px;
+            color: #eee;
+            font-size: 14px;
+        }
+
+        /* ==============================
+           FILTER
+        ============================== */
+        .filter-panel {
+            margin-bottom: 18px;
+            padding: 20px;
+            background: var(--gray);
+        }
+
+        .filter-heading {
+            margin-bottom: 14px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .filter-box {
+            display: grid;
+            grid-template-columns: minmax(200px, 2fr) 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .filter-box input,
+        .filter-box select {
+            width: 100%;
+            min-width: 0;
+            height: 46px;
+            padding: 0 13px;
+
+            color: #111;
+            background: #fff;
+            border: 1px solid #d7d7d7;
+            border-radius: 0;
+            outline: none;
+
+            font-size: 13px;
+            transition: border-color .2s;
+        }
+
+        .filter-box input:focus,
+        .filter-box select:focus {
+            border-color: #111;
+        }
+
+        .filter-box input::placeholder {
+            color: #777;
+        }
+
+        /* ==============================
+           SORT
+        ============================== */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .toolbar-note {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .sort-box {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .sort-box label {
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .sort-box select {
+            width: 190px;
+            height: 42px;
+            padding: 0 12px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            outline: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .sort-box select:focus {
+            border-color: #111;
+        }
+
+        /* ==============================
+           PRODUCT GRID
+        ============================== */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .product-card {
+            min-width: 0;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid var(--border);
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,.09);
+        }
+
+        .product-image {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: #f4f4f4;
+        }
+
+        .product-image img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .35s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.045);
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .product-category {
+            margin-bottom: 8px;
+            color: #777;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .product-name {
+            min-height: 42px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .product-button {
+            display: block;
+            width: 100%;
+            margin-top: auto;
+            padding: 12px 8px;
+
+            background: #111;
+            color: #fff;
+            border: 1px solid #111;
+
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 800;
+
+            cursor: pointer;
+            transition: background .2s, border-color .2s;
+        }
+
+        .product-button:hover {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        /* ==============================
+           EMPTY / LOADING / ERROR
+        ============================== */
+        .loading-message,
+        .empty-message,
+        .error-message {
+            grid-column: 1 / -1;
+            padding: 55px 20px;
+            background: #f7f7f7;
+            text-align: center;
+        }
+
+        .loading-message {
+            color: #555;
+        }
+
+        .empty-message h3,
+        .error-message h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .empty-message p,
+        .error-message p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .error-message h3 {
+            color: #c00;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+        .site-footer {
+            padding: 35px 20px;
+            background: #080808;
+            color: #fff;
+            text-align: center;
+        }
+
+        .footer-logo {
+            margin-bottom: 12px;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .site-footer p {
+            margin: 6px 0;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* ==============================
+           TABLET
+        ============================== */
+        @media (max-width: 1000px) {
+            .site-header {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 14px 3%;
+            }
+
+            .site-header nav {
+                order: 3;
+                flex: 1 0 100%;
+                justify-content: flex-start;
+                overflow-x: auto;
+                gap: 22px;
+            }
+
+            .header-actions {
+                margin-left: auto;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 16px;
+            }
+
+            .filter-box {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* ==============================
+           MOBILE
+        ============================== */
+        @media (max-width: 600px) {
+            .container {
+                width: 94%;
+                padding: 28px 0 45px;
+            }
+
+            .site-header {
+                padding: 12px 3%;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .site-header nav {
+                gap: 18px;
+            }
+
+            .site-header nav a {
+                font-size: 12px;
+            }
+
+            .shop-banner {
+                min-height: 185px;
+                padding: 24px;
+                margin-bottom: 24px;
+            }
+
+            .shop-banner h2 {
+                font-size: 30px;
+            }
+
+            .filter-panel {
+                padding: 14px;
+            }
+
+            .filter-box {
+                grid-template-columns: 1fr 1fr;
+                gap: 9px;
+            }
+
+            #searchInput {
+                grid-column: 1 / -1;
+            }
+
+            .toolbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .sort-box {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .sort-box select {
+                width: 60%;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .product-info {
+                padding: 10px;
+            }
+
+            .product-name {
+                min-height: 40px;
+                font-size: 13px;
+            }
+
+            .product-price {
+                font-size: 13px;
+            }
+
+            .product-button {
+                padding: 11px 5px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-box {
+                grid-template-columns: 1fr;
+            }
+
+            #searchInput {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <a href="index.html" class="logo">▲ adidas</a>
+
+        <nav>
+            <a href="index.html">Trang chủ</a>
+            <a href="product.html" class="active">Sản phẩm</a>
+            <a href="nam.html">Nam</a>
+            <a href="nu.html">Nữ</a>
+            <a href="the-thao.html">Thể thao</a>
+            <a href="sale.html">Sale</a>
+        </nav>
+
+        <div class="header-actions">
+            <a href="cart.html" aria-label="Giỏ hàng" title="Giỏ hàng">🛒</a>
+            <a href="orders.html" aria-label="Đơn hàng" title="Đơn hàng">📦</a>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG -->
+    <main class="container">
+
+        <section class="page-intro">
+            <p class="eyebrow">IMPOSSIBLE IS NOTHING</p>
+            <h1 class="section-title">Danh sách sản phẩm</h1>
+            <p class="page-description">
+                Khám phá bộ sưu tập Adidas với phong cách thể thao,
+                hiện đại và năng động.
+            </p>
+        </section>
+
+        <!-- BANNER -->
+        <section class="shop-banner">
+            <span class="banner-label">ADIDAS ORIGINALS & PERFORMANCE</span>
+            <h2>YOUR STYLE.<br>YOUR GAME.</h2>
+            <p>Chọn phong cách của bạn. Sẵn sàng bứt phá.</p>
+        </section>
+
+        <!-- BỘ LỌC -->
+        <section class="filter-panel">
+            <h2 class="filter-heading">Tìm sản phẩm phù hợp</h2>
+
+            <div class="filter-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Tìm kiếm sản phẩm..."
+                    autocomplete="off"
+                    aria-label="Tìm kiếm sản phẩm"
+                >
+
+                <select id="categoryFilter" aria-label="Lọc danh mục">
+                    <option value="all">Tất cả danh mục</option>
+                    <option value="Áo">Áo</option>
+                    <option value="Quần">Quần</option>
+                    <option value="Áo khoác">Áo khoác</option>
+                    <option value="Giày">Giày</option>
+                </select>
+
+                <input
+                    type="number"
+                    id="minPrice"
+                    placeholder="Giá từ"
+                    min="0"
+                    step="10000"
+                    aria-label="Giá thấp nhất"
+                >
+
+                <input
+                    type="number"
+                    id="maxPrice"
+                    placeholder="Giá đến"
+                    min="0"
+                    step="10000"
+                    aria-label="Giá cao nhất"
+                >
+            </div>
+        </section>
+
+        <!-- SẮP XẾP -->
+        <section class="toolbar">
+            <p class="toolbar-note">
+                Sản phẩm thể thao dành cho phong cách của bạn
+            </p>
+
+            <div class="sort-box">
+                <label for="sortPrice">Sắp xếp theo giá:</label>
+
+                <select id="sortPrice">
+                    <option value="">Mặc định</option>
+                    <option value="asc">Giá thấp → cao</option>
+                    <option value="desc">Giá cao → thấp</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- DANH SÁCH SẢN PHẨM -->
+        <section
+            id="productList"
+            class="product-grid"
+            aria-live="polite"
+            aria-label="Danh sách sản phẩm"
+        >
+            <div class="loading-message">
+                Đang tải sản phẩm...
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-logo">▲ adidas</div>
+        <p>IMPOSSIBLE IS NOTHING</p>
+        <p>Thể thao · Phong cách · Năng động</p>
+        <p>© 2026 Adidas Shop</p>
+    </footer>
+
+    <!-- GIỮ NGUYÊN FILE JAVASCRIPT HIỆN TẠI -->
+    <script type="module" src="./js/products.js"></script>
+
+</body>
+</html>
