@@ -1,5 +1,10 @@
+
 (function () {
     "use strict";
+
+    // ==========================================
+    // 1. CẤU HÌNH VÀ CÁC PHẦN TỬ HTML
+    // ==========================================
 
     const $ = (id) => document.getElementById(id);
     const form = $("checkoutForm");
@@ -9,31 +14,61 @@
         return;
     }
 
+    const CART_KEY = "cart";
+    const LEGACY_CART_KEY = "adidas_cart";
+    const ORDERS_KEY = "orders";
+
+    let submitting = false;
+    let locating = false;
+
     function findElement(ids) {
         for (const id of ids) {
             const element = $(id);
             if (element) return element;
         }
+
         return null;
     }
 
-    const nameInput = findElement(["name", "fullName", "customerName"]);
-    const phoneInput = findElement(["phone", "customerPhone"]);
-    const emailInput = findElement(["email", "customerEmail"]);
+    const nameInput = findElement([
+        "name",
+        "fullName",
+        "customerName"
+    ]);
+
+    const phoneInput = findElement([
+        "phone",
+        "customerPhone"
+    ]);
+
+    const emailInput = findElement([
+        "email",
+        "customerEmail"
+    ]);
 
     const provinceInput = findElement([
-        "province", "city", "provinceId",
-        "provinceSelect", "citySelect"
+        "province",
+        "city",
+        "provinceId",
+        "provinceSelect",
+        "citySelect"
     ]);
 
     const wardInput = findElement([
-        "ward", "commune", "wardId",
-        "wardSelect", "communeSelect"
+        "ward",
+        "commune",
+        "wardId",
+        "wardSelect",
+        "communeSelect"
     ]);
 
     const streetInput = findElement([
-        "streetAddress", "street", "detailAddress",
-        "addressDetail", "houseNumber", "address"
+        "streetAddress",
+        "street",
+        "detailAddress",
+        "addressDetail",
+        "houseNumber",
+        "address"
     ]);
 
     const bankInfo = $("bankInfo");
@@ -48,44 +83,92 @@
         'button[type="submit"], input[type="submit"]'
     );
 
-    let submitting = false;
-    let locating = false;
+    // ==========================================
+    // 2. XỬ LÝ GIỎ HÀNG
+    // ==========================================
 
-    // =========================
-    // GIỎ HÀNG
-    // =========================
-
-    function getCart() {
+    function readStorageArray(key) {
         try {
-            const cart = JSON.parse(
-                localStorage.getItem("cart") || "[]"
-            );
+            const raw = localStorage.getItem(key);
 
-            if (!Array.isArray(cart)) return [];
+            if (!raw) return [];
 
-            return cart.filter(function (item) {
-                return item &&
-                    Number.isFinite(Number(item.price)) &&
-                    Number(item.price) >= 0 &&
-                    Number.isInteger(Number(item.quantity)) &&
-                    Number(item.quantity) > 0;
-            });
+            const data = JSON.parse(raw);
+
+            return Array.isArray(data) ? data : [];
         } catch (error) {
-            console.error("Lỗi đọc giỏ hàng:", error);
+            console.error("Không đọc được dữ liệu:", key, error);
             return [];
         }
     }
 
+    function normalizeCartItem(item) {
+        if (!item || typeof item !== "object") {
+            return null;
+        }
+
+        const price = Number(item.price);
+        const quantity = Number(item.quantity);
+
+        if (
+            !Number.isFinite(price) ||
+            price < 0 ||
+            !Number.isInteger(quantity) ||
+            quantity < 1
+        ) {
+            return null;
+        }
+
+        return {
+            ...item,
+            id: String(
+                item.id ??
+                item.product_id ??
+                item.productId ??
+                item.name ??
+                ""
+            ),
+            name: String(item.name || "Sản phẩm"),
+            image: String(item.image || ""),
+            price: price,
+            quantity: quantity,
+            size: item.size ?? "",
+            color: item.color ?? ""
+        };
+    }
+
+    function getCart() {
+        const mainCart = readStorageArray(CART_KEY)
+            .map(normalizeCartItem)
+            .filter(Boolean);
+
+        if (mainCart.length > 0) {
+            return mainCart;
+        }
+
+        return readStorageArray(LEGACY_CART_KEY)
+            .map(normalizeCartItem)
+            .filter(Boolean);
+    }
+
     function calculateTotal(cart) {
         return cart.reduce(function (total, item) {
-            return total +
-                Number(item.price) * Number(item.quantity);
+            return total + item.price * item.quantity;
         }, 0);
     }
 
-    // =========================
-    // THÔNG BÁO ĐỊA CHỈ
-    // =========================
+    function formatCurrency(amount) {
+        return Number(amount).toLocaleString("vi-VN") + " VNĐ";
+    }
+
+    function clearCart() {
+        localStorage.removeItem(CART_KEY);
+        localStorage.removeItem(LEGACY_CART_KEY);
+    }
+
+    // ==========================================
+    // 3. THÔNG BÁO TRÊN GIAO DIỆN
+    // ==========================================
 
     function showLocationMessage(message, isError = false) {
         let box = $("locationMessage");
@@ -108,14 +191,17 @@
         }
 
         box.textContent = message;
+
         box.style.cssText =
-            "font-size:13px;line-height:1.5;margin:8px 0;" +
+            "font-size:13px;" +
+            "line-height:1.5;" +
+            "margin:8px 0;" +
             "color:" + (isError ? "#b42318" : "#333") + ";";
     }
 
-    // =========================
-    // NÚT LẤY ĐỊA CHỈ GPS
-    // =========================
+    // ==========================================
+    // 4. NÚT LẤY ĐỊA CHỈ GPS
+    // ==========================================
 
     function installLocationButton() {
         let button = $("getCurrentLocation");
@@ -127,9 +213,14 @@
             button.textContent = "📍 Lấy địa chỉ hiện tại";
 
             button.style.cssText =
-                "display:block;margin:10px 0;padding:12px 16px;" +
-                "border:1px solid #111;border-radius:5px;" +
-                "background:#111;color:#fff;cursor:pointer;" +
+                "display:block;" +
+                "margin:10px 0;" +
+                "padding:12px 16px;" +
+                "border:1px solid #111;" +
+                "border-radius:5px;" +
+                "background:#111;" +
+                "color:#fff;" +
+                "cursor:pointer;" +
                 "font-weight:600;";
 
             const target = provinceInput || streetInput;
@@ -148,15 +239,14 @@
 
             button.addEventListener("click", function (event) {
                 event.preventDefault();
-                event.stopPropagation();
                 getCurrentLocation();
             });
         }
     }
 
-    // =========================
-    // CHUẨN HÓA TÊN ĐỊA CHỈ
-    // =========================
+    // ==========================================
+    // 5. CHUẨN HÓA TÊN ĐỊA CHỈ
+    // ==========================================
 
     function normalizeText(value) {
         return String(value || "")
@@ -170,10 +260,6 @@
             )
             .trim();
     }
-
-    // =========================
-    // CHỌN GIÁ TRỊ DROPDOWN
-    // =========================
 
     function setSelectValue(select, possibleValues) {
         if (!select || select.tagName !== "SELECT") {
@@ -231,9 +317,9 @@
         });
     }
 
-    // =========================
-    // TRA CỨU ĐỊA CHỈ TỪ GPS
-    // =========================
+    // ==========================================
+    // 6. TRA CỨU ĐỊA CHỈ TỪ TỌA ĐỘ GPS
+    // ==========================================
 
     async function reverseGeocode(latitude, longitude) {
         const endpoints = [
@@ -266,10 +352,8 @@
                 const url = new URL(endpoint.url);
 
                 url.search = new URLSearchParams(
-                    Object.fromEntries(
-                        Object.entries(endpoint.params).map(
-                            ([key, value]) => [key, String(value)]
-                        )
+                    Object.entries(endpoint.params).map(
+                        ([key, value]) => [key, String(value)]
                     )
                 ).toString();
 
@@ -291,14 +375,13 @@
 
                 const data = await response.json();
 
-                // Photon trả về GeoJSON.
                 if (endpoint.name === "Photon") {
                     const feature = data.features &&
                         data.features[0];
 
                     if (!feature || !feature.properties) {
                         throw new Error(
-                            "Photon không tìm thấy địa chỉ."
+                            "Không tìm thấy địa chỉ từ Photon."
                         );
                     }
 
@@ -329,10 +412,9 @@
                     };
                 }
 
-                // Nominatim trả về đối tượng có address.
                 if (!data || !data.address) {
                     throw new Error(
-                        "Nominatim không tìm thấy địa chỉ."
+                        "Không tìm thấy địa chỉ từ Nominatim."
                     );
                 }
 
@@ -340,6 +422,7 @@
 
             } catch (error) {
                 lastError = error;
+
                 console.warn(
                     "Tra cứu bằng " + endpoint.name + " thất bại:",
                     error
@@ -350,17 +433,19 @@
         }
 
         throw new Error(
-            "Không thể kết nối dịch vụ bản đồ. " +
-            "Hãy kiểm tra mạng và thử lại. " +
-            (lastError && lastError.name === "TimeoutError"
-                ? "Yêu cầu tra cứu đã hết thời gian chờ."
-                : "")
+            "Không thể tra cứu địa chỉ. " +
+            "Vui lòng kiểm tra kết nối mạng hoặc nhập địa chỉ thủ công." +
+            (
+                lastError && lastError.name === "TimeoutError"
+                    ? " Yêu cầu đã hết thời gian chờ."
+                    : ""
+            )
         );
     }
 
-    // =========================
-    // LẤY GPS VÀ ĐIỀN ĐỊA CHỈ
-    // =========================
+    // ==========================================
+    // 7. LẤY GPS VÀ TỰ ĐIỀN ĐỊA CHỈ
+    // ==========================================
 
     async function getCurrentLocation() {
         if (locating) return;
@@ -409,16 +494,16 @@
                 longitude
             );
 
-            const a = result.address;
+            const a = result.address || {};
 
-            const province = [
+            const provinceValues = [
                 a.state,
                 a.province,
                 a.city,
                 a.town
             ].filter(Boolean);
 
-            const ward = [
+            const wardValues = [
                 a.suburb,
                 a.quarter,
                 a.city_district,
@@ -435,24 +520,21 @@
                 a.road || a.pedestrian || a.residential
             ].filter(Boolean).join(" ");
 
-            // Điền tỉnh/thành phố.
             const provinceMatched = setSelectValue(
                 provinceInput,
-                province
+                provinceValues
             );
 
-            // Chờ dropdown phường/xã cập nhật theo tỉnh.
+            // Chờ danh sách phường/xã cập nhật nếu phụ thuộc tỉnh.
             if (provinceMatched && wardInput) {
                 await waitFor(1000);
             }
 
-            // Điền phường/xã.
             const wardMatched = setSelectValue(
                 wardInput,
-                ward
+                wardValues
             );
 
-            // Điền số nhà và tên đường.
             if (streetInput) {
                 setInputValue(
                     streetInput,
@@ -464,12 +546,12 @@
                 showLocationMessage(
                     "Đã tìm thấy vị trí nhưng chưa khớp danh sách " +
                     "tỉnh/thành phố hoặc phường/xã. " +
-                    "Vui lòng chọn lại các mục này thủ công."
+                    "Vui lòng kiểm tra và chọn lại thủ công."
                 );
             } else {
                 showLocationMessage(
                     "Đã điền địa chỉ gần nhất. " +
-                    "Vui lòng kiểm tra lại trước khi đặt hàng."
+                    "Vui lòng kiểm tra trước khi đặt hàng."
                 );
             }
 
@@ -487,7 +569,7 @@
                 } else if (error.code === 2) {
                     message =
                         "Không xác định được vị trí. " +
-                        "Hãy bật GPS hoặc Wi-Fi.";
+                        "Hãy bật GPS hoặc kiểm tra kết nối mạng.";
                 } else if (error.code === 3) {
                     message =
                         "Lấy vị trí quá lâu. Vui lòng thử lại.";
@@ -507,27 +589,58 @@
         }
     }
 
-    // =========================
-    // QR CHUYỂN KHOẢN
-    // =========================
+    // ==========================================
+    // 8. ĐỊA CHỈ KHÁCH HÀNG
+    // ==========================================
+
+    function getFieldValue(element) {
+        if (!element) return "";
+
+        if (
+            element.tagName === "SELECT" &&
+            element.selectedOptions.length > 0
+        ) {
+            return element.selectedOptions[0].textContent.trim();
+        }
+
+        return String(element.value || "").trim();
+    }
+
+    function getCustomerAddress() {
+        const province = getFieldValue(provinceInput);
+        const ward = getFieldValue(wardInput);
+        const street = getFieldValue(streetInput);
+
+        return {
+            province: province,
+            ward: ward,
+            streetAddress: street,
+            address: [street, ward, province]
+                .filter(Boolean)
+                .join(", ")
+        };
+    }
+
+    // ==========================================
+    // 9. QR CHUYỂN KHOẢN
+    // ==========================================
 
     function updateBankQR() {
         const selectedPayment = form.querySelector(
             'input[name="payment"]:checked'
         );
 
-        if (!selectedPayment) return;
-
         const total = calculateTotal(getCart());
-        const isBank = selectedPayment.value === "bank";
+
+        const isBank = selectedPayment &&
+            selectedPayment.value === "bank";
 
         if (bankInfo) {
             bankInfo.style.display = isBank ? "block" : "none";
         }
 
         if (qrAmount) {
-            qrAmount.textContent =
-                total.toLocaleString("vi-VN") + " VNĐ";
+            qrAmount.textContent = formatCurrency(total);
         }
 
         if (!bankQR) return;
@@ -560,57 +673,11 @@
         phoneInput.addEventListener("input", updateBankQR);
     }
 
-    // =========================
-    // LẤY ĐỊA CHỈ KHÁCH HÀNG
-    // =========================
+    // ==========================================
+    // 10. KIỂM TRA THÔNG TIN KHÁCH HÀNG
+    // ==========================================
 
-    function getCustomerAddress() {
-        const province = provinceInput
-            ? (
-                provinceInput.tagName === "SELECT"
-                    ? provinceInput.selectedOptions[0]?.textContent.trim() || ""
-                    : provinceInput.value.trim()
-            )
-            : "";
-
-        const ward = wardInput
-            ? (
-                wardInput.tagName === "SELECT"
-                    ? wardInput.selectedOptions[0]?.textContent.trim() || ""
-                    : wardInput.value.trim()
-            )
-            : "";
-
-        const street = streetInput
-            ? streetInput.value.trim()
-            : "";
-
-        return {
-            province: province,
-            ward: ward,
-            streetAddress: street,
-            address: [street, ward, province]
-                .filter(Boolean)
-                .join(", ")
-        };
-    }
-
-    // =========================
-    // ĐẶT HÀNG
-    // =========================
-
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        if (submitting) return;
-
-        const cart = getCart();
-
-        if (cart.length === 0) {
-            alert("Giỏ hàng đang trống!");
-            return;
-        }
-
+    function validateCustomer() {
         const name = nameInput
             ? nameInput.value.trim()
             : "";
@@ -623,7 +690,7 @@
             ? emailInput.value.trim()
             : "";
 
-        const customerAddress = getCustomerAddress();
+        const address = getCustomerAddress();
 
         const selectedPayment = form.querySelector(
             'input[name="payment"]:checked'
@@ -631,128 +698,263 @@
 
         if (name.length < 2) {
             alert("Vui lòng nhập họ và tên hợp lệ!");
+
             if (nameInput) nameInput.focus();
-            return;
+
+            return null;
         }
 
         const normalizedPhone = phone.replace(/[\s.-]/g, "");
 
         if (!/^(0\d{9}|\+84\d{9})$/.test(normalizedPhone)) {
-            alert("Vui lòng nhập số điện thoại hợp lệ.");
+            alert(
+                "Vui lòng nhập số điện thoại hợp lệ " +
+                "(10 số bắt đầu bằng 0 hoặc mã +84)."
+            );
+
             if (phoneInput) phoneInput.focus();
-            return;
+
+            return null;
         }
 
         if (
-            !customerAddress.address ||
-            customerAddress.address.length < 5
+            email &&
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
         ) {
-            alert("Vui lòng nhập đầy đủ địa chỉ nhận hàng.");
+            alert("Vui lòng nhập địa chỉ email hợp lệ.");
+
+            if (emailInput) emailInput.focus();
+
+            return null;
+        }
+
+        if (!address.streetAddress) {
+            alert("Vui lòng nhập số nhà và tên đường.");
+
             if (streetInput) streetInput.focus();
-            return;
+
+            return null;
+        }
+
+        if (!address.ward) {
+            alert("Vui lòng chọn hoặc nhập phường/xã.");
+
+            if (wardInput) wardInput.focus();
+
+            return null;
+        }
+
+        if (!address.province) {
+            alert("Vui lòng chọn hoặc nhập tỉnh/thành phố.");
+
+            if (provinceInput) provinceInput.focus();
+
+            return null;
         }
 
         if (!selectedPayment) {
-            alert("Vui lòng chọn phương thức thanh toán!");
-            return;
+            alert("Vui lòng chọn phương thức thanh toán.");
+            return null;
         }
 
-        const payment = selectedPayment.value === "cod"
-            ? "Thanh toán khi nhận hàng"
-            : "Chuyển khoản ngân hàng";
-
-        const customer = {
+        return {
             name: name,
             phone: phone,
             email: email,
-            address: customerAddress.address,
-            streetAddress: customerAddress.streetAddress,
-            ward: customerAddress.ward,
-            province: customerAddress.province
+            address: address,
+            paymentCode: selectedPayment.value,
+            payment: selectedPayment.value === "cod"
+                ? "Thanh toán khi nhận hàng"
+                : "Chuyển khoản ngân hàng"
+        };
+    }
+
+    // ==========================================
+    // 11. TẠO VÀ LƯU ĐƠN HÀNG
+    // ==========================================
+
+    function saveOrderLocally(payload) {
+        const orders = readStorageArray(ORDERS_KEY);
+
+        const order = {
+            id: String(Date.now()),
+            customer: payload.customer,
+            payment: payload.payment,
+            paymentCode: payload.paymentCode,
+            products: payload.products,
+            total: payload.total,
+            status: "Chờ xử lý",
+            note: "",
+            createdAt: new Date().toLocaleString("vi-VN")
+        };
+
+        orders.push(order);
+
+        // Nếu lưu thất bại, localStorage sẽ ném lỗi.
+        localStorage.setItem(
+            ORDERS_KEY,
+            JSON.stringify(orders)
+        );
+
+        localStorage.setItem(
+            "lastOrderId",
+            String(order.id)
+        );
+
+        return order;
+    }
+
+    async function createOrder(payload) {
+        const model = window.CheckoutModel;
+
+        if (model && typeof model.createOrder === "function") {
+            const order = await model.createOrder({
+                customer: payload.customer,
+                payment: payload.payment,
+                paymentCode: payload.paymentCode,
+                products: payload.products,
+                total: payload.total,
+                note: ""
+            });
+
+            if (!order || order.id === undefined || order.id === null) {
+                throw new Error(
+                    "CheckoutModel.createOrder() không trả về mã đơn hàng hợp lệ."
+                );
+            }
+
+            return order;
+        }
+
+        return saveOrderLocally(payload);
+    }
+
+    // ==========================================
+    // 12. KHÓA / MỞ NÚT ĐẶT HÀNG
+    // ==========================================
+
+    function setSubmittingState(isSubmitting) {
+        if (!submitButton) return;
+
+        submitButton.disabled = isSubmitting;
+
+        if (
+            submitButton.tagName === "BUTTON" ||
+            submitButton.tagName === "INPUT"
+        ) {
+            if (!submitButton.dataset.originalText) {
+                submitButton.dataset.originalText =
+                    submitButton.tagName === "INPUT"
+                        ? submitButton.value
+                        : submitButton.textContent;
+            }
+
+            const originalText = submitButton.dataset.originalText;
+
+            if (submitButton.tagName === "INPUT") {
+                submitButton.value = isSubmitting
+                    ? "ĐANG TẠO ĐƠN HÀNG..."
+                    : originalText;
+            } else {
+                submitButton.textContent = isSubmitting
+                    ? "ĐANG TẠO ĐƠN HÀNG..."
+                    : originalText;
+            }
+        }
+    }
+
+    // ==========================================
+    // 13. XỬ LÝ ĐẶT HÀNG
+    // ==========================================
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        if (submitting) return;
+
+        const cart = getCart();
+
+        if (cart.length === 0) {
+            alert("Giỏ hàng đang trống! Vui lòng thêm sản phẩm trước.");
+            return;
+        }
+
+        const customerInfo = validateCustomer();
+
+        if (!customerInfo) return;
+
+        const total = calculateTotal(cart);
+
+        if (!Number.isFinite(total) || total < 0) {
+            alert("Tổng tiền đơn hàng không hợp lệ.");
+            return;
+        }
+
+        const customer = {
+            name: customerInfo.name,
+            phone: customerInfo.phone,
+            email: customerInfo.email,
+            address: customerInfo.address.address,
+            streetAddress: customerInfo.address.streetAddress,
+            ward: customerInfo.address.ward,
+            province: customerInfo.address.province
+        };
+
+        const payload = {
+            customer: customer,
+            payment: customerInfo.payment,
+            paymentCode: customerInfo.paymentCode,
+            products: cart,
+            total: total
         };
 
         submitting = true;
-
-        if (submitButton) {
-            submitButton.disabled = true;
-
-            if (submitButton.tagName === "BUTTON") {
-                submitButton.textContent = "ĐANG TẠO ĐƠN HÀNG...";
-            }
-        }
+        setSubmittingState(true);
 
         try {
-            const model = window.CheckoutModel;
-            let order;
+            const order = await createOrder(payload);
 
-            if (model && typeof model.createOrder === "function") {
-                order = model.createOrder({
-                    customer: customer,
-                    payment: payment,
-                    paymentCode: selectedPayment.value,
-                    note: ""
-                });
-            } else {
-                const orders = JSON.parse(
-                    localStorage.getItem("orders") || "[]"
-                );
+            // Chỉ xóa giỏ hàng sau khi tạo đơn thành công.
+            clearCart();
 
-                order = {
-                    id: String(Date.now()),
-                    customer: customer,
-                    payment: payment,
-                    paymentCode: selectedPayment.value,
-                    products: cart,
-                    total: calculateTotal(cart),
-                    status: "Chờ xử lý",
-                    note: "",
-                    createdAt: new Date().toLocaleString("vi-VN")
-                };
-
-                orders.push(order);
-
-                localStorage.setItem(
-                    "orders",
-                    JSON.stringify(orders)
-                );
-
-                localStorage.setItem(
-                    "lastOrderId",
-                    String(order.id)
-                );
-
-                localStorage.removeItem("cart");
-            }
+            localStorage.setItem(
+                "lastOrderId",
+                String(order.id)
+            );
 
             window.location.href =
-                "thankyou.html?orderId=" +
+                "./thankyou.html?orderId=" +
                 encodeURIComponent(order.id);
 
         } catch (error) {
             console.error("Lỗi tạo đơn hàng:", error);
 
             alert(
-                error.message ||
-                "Đặt hàng thất bại. Vui lòng thử lại."
+                error && error.message
+                    ? error.message
+                    : "Đặt hàng thất bại. Vui lòng thử lại."
             );
 
             submitting = false;
-
-            if (submitButton) {
-                submitButton.disabled = false;
-
-                if (submitButton.tagName === "BUTTON") {
-                    submitButton.textContent = "ĐẶT HÀNG";
-                }
-            }
+            setSubmittingState(false);
         }
     });
 
-    // =========================
-    // KHỞI TẠO
-    // =========================
+    // ==========================================
+    // 14. KHỞI TẠO TRANG CHECKOUT
+    // ==========================================
 
     installLocationButton();
     updateBankQR();
+
+    // Cập nhật QR nếu giỏ hàng thay đổi ở tab khác.
+    window.addEventListener("storage", function (event) {
+        if (
+            event.key === CART_KEY ||
+            event.key === LEGACY_CART_KEY
+        ) {
+            updateBankQR();
+        }
+    });
 
 })();
