@@ -1,58 +1,75 @@
+
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
 
-    <title>Giỏ hàng | Adidas</title>
+    <title>Giỏ hàng | Adidas Shop</title>
 
+    <!-- Sử dụng CSS chung của toàn bộ website -->
     <link rel="stylesheet" href="./src/style.css">
+
+    <script src="./js/cart.js" defer></script>
 </head>
 
 <body class="adidas-cart-page">
 
-    <!-- THANH ĐẦU TRANG -->
+    <!-- HEADER -->
     <header class="header">
-        <a href="index.html" class="logo">adidas</a>
+        <a href="index.html" class="logo" aria-label="Adidas Shop">
+            adidas<span>.</span>
+        </a>
 
-        <nav class="menu">
+        <nav class="menu" aria-label="Menu chính">
             <a href="index.html">Trang chủ</a>
             <a href="product.html">Sản phẩm</a>
             <a href="nam.html">Nam</a>
             <a href="nu.html">Nữ</a>
             <a href="the-thao.html">Thể thao</a>
-            <a href="sale.html">Sale</a>
+            <a href="sale.html" class="sale-link">Sale</a>
         </nav>
 
         <div class="header-right">
-            <a href="orders.html" class="icon" title="Đơn hàng">📦</a>
-            <a href="cart.html" class="icon" title="Giỏ hàng">🛒</a>
-            <a href="#" class="icon" title="Tài khoản">👤</a>
+            <a href="orders.html" class="icon" title="Đơn hàng" aria-label="Đơn hàng">📦</a>
+            <a href="cart.html" class="icon cart-header-active" title="Giỏ hàng" aria-label="Giỏ hàng">
+                🛒 <span id="headerCartCount">0</span>
+            </a>
+            <a href="login.html" class="icon" title="Tài khoản" aria-label="Tài khoản">👤</a>
         </div>
     </header>
 
-    <!-- NỘI DUNG -->
+    <!-- THANH THÔNG BÁO -->
+    <div class="cart-announcement">
+        MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG ĐẠT ĐIỀU KIỆN
+    </div>
+
     <main class="adidas-cart-layout">
 
-        <div class="adidas-cart-breadcrumb">
+        <!-- BREADCRUMB -->
+        <nav class="adidas-cart-breadcrumb" aria-label="Breadcrumb">
             <a href="index.html">Trang chủ</a>
             <span>/</span>
-            <span>Giỏ hàng</span>
-        </div>
+            <span aria-current="page">Giỏ hàng</span>
+        </nav>
 
-        <div class="adidas-cart-heading">
+        <!-- TIÊU ĐỀ -->
+        <section class="adidas-cart-heading">
             <div>
                 <p class="adidas-cart-label">ADIDAS ORIGINALS</p>
-                <h1>GIỎ HÀNG</h1>
-                <p>Những món đồ bạn đã lựa chọn.</p>
+                <h1>GIỎ HÀNG <span> CỦA BẠN</span></h1>
+                <p class="adidas-cart-description">
+                    Kiểm tra sản phẩm bạn đã chọn trước khi thanh toán.
+                </p>
             </div>
 
             <a href="product.html" class="adidas-continue-link">
-                ← Tiếp tục mua sắm
+                <span aria-hidden="true">←</span> TIẾP TỤC MUA SẮM
             </a>
-        </div>
+        </section>
 
+        <!-- NỘI DUNG -->
         <div class="adidas-cart-grid">
 
             <!-- DANH SÁCH SẢN PHẨM -->
@@ -60,65 +77,142 @@
 
                 <div class="adidas-cart-section-title">
                     <h2>SẢN PHẨM CỦA BẠN</h2>
-                    <span>ADIDAS SHOP</span>
+                    <span id="cartItemCount">0 sản phẩm</span>
                 </div>
 
-                <div id="cartList"></div>
+                <div id="cartList" aria-live="polite" aria-busy="true">
+                    <div class="cart-loading">
+                        <span class="cart-loading-spinner"></span>
+                        <p>Đang tải giỏ hàng...</p>
+                    </div>
+                </div>
+
+                <div class="cart-continue-bottom">
+                    <a href="product.html">← Tiếp tục khám phá sản phẩm</a>
+                </div>
 
             </section>
 
-            <!-- CỘT THÔNG TIN -->
+            <!-- CỘT BÊN PHẢI -->
             <aside class="adidas-cart-sidebar">
 
-                <div class="adidas-cart-promo">
-                    <span class="adidas-promo-icon">★</span>
-                    <p>YOUR STYLE. YOUR GAME.</p>
-                    <h2>IMPOSSIBLE<br>IS NOTHING.</h2>
-                    <a href="product.html">KHÁM PHÁ SẢN PHẨM →</a>
-                </div>
+                <!-- BANNER -->
+                <section class="adidas-cart-promo">
+                    <div class="cart-promo-top">
+                        <span class="cart-promo-mark">adidas</span>
+                        <span class="cart-promo-tag">ORIGINALS</span>
+                    </div>
 
-                <div class="adidas-cart-service">
+                    <p class="adidas-promo-caption">YOUR STYLE. YOUR GAME.</p>
+
+                    <h2>IMPOSSIBLE<br>IS NOTHING.</h2>
+
+                    <p class="cart-promo-description">
+                        Phong cách của bạn. Lựa chọn của bạn.
+                    </p>
+
+                    <a href="product.html">
+                        KHÁM PHÁ SẢN PHẨM <span>↗</span>
+                    </a>
+                </section>
+
+                <!-- TÓM TẮT ĐƠN HÀNG -->
+                <section class="adidas-cart-summary">
+
+                    <h2>TÓM TẮT ĐƠN HÀNG</h2>
+
+                    <div class="summary-row">
+                        <span>Tạm tính</span>
+                        <strong id="cartSubtotal">0 ₫</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Phí vận chuyển</span>
+                        <span class="shipping-note">Tính khi thanh toán</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-total">
+                        <span>TỔNG CỘNG</span>
+                        <strong id="cartTotal">0 ₫</strong>
+                    </div>
+
+                    <p class="cart-tax-note">
+                        Phí vận chuyển và ưu đãi sẽ được xác nhận ở bước thanh toán.
+                    </p>
+
+                    <a href="checkout.html"
+                       class="checkout-button is-disabled"
+                       id="checkoutButton"
+                       aria-disabled="true">
+                        <span>TIẾN HÀNH THANH TOÁN</span>
+                        <span class="checkout-arrow">→</span>
+                    </a>
+
+                    <div class="cart-secure-note">
+                        <span aria-hidden="true">🔒</span>
+                        <span>Kiểm tra thông tin trước khi đặt hàng.</span>
+                    </div>
+
+                    <div class="cart-payment-methods">
+                        <span>COD</span>
+                        <span>ATM</span>
+                        <span>VISA</span>
+                        <span>MASTER</span>
+                    </div>
+
+                </section>
+
+                <!-- DỊCH VỤ -->
+                <section class="adidas-cart-service">
 
                     <div class="adidas-service-row">
-                        <span>01</span>
+                        <span class="service-number">01</span>
                         <div>
                             <h3>Giao hàng thuận tiện</h3>
-                            <p>Thông tin giao hàng ở bước thanh toán.</p>
+                            <p>Nhập địa chỉ nhận hàng ở bước thanh toán.</p>
                         </div>
                     </div>
 
                     <div class="adidas-service-row">
-                        <span>02</span>
+                        <span class="service-number">02</span>
                         <div>
                             <h3>Thanh toán linh hoạt</h3>
-                            <p>Lựa chọn phương thức thanh toán phù hợp.</p>
+                            <p>Chọn phương thức thanh toán phù hợp.</p>
                         </div>
                     </div>
 
                     <div class="adidas-service-row">
-                        <span>03</span>
+                        <span class="service-number">03</span>
                         <div>
                             <h3>Quản lý đơn hàng</h3>
-                            <p>Theo dõi đơn hàng sau khi đặt mua.</p>
+                            <p>Theo dõi thông tin sau khi đặt mua.</p>
                         </div>
                     </div>
 
-                </div>
-
+                </section>
             </aside>
-
         </div>
-
     </main>
 
-    <!-- CHÂN TRANG -->
+    <!-- FOOTER -->
     <footer class="adidas-cart-footer">
-        <a href="index.html" class="adidas-footer-logo">adidas</a>
-        <p>YOU GOT THIS.</p>
-        <span>© 2026 Adidas Shop</span>
-    </footer>
+        <div class="cart-footer-inner">
+            <div>
+                <a href="index.html" class="adidas-footer-logo">adidas.</a>
+                <p>YOU GOT THIS.</p>
+            </div>
 
-    <script src="./js/cart.js"></script>
+            <div class="cart-footer-links">
+                <a href="product.html">Sản phẩm</a>
+                <a href="orders.html">Đơn hàng</a>
+                <a href="index.html">Trang chủ</a>
+            </div>
+
+            <span class="cart-copyright">© 2026 Adidas Shop</span>
+        </div>
+    </footer>
 
 </body>
 </html>
