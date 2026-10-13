@@ -1,72 +1,306 @@
+
+"use strict";
+
 async function loadSportProducts() {
+    const productList = document.getElementById("productList");
+    const productCount = document.getElementById("productCount");
 
-    const response = await fetch(
-        "./data/products.json"
-    );
-
-    const products = await response.json();
-
-    const productList =
-        document.getElementById("productList");
-
-
-    // Lọc sản phẩm thể thao
-    const sportProducts = products.filter(
-        function (product) {
-
-            return product.gender === "Thể thao";
-
-        }
-    );
-
-
-    // Không có sản phẩm
-    if (sportProducts.length === 0) {
-
-        productList.innerHTML = `
-            <h2>
-                Chưa có sản phẩm thể thao
-            </h2>
-        `;
-
+    if (!productList) {
+        console.error("Không tìm thấy phần tử productList.");
         return;
     }
 
+    productList.replaceChildren();
 
-    // Hiển thị sản phẩm
-    sportProducts.forEach(function (product) {
+    const loading = createElement(
+        "p",
+        "loading-message",
+        "Đang tải sản phẩm thể thao..."
+    );
 
-        productList.innerHTML += `
+    productList.appendChild(loading);
 
-            <div class="product-card">
+    if (productCount) {
+        productCount.textContent = "Đang tải...";
+    }
 
-                <img
-                    src="${product.image}"
-                    alt="${product.name}"
-                >
+    try {
+        const response = await fetch("./data/products.json", {
+            cache: "no-cache"
+        });
 
-                <h3>
-                    ${product.name}
-                </h3>
+        if (!response.ok) {
+            throw new Error(
+                `Không tải được products.json: HTTP ${response.status}`
+            );
+        }
 
-                <p>
-                    ${product.price.toLocaleString("vi-VN")}
-                    VNĐ
-                </p>
+        const data = await response.json();
 
-                <a
-                    href="detail.html?id=${product.id}"
-                    class="btn"
-                >
-                    Xem sản phẩm
-                </a>
+        if (!Array.isArray(data)) {
+            throw new Error(
+                "Dữ liệu products.json phải là một mảng sản phẩm."
+            );
+        }
 
-            </div>
+        // Hỗ trợ gender = "Thể thao", "the thao", không phân biệt hoa/thường.
+        const sportProducts = data.filter((product) => {
+            if (!product || typeof product !== "object") {
+                return false;
+            }
 
-        `;
+            const gender = normalizeText(product.gender);
 
-    });
+            return gender === "thể thao" || gender === "the thao";
+        });
 
+        if (productCount) {
+            productCount.textContent =
+                `${sportProducts.length} sản phẩm`;
+        }
+
+        if (sportProducts.length === 0) {
+            showMessage(
+                productList,
+                "empty-message",
+                "Chưa có sản phẩm thể thao",
+                "Kiểm tra trường gender trong data/products.json. " +
+                'Giá trị cần có là "Thể thao".'
+            );
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        sportProducts.forEach((product) => {
+            fragment.appendChild(createProductCard(product));
+        });
+
+        productList.replaceChildren(fragment);
+
+    } catch (error) {
+        console.error("Lỗi tải sản phẩm thể thao:", error);
+
+        if (productCount) {
+            productCount.textContent = "Không tải được";
+        }
+
+        showMessage(
+            productList,
+            "error-message",
+            "Không thể tải sản phẩm",
+            "Kiểm tra đường dẫn products.json, định dạng JSON và máy chủ."
+        );
+    }
+}
+
+function normalizeText(value) {
+    return String(value ?? "")
+        .trim()
+        .toLocaleLowerCase("vi");
+}
+
+function createElement(tag, className, text) {
+    const element = document.createElement(tag);
+
+    if (className) {
+        element.className = className;
+    }
+
+    if (text !== undefined && text !== null) {
+        element.textContent = String(text);
+    }
+
+    return element;
+}
+
+function parsePrice(value) {
+    if (typeof value === "number") {
+        return Number.isFinite(value) && value >= 0
+            ? value
+            : 0;
+    }
+
+    if (typeof value !== "string") {
+        return 0;
+    }
+
+    const normalized = value
+        .trim()
+        .replace(/\s/g, "")
+        .replace(/VNĐ|VND/gi, "");
+
+    // Ví dụ: 850.000 hoặc 1.200.000
+    if (/^\d{1,3}(\.\d{3})+$/.test(normalized)) {
+        const price = Number(normalized.replace(/\./g, ""));
+
+        return Number.isFinite(price) ? price : 0;
+    }
+
+    const price = Number(normalized);
+
+    return Number.isFinite(price) && price >= 0
+        ? price
+        : 0;
+}
+
+function formatPrice(value) {
+    return parsePrice(value).toLocaleString("vi-VN") + " VNĐ";
+}
+
+function getProductImage(product) {
+    const candidates = [
+        product.image,
+        product.image_url,
+        product.thumbnail
+    ];
+
+    for (const candidate of candidates) {
+        if (typeof candidate !== "string") {
+            continue;
+        }
+
+        const path = candidate.trim();
+
+        if (!path) {
+            continue;
+        }
+
+        if (/^(javascript|vbscript):/i.test(path)) {
+            continue;
+        }
+
+        if (
+            /^data:/i.test(path) &&
+            !/^data:image\/(png|jpeg|jpg|webp|gif);base64,/i.test(path)
+        ) {
+            continue;
+        }
+
+        return path;
+    }
+
+    return "";
+}
+
+function createImageFallback(productName) {
+    const fallback = createElement(
+        "div",
+        "product-image-fallback"
+    );
+
+    const brand = createElement(
+        "span",
+        "fallback-brand",
+        "adidas"
+    );
+
+    const label = createElement(
+        "span",
+        "fallback-label",
+        productName || "Sản phẩm Adidas"
+    );
+
+    fallback.append(brand, label);
+
+    return fallback;
+}
+
+function createDetailLink(product) {
+    const link = document.createElement("a");
+
+    if (
+        product.id !== undefined &&
+        product.id !== null &&
+        String(product.id).trim() !== ""
+    ) {
+        link.href =
+            "detail.html?id=" +
+            encodeURIComponent(String(product.id));
+    } else {
+        link.href = "product.html";
+    }
+
+    return link;
+}
+
+function createProductCard(product) {
+    const name = String(
+        product.name || "Sản phẩm Adidas"
+    );
+
+    const card = createElement("article", "product-card");
+
+    // Ảnh sản phẩm
+    const imageLink = createDetailLink(product);
+    imageLink.className = "product-image-link";
+
+    const imagePath = getProductImage(product);
+
+    if (imagePath) {
+        const image = document.createElement("img");
+
+        image.className = "product-image";
+        image.alt = name;
+        image.loading = "lazy";
+        image.decoding = "async";
+
+        image.addEventListener("error", function () {
+            if (image.dataset.failed === "true") {
+                return;
+            }
+
+            image.dataset.failed = "true";
+            image.remove();
+
+            imageLink.appendChild(createImageFallback(name));
+        });
+
+        image.src = imagePath;
+
+        imageLink.appendChild(image);
+    } else {
+        imageLink.appendChild(createImageFallback(name));
+    }
+
+    // Thông tin sản phẩm
+    const info = createElement("div", "product-info");
+
+    const title = createElement(
+        "h3",
+        "product-name",
+        name
+    );
+
+    const price = createElement(
+        "p",
+        "product-price",
+        formatPrice(product.price)
+    );
+
+    const actions = createElement(
+        "div",
+        "product-actions"
+    );
+
+    const button = createDetailLink(product);
+    button.className = "product-btn";
+    button.textContent = "XEM SẢN PHẨM";
+
+    actions.appendChild(button);
+    info.append(title, price, actions);
+    card.append(imageLink, info);
+
+    return card;
+}
+
+function showMessage(container, className, title, description) {
+    const message = createElement("div", className);
+    const heading = createElement("h3", "", title);
+    const detail = createElement("p", "", description);
+
+    message.append(heading, detail);
+    container.replaceChildren(message);
 }
 
 loadSportProducts();
