@@ -10,138 +10,269 @@
     <link rel="stylesheet" href="./src/style.css">
 
     <style>
-        .thankyou-page {
-            max-width: 900px;
-            margin: 40px auto 60px;
-            padding: 0 20px;
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f5f5;
             color: #171717;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* HEADER */
+        .header {
+            min-height: 75px;
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .logo {
+            color: #111;
+            font-size: 27px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-decoration: none;
+        }
+
+        .menu {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .menu a {
+            color: #111;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .menu a:hover {
+            text-decoration: underline;
+            text-underline-offset: 5px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-right .icon {
+            color: #111;
+            text-decoration: none;
+            font-size: 21px;
+        }
+
+        /* MAIN */
+        .thankyou-page {
+            width: 100%;
+            max-width: 1100px;
+            margin: 45px auto 60px;
+            padding: 0 20px;
         }
 
         .thankyou-card {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 14px;
-            padding: 32px;
-            box-shadow: 0 5px 22px #0000000a;
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            padding: 38px;
+            box-shadow: 0 8px 30px rgb(0 0 0 / 5%);
         }
 
+        /* SUCCESS */
         .thankyou-header {
             text-align: center;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #eee;
+            padding: 5px 0 30px;
+            border-bottom: 1px solid #e8e8e8;
         }
 
         .success-icon {
-            width: 70px;
-            height: 70px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             background: #e7f7ec;
             color: #16803d;
-            display: grid;
-            place-items: center;
-            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
             font-size: 38px;
             font-weight: bold;
         }
 
         .thankyou-header h1 {
-            font-size: 28px;
-            margin: 0 0 12px;
+            margin: 0 0 14px;
+            font-size: 30px;
+            font-weight: 800;
         }
 
         .thankyou-header p {
-            color: #555;
-            line-height: 1.6;
+            margin: 0;
+            color: #666;
+            line-height: 1.7;
+            font-size: 15px;
         }
 
         .order-number {
             display: inline-block;
-            padding: 10px 14px;
-            margin-top: 10px;
-            background: #f5f5f5;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-
-        .thankyou-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-top: 28px;
-        }
-
-        .thankyou-section h2 {
-            font-size: 18px;
-            margin: 0 0 15px;
-        }
-
-        .thankyou-section p {
+            margin-top: 20px;
+            padding: 12px 18px;
+            background: #f4f4f4;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
             font-size: 14px;
-            line-height: 1.6;
+            font-weight: 700;
             overflow-wrap: anywhere;
         }
 
+        /* ORDER DETAILS */
+        .thankyou-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 35px;
+            margin-top: 32px;
+        }
+
+        .thankyou-section {
+            min-width: 0;
+        }
+
+        .thankyou-section h2 {
+            margin: 0 0 18px;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .thankyou-section p {
+            margin: 10px 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        #customerDetails {
+            padding: 17px;
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+
+        #customerDetails p {
+            margin: 6px 0;
+        }
+
+        #paymentDetails,
+        #orderDate,
+        #orderStatus {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* PRODUCT */
         .thankyou-product {
             display: grid;
-            grid-template-columns: 55px 1fr auto;
-            gap: 12px;
+            grid-template-columns: 70px minmax(0, 1fr) auto;
             align-items: center;
-            padding: 12px 0;
+            gap: 14px;
+            padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
 
         .thankyou-product img {
-            width: 55px;
-            height: 62px;
-            object-fit: cover;
+            width: 70px;
+            height: 78px;
+            object-fit: contain;
             border-radius: 5px;
             background: #f5f5f5;
         }
 
         .thankyou-product strong {
-            font-size: 13px;
+            display: block;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
         }
 
         .thankyou-product small {
             display: block;
-            margin-top: 5px;
-            color: #666;
+            margin-top: 6px;
+            color: #777;
+            font-size: 12px;
+            line-height: 1.6;
         }
 
         .thankyou-total {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
+            gap: 15px;
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 2px solid #171717;
+            font-size: 17px;
+            font-weight: 800;
         }
 
+        #thankyouTotal {
+            text-align: right;
+            font-size: 21px;
+        }
+
+        /* BUTTONS */
         .thankyou-actions {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 30px;
+            gap: 14px;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
         }
 
         .thankyou-actions a {
-            display: inline-block;
-            padding: 14px 20px;
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 24px;
             border: 1px solid #111;
-            border-radius: 5px;
+            border-radius: 3px;
             text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            transition: 0.2s;
         }
 
         .thankyou-actions .primary {
             background: #111;
-            color: white;
+            color: #fff;
+        }
+
+        .thankyou-actions .primary:hover {
+            background: #333;
         }
 
         .thankyou-actions .secondary {
+            background: #fff;
             color: #111;
+        }
+
+        .thankyou-actions .secondary:hover {
+            background: #f0f0f0;
         }
 
         .thankyou-error {
@@ -149,17 +280,88 @@
             padding: 25px 0;
         }
 
-        @media (max-width: 650px) {
-            .thankyou-card {
-                padding: 20px;
+        /* FOOTER */
+        .footer {
+            padding: 25px 15px;
+            background: #111;
+            color: #fff;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 800px) {
+            .header {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .menu {
+                order: 3;
+                width: 100%;
+                gap: 15px;
             }
 
             .thankyou-grid {
                 grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .thankyou-card {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .thankyou-page {
+                margin: 20px auto 35px;
+                padding: 0 12px;
+            }
+
+            .thankyou-card {
+                padding: 20px 15px;
             }
 
             .thankyou-header h1 {
-                font-size: 24px;
+                font-size: 23px;
+            }
+
+            .thankyou-header p {
+                font-size: 13px;
+            }
+
+            .thankyou-product {
+                grid-template-columns: 55px minmax(0, 1fr);
+                gap: 10px;
+            }
+
+            .thankyou-product img {
+                width: 55px;
+                height: 65px;
+            }
+
+            .thankyou-product > :last-child {
+                grid-column: 2;
+            }
+
+            .thankyou-total {
+                font-size: 14px;
+            }
+
+            #thankyouTotal {
+                font-size: 17px;
+            }
+
+            .thankyou-actions {
+                flex-direction: column;
+            }
+
+            .thankyou-actions a {
+                width: 100%;
             }
         }
     </style>
@@ -167,104 +369,92 @@
 
 <body>
 
-<header class="header">
+    <header class="header">
+        <a href="index.html" class="logo">adidas</a>
 
-    <div class="logo">adidas</div>
+        <nav class="menu">
+            <a href="index.html">Trang chủ</a>
+            <a href="product.html">Sản phẩm</a>
+            <a href="nam.html">Nam</a>
+            <a href="nu.html">Nữ</a>
+            <a href="the-thao.html">Thể thao</a>
+            <a href="sale.html">Sale</a>
+        </nav>
 
-    <nav class="menu">
-        <a href="index.html">Trang chủ</a>
-        <a href="product.html">Sản phẩm</a>
-        <a href="nam.html">Nam</a>
-        <a href="nu.html">Nữ</a>
-        <a href="the-thao.html">Thể thao</a>
-        <a href="sale.html">Sale</a>
-    </nav>
+        <div class="header-right">
+            <a href="cart.html" class="icon" aria-label="Giỏ hàng">🛒</a>
+            <a href="login.html" class="icon" aria-label="Tài khoản">👤</a>
+        </div>
+    </header>
 
-    <div class="header-right">
-        <a href="cart.html" class="icon">🛒</a>
-        <a href="login.html" class="icon">👤</a>
-    </div>
+    <main class="thankyou-page">
 
-</header>
+        <section class="thankyou-card" id="thankyouContent">
 
-<main class="thankyou-page">
+            <div class="thankyou-header">
+                <div class="success-icon">✓</div>
 
-    <section class="thankyou-card" id="thankyouContent">
+                <h1>Cảm ơn bạn đã đặt hàng!</h1>
 
-        <div class="thankyou-header">
+                <p>
+                    Đơn hàng của bạn đã được ghi nhận.<br>
+                    Cảm ơn bạn đã mua sắm tại Adidas.
+                </p>
 
-            <div class="success-icon">✓</div>
-
-            <h1>Cảm ơn bạn đã đặt hàng!</h1>
-
-            <p>
-                Đơn hàng của bạn đã được ghi nhận.
-                Cảm ơn bạn đã mua sắm tại Adidas.
-            </p>
-
-            <div class="order-number" id="orderNumber">
-                Mã đơn hàng: —
+                <div class="order-number" id="orderNumber">
+                    Mã đơn hàng: —
+                </div>
             </div>
 
-        </div>
+            <div class="thankyou-grid">
 
-        <div class="thankyou-grid">
+                <section class="thankyou-section">
+                    <h2>Thông tin nhận hàng</h2>
 
-            <section class="thankyou-section">
+                    <div id="customerDetails"></div>
 
-                <h2>Thông tin nhận hàng</h2>
+                    <h2 style="margin-top: 28px">
+                        Phương thức thanh toán
+                    </h2>
 
-                <div id="customerDetails"></div>
+                    <p id="paymentDetails">Đang tải...</p>
+                    <p id="orderDate"></p>
+                    <p id="orderStatus"></p>
+                </section>
 
-                <h2 style="margin-top: 25px">
-                    Phương thức thanh toán
-                </h2>
+                <section class="thankyou-section">
+                    <h2>Chi tiết đơn hàng</h2>
 
-                <p id="paymentDetails"></p>
+                    <div id="thankyouProducts"></div>
 
-                <p id="orderDate"></p>
+                    <div class="thankyou-total">
+                        <span>Tổng thanh toán</span>
+                        <span id="thankyouTotal">0 ₫</span>
+                    </div>
+                </section>
 
-                <p id="orderStatus"></p>
+            </div>
 
-            </section>
+            <div class="thankyou-actions">
+                <a href="product.html" class="primary">
+                    TIẾP TỤC MUA SẮM
+                </a>
 
-            <section class="thankyou-section">
+                <a href="orders.html" class="secondary">
+                    XEM ĐƠN HÀNG
+                </a>
+            </div>
 
-                <h2>Chi tiết đơn hàng</h2>
+        </section>
 
-                <div id="thankyouProducts"></div>
+    </main>
 
-                <div class="thankyou-total">
-                    <span>Tổng thanh toán</span>
-                    <span id="thankyouTotal">0 ₫</span>
-                </div>
+    <footer class="footer">
+        <p>© 2026 Adidas. All rights reserved.</p>
+    </footer>
 
-            </section>
-
-        </div>
-
-        <div class="thankyou-actions">
-
-            <a href="product.html" class="primary">
-                TIẾP TỤC MUA SẮM
-            </a>
-
-            <a href="orders.html" class="secondary">
-                XEM ĐƠN HÀNG
-            </a>
-
-        </div>
-
-    </section>
-
-</main>
-
-<footer class="footer">
-    <p>© 2026 Adidas</p>
-</footer>
-
-<script src="./js/checkoutModel.js"></script>
-<script src="./js/thankyou.js"></script>
+    <script src="./js/checkoutModel.js"></script>
+    <script src="./js/thankyou.js"></script>
 
 </body>
 </html>
