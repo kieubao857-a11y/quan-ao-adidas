@@ -1,16 +1,15 @@
-
 (function () {
     "use strict";
 
     // ==========================================
-    // 1. CẤU HÌNH VÀ CÁC PHẦN TỬ HTML
+    // 1. CẤU HÌNH
     // ==========================================
 
-    const $ = (id) => document.getElementById(id);
+    const $ = id => document.getElementById(id);
     const form = $("checkoutForm");
 
     if (!form) {
-        console.error("Không tìm thấy form checkoutForm.");
+        console.error("Không tìm thấy checkoutForm.");
         return;
     }
 
@@ -19,72 +18,64 @@
     const ORDERS_KEY = "orders";
 
     let submitting = false;
-    let locating = false;
+    let activeVoucherCode = "";
 
-    function findElement(ids) {
-        for (const id of ids) {
-            const element = $(id);
-            if (element) return element;
-        }
-
-        return null;
-    }
-
-    const nameInput = findElement([
-        "name",
-        "fullName",
-        "customerName"
-    ]);
-
-    const phoneInput = findElement([
-        "phone",
-        "customerPhone"
-    ]);
-
-    const emailInput = findElement([
-        "email",
-        "customerEmail"
-    ]);
-
-    const provinceInput = findElement([
-        "province",
-        "city",
-        "provinceId",
-        "provinceSelect",
-        "citySelect"
-    ]);
-
-    const wardInput = findElement([
-        "ward",
-        "commune",
-        "wardId",
-        "wardSelect",
-        "communeSelect"
-    ]);
-
-    const streetInput = findElement([
-        "streetAddress",
-        "street",
-        "detailAddress",
-        "addressDetail",
-        "houseNumber",
-        "address"
-    ]);
+    const nameInput = $("name");
+    const phoneInput = $("phone");
+    const emailInput = $("email");
+    const provinceInput = $("province");
+    const wardInput = $("ward");
+    const streetInput = $("streetAddress");
 
     const bankInfo = $("bankInfo");
     const bankQR = $("bankQR");
     const qrAmount = $("qrAmount");
 
-    const paymentMethods = form.querySelectorAll(
-        'input[name="payment"]'
-    );
+    const voucherInput = $("voucherCode");
+    const applyVoucherButton = $("applyVoucher");
+    const removeVoucherButton = $("removeVoucher");
+    const voucherMessage = $("voucherMessage");
+
+    const subtotalElement = $("checkoutSubtotal");
+    const discountElement = $("checkoutDiscount");
+    const totalElement = $("checkoutTotal");
 
     const submitButton = form.querySelector(
         'button[type="submit"], input[type="submit"]'
     );
 
     // ==========================================
-    // 2. XỬ LÝ GIỎ HÀNG
+    // 2. DANH SÁCH VOUCHER
+    // ==========================================
+
+    const VOUCHERS = {
+        ADIDAS10: {
+            type: "percent",
+            value: 10,
+            min: 1000000
+        },
+
+        ADIDAS15: {
+            type: "percent",
+            value: 15,
+            min: 2000000
+        },
+
+        ADIDAS20: {
+            type: "percent",
+            value: 20,
+            min: 3000000
+        },
+
+        FREESHIP: {
+            type: "fixed",
+            value: 30000,
+            min: 1000000
+        }
+    };
+
+    // ==========================================
+    // 3. ĐỌC DỮ LIỆU LOCAL STORAGE
     // ==========================================
 
     function readStorageArray(key) {
@@ -121,6 +112,7 @@
 
         return {
             ...item,
+
             id: String(
                 item.id ??
                 item.product_id ??
@@ -128,6 +120,7 @@
                 item.name ??
                 ""
             ),
+
             name: String(item.name || "Sản phẩm"),
             image: String(item.image || ""),
             price: price,
@@ -164,10 +157,170 @@
     function clearCart() {
         localStorage.removeItem(CART_KEY);
         localStorage.removeItem(LEGACY_CART_KEY);
+        localStorage.removeItem("checkoutCart");
     }
 
     // ==========================================
-    // 3. THÔNG BÁO TRÊN GIAO DIỆN
+    // 4. TÍNH TIỀN VOUCHER
+    // ==========================================
+
+    function getVoucherDiscount(subtotal) {
+        const voucher = VOUCHERS[activeVoucherCode];
+
+        if (!voucher || subtotal < voucher.min) {
+            return 0;
+        }
+
+        if (voucher.type === "percent") {
+            return Math.min(
+                subtotal,
+                Math.round(subtotal * voucher.value / 100)
+            );
+        }
+
+        return Math.min(subtotal, voucher.value);
+    }
+
+    function getFinalTotal(cart) {
+        const subtotal = calculateTotal(cart);
+        const discount = getVoucherDiscount(subtotal);
+
+        return Math.max(0, subtotal - discount);
+    }
+
+    function showVoucherMessage(message, isError = false) {
+        if (!voucherMessage) return;
+
+        voucherMessage.textContent = message;
+
+        voucherMessage.style.color = isError
+            ? "#b42318"
+            : "#18723a";
+    }
+
+    function refreshVoucherSummary() {
+        const cart = getCart();
+        const subtotal = calculateTotal(cart);
+        const discount = getVoucherDiscount(subtotal);
+        const finalTotal = Math.max(0, subtotal - discount);
+
+        if (subtotalElement) {
+            subtotalElement.textContent =
+                formatCurrency(subtotal);
+        }
+
+        if (discountElement) {
+            discountElement.textContent =
+                "-" + formatCurrency(discount);
+        }
+
+        if (totalElement) {
+            totalElement.textContent =
+                formatCurrency(finalTotal);
+        }
+
+        if (removeVoucherButton) {
+            removeVoucherButton.hidden = !activeVoucherCode;
+        }
+
+        updateBankQR();
+    }
+
+    function applyVoucher(code) {
+        const normalizedCode = String(code || "")
+            .trim()
+            .toUpperCase();
+
+        const voucher = VOUCHERS[normalizedCode];
+        const subtotal = calculateTotal(getCart());
+
+        if (!normalizedCode) {
+            showVoucherMessage(
+                "Vui lòng nhập hoặc chọn mã voucher.",
+                true
+            );
+            return;
+        }
+
+        if (!voucher) {
+            activeVoucherCode = "";
+
+            showVoucherMessage(
+                "Mã voucher không hợp lệ. Vui lòng kiểm tra lại.",
+                true
+            );
+
+            refreshVoucherSummary();
+            return;
+        }
+
+        if (subtotal < voucher.min) {
+            activeVoucherCode = "";
+
+            showVoucherMessage(
+                "Đơn hàng phải đạt tối thiểu " +
+                formatCurrency(voucher.min) +
+                " để sử dụng mã này.",
+                true
+            );
+
+            refreshVoucherSummary();
+            return;
+        }
+
+        activeVoucherCode = normalizedCode;
+
+        if (voucherInput) {
+            voucherInput.value = normalizedCode;
+        }
+
+        showVoucherMessage(
+            "Áp dụng " + normalizedCode +
+            " thành công! Bạn được giảm " +
+            formatCurrency(getVoucherDiscount(subtotal)) + "."
+        );
+
+        refreshVoucherSummary();
+    }
+
+    if (applyVoucherButton) {
+        applyVoucherButton.addEventListener("click", function () {
+            applyVoucher(
+                voucherInput ? voucherInput.value : ""
+            );
+        });
+    }
+
+    if (voucherInput) {
+        voucherInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                applyVoucher(voucherInput.value);
+            }
+        });
+    }
+
+    document.querySelectorAll("[data-voucher]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            applyVoucher(button.dataset.voucher);
+        });
+    });
+
+    if (removeVoucherButton) {
+        removeVoucherButton.addEventListener("click", function () {
+            activeVoucherCode = "";
+
+            if (voucherInput) {
+                voucherInput.value = "";
+            }
+
+            showVoucherMessage("Đã gỡ mã giảm giá.");
+            refreshVoucherSummary();
+        });
+    }
+
+    // ==========================================
+    // 5. THÔNG BÁO ĐỊA CHỈ
     // ==========================================
 
     function showLocationMessage(message, isError = false) {
@@ -177,16 +330,13 @@
             box = document.createElement("p");
             box.id = "locationMessage";
             box.setAttribute("role", "status");
-            box.setAttribute("aria-live", "polite");
 
-            const button = $("getCurrentLocation");
+            const target = $("getCurrentLocation") || streetInput;
 
-            if (button) {
-                button.insertAdjacentElement("afterend", box);
-            } else if (streetInput) {
-                streetInput.insertAdjacentElement("afterend", box);
+            if (target) {
+                target.insertAdjacentElement("afterend", box);
             } else {
-                form.appendChild(box);
+                form.prepend(box);
             }
         }
 
@@ -199,398 +349,66 @@
             "color:" + (isError ? "#b42318" : "#333") + ";";
     }
 
-    // ==========================================
-    // 4. NÚT LẤY ĐỊA CHỈ GPS
-    // ==========================================
-
+    // Không gắn thêm GPS nếu checkout.html đã xử lý nút này.
     function installLocationButton() {
-        let button = $("getCurrentLocation");
+        const button = $("getCurrentLocation");
 
-        if (!button) {
-            button = document.createElement("button");
-            button.type = "button";
-            button.id = "getCurrentLocation";
-            button.textContent = "📍 Lấy địa chỉ hiện tại";
-
-            button.style.cssText =
-                "display:block;" +
-                "margin:10px 0;" +
-                "padding:12px 16px;" +
-                "border:1px solid #111;" +
-                "border-radius:5px;" +
-                "background:#111;" +
-                "color:#fff;" +
-                "cursor:pointer;" +
-                "font-weight:600;";
-
-            const target = provinceInput || streetInput;
-
-            if (target) {
-                target.insertAdjacentElement("afterend", button);
-            } else {
-                form.prepend(button);
-            }
-        }
+        if (!button) return;
 
         button.type = "button";
 
-        if (button.dataset.locationBound !== "true") {
-            button.dataset.locationBound = "true";
-
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-                getCurrentLocation();
-            });
-        }
-    }
-
-    // ==========================================
-    // 5. CHUẨN HÓA TÊN ĐỊA CHỈ
-    // ==========================================
-
-    function normalizeText(value) {
-        return String(value || "")
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/[đĐ]/g, "d")
-            .toLowerCase()
-            .replace(
-                /^(tinh|thanh pho|phuong|xa|quan|huyen|thi xa|thi tran)\s+/,
-                ""
-            )
-            .trim();
-    }
-
-    function setSelectValue(select, possibleValues) {
-        if (!select || select.tagName !== "SELECT") {
-            return false;
+        if (button.dataset.locationBound === "true") {
+            return;
         }
 
-        const options = Array.from(select.options);
+        button.dataset.locationBound = "true";
 
-        for (const value of possibleValues.filter(Boolean)) {
-            const wanted = normalizeText(value);
-
-            const option = options.find(function (item) {
-                const text = normalizeText(item.textContent);
-
-                return item.value &&
-                    text &&
-                    (
-                        text === wanted ||
-                        text.includes(wanted) ||
-                        wanted.includes(text)
-                    );
-            });
-
-            if (option) {
-                select.value = option.value;
-
-                select.dispatchEvent(
-                    new Event("change", { bubbles: true })
+        button.addEventListener("click", function () {
+            if (!navigator.geolocation) {
+                showLocationMessage(
+                    "Trình duyệt không hỗ trợ GPS.",
+                    true
                 );
-
-                return true;
+                return;
             }
-        }
 
-        return false;
-    }
+            button.disabled = true;
 
-    function setInputValue(element, value) {
-        if (!element || !value) return;
+            navigator.geolocation.getCurrentPosition(
+                function () {
+                    button.disabled = false;
 
-        element.value = value;
+                    showLocationMessage(
+                        "Đã xác định vị trí. Vui lòng kiểm tra địa chỉ."
+                    );
+                },
 
-        element.dispatchEvent(
-            new Event("input", { bubbles: true })
-        );
+                function (error) {
+                    button.disabled = false;
 
-        element.dispatchEvent(
-            new Event("change", { bubbles: true })
-        );
-    }
+                    const messages = {
+                        1: "Bạn chưa cấp quyền định vị.",
+                        2: "Không xác định được vị trí GPS.",
+                        3: "Lấy vị trí quá lâu. Hãy thử lại."
+                    };
 
-    function waitFor(ms) {
-        return new Promise(function (resolve) {
-            setTimeout(resolve, ms);
+                    showLocationMessage(
+                        messages[error.code] || "Không lấy được GPS.",
+                        true
+                    );
+                },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 20000,
+                    maximumAge: 60000
+                }
+            );
         });
     }
 
     // ==========================================
-    // 6. TRA CỨU ĐỊA CHỈ TỪ TỌA ĐỘ GPS
-    // ==========================================
-
-    async function reverseGeocode(latitude, longitude) {
-        const endpoints = [
-            {
-                name: "Photon",
-                url: "https://photon.komoot.io/reverse",
-                params: {
-                    lat: latitude,
-                    lon: longitude,
-                    lang: "en"
-                }
-            },
-            {
-                name: "Nominatim",
-                url: "https://nominatim.openstreetmap.org/reverse",
-                params: {
-                    format: "jsonv2",
-                    lat: latitude,
-                    lon: longitude,
-                    addressdetails: "1",
-                    "accept-language": "vi"
-                }
-            }
-        ];
-
-        let lastError = null;
-
-        for (const endpoint of endpoints) {
-            try {
-                const url = new URL(endpoint.url);
-
-                url.search = new URLSearchParams(
-                    Object.entries(endpoint.params).map(
-                        ([key, value]) => [key, String(value)]
-                    )
-                ).toString();
-
-                const response = await fetch(url.toString(), {
-                    method: "GET",
-                    headers: {
-                        Accept: "application/json"
-                    },
-                    signal: AbortSignal.timeout(12000)
-                });
-
-                if (!response.ok) {
-                    throw new Error(
-                        endpoint.name +
-                        " trả về lỗi HTTP " +
-                        response.status
-                    );
-                }
-
-                const data = await response.json();
-
-                if (endpoint.name === "Photon") {
-                    const feature = data.features &&
-                        data.features[0];
-
-                    if (!feature || !feature.properties) {
-                        throw new Error(
-                            "Không tìm thấy địa chỉ từ Photon."
-                        );
-                    }
-
-                    const p = feature.properties;
-
-                    return {
-                        display_name: [
-                            p.housenumber,
-                            p.street,
-                            p.district,
-                            p.city,
-                            p.state,
-                            p.country
-                        ].filter(Boolean).join(", "),
-
-                        address: {
-                            house_number: p.housenumber || "",
-                            road: p.street || "",
-                            suburb: p.district || p.suburb || "",
-                            city_district: p.district || "",
-                            city: p.city || p.locality || "",
-                            town: p.town || "",
-                            village: p.village || "",
-                            state: p.state || "",
-                            province: p.province || "",
-                            country: p.country || ""
-                        }
-                    };
-                }
-
-                if (!data || !data.address) {
-                    throw new Error(
-                        "Không tìm thấy địa chỉ từ Nominatim."
-                    );
-                }
-
-                return data;
-
-            } catch (error) {
-                lastError = error;
-
-                console.warn(
-                    "Tra cứu bằng " + endpoint.name + " thất bại:",
-                    error
-                );
-
-                await waitFor(500);
-            }
-        }
-
-        throw new Error(
-            "Không thể tra cứu địa chỉ. " +
-            "Vui lòng kiểm tra kết nối mạng hoặc nhập địa chỉ thủ công." +
-            (
-                lastError && lastError.name === "TimeoutError"
-                    ? " Yêu cầu đã hết thời gian chờ."
-                    : ""
-            )
-        );
-    }
-
-    // ==========================================
-    // 7. LẤY GPS VÀ TỰ ĐIỀN ĐỊA CHỈ
-    // ==========================================
-
-    async function getCurrentLocation() {
-        if (locating) return;
-
-        locating = true;
-
-        const button = $("getCurrentLocation");
-
-        if (button) {
-            button.disabled = true;
-            button.textContent = "Đang lấy vị trí...";
-            button.style.opacity = "0.7";
-        }
-
-        try {
-            if (!navigator.geolocation) {
-                throw new Error(
-                    "Trình duyệt không hỗ trợ định vị. " +
-                    "Vui lòng nhập địa chỉ thủ công."
-                );
-            }
-
-            showLocationMessage("Đang xác định vị trí GPS...");
-
-            const position = await new Promise(function (resolve, reject) {
-                navigator.geolocation.getCurrentPosition(
-                    resolve,
-                    reject,
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 20000,
-                        maximumAge: 60000
-                    }
-                );
-            });
-
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-
-            showLocationMessage(
-                "Đã xác định vị trí. Đang tra cứu địa chỉ..."
-            );
-
-            const result = await reverseGeocode(
-                latitude,
-                longitude
-            );
-
-            const a = result.address || {};
-
-            const provinceValues = [
-                a.state,
-                a.province,
-                a.city,
-                a.town
-            ].filter(Boolean);
-
-            const wardValues = [
-                a.suburb,
-                a.quarter,
-                a.city_district,
-                a.district,
-                a.ward,
-                a.town,
-                a.village,
-                a.hamlet,
-                a.neighbourhood
-            ].filter(Boolean);
-
-            const street = [
-                a.house_number,
-                a.road || a.pedestrian || a.residential
-            ].filter(Boolean).join(" ");
-
-            const provinceMatched = setSelectValue(
-                provinceInput,
-                provinceValues
-            );
-
-            // Chờ danh sách phường/xã cập nhật nếu phụ thuộc tỉnh.
-            if (provinceMatched && wardInput) {
-                await waitFor(1000);
-            }
-
-            const wardMatched = setSelectValue(
-                wardInput,
-                wardValues
-            );
-
-            if (streetInput) {
-                setInputValue(
-                    streetInput,
-                    street || result.display_name || ""
-                );
-            }
-
-            if (!provinceMatched || !wardMatched) {
-                showLocationMessage(
-                    "Đã tìm thấy vị trí nhưng chưa khớp danh sách " +
-                    "tỉnh/thành phố hoặc phường/xã. " +
-                    "Vui lòng kiểm tra và chọn lại thủ công."
-                );
-            } else {
-                showLocationMessage(
-                    "Đã điền địa chỉ gần nhất. " +
-                    "Vui lòng kiểm tra trước khi đặt hàng."
-                );
-            }
-
-        } catch (error) {
-            console.error("Lỗi định vị:", error);
-
-            let message = error.message ||
-                "Không thể lấy địa chỉ. Vui lòng thử lại.";
-
-            if (typeof error.code === "number") {
-                if (error.code === 1) {
-                    message =
-                        "Bạn chưa cấp quyền định vị. " +
-                        "Hãy cho phép website truy cập vị trí.";
-                } else if (error.code === 2) {
-                    message =
-                        "Không xác định được vị trí. " +
-                        "Hãy bật GPS hoặc kiểm tra kết nối mạng.";
-                } else if (error.code === 3) {
-                    message =
-                        "Lấy vị trí quá lâu. Vui lòng thử lại.";
-                }
-            }
-
-            showLocationMessage(message, true);
-
-        } finally {
-            locating = false;
-
-            if (button) {
-                button.disabled = false;
-                button.textContent = "📍 Lấy địa chỉ hiện tại";
-                button.style.opacity = "1";
-            }
-        }
-    }
-
-    // ==========================================
-    // 8. ĐỊA CHỈ KHÁCH HÀNG
+    // 6. LẤY ĐỊA CHỈ KHÁCH HÀNG
     // ==========================================
 
     function getFieldValue(element) {
@@ -615,6 +433,7 @@
             province: province,
             ward: ward,
             streetAddress: street,
+
             address: [street, ward, province]
                 .filter(Boolean)
                 .join(", ")
@@ -622,7 +441,7 @@
     }
 
     // ==========================================
-    // 9. QR CHUYỂN KHOẢN
+    // 7. CẬP NHẬT QR NGÂN HÀNG
     // ==========================================
 
     function updateBankQR() {
@@ -630,7 +449,7 @@
             'input[name="payment"]:checked'
         );
 
-        const total = calculateTotal(getCart());
+        const total = getFinalTotal(getCart());
 
         const isBank = selectedPayment &&
             selectedPayment.value === "bank";
@@ -665,7 +484,7 @@
             params.toString();
     }
 
-    paymentMethods.forEach(function (method) {
+    form.querySelectorAll('input[name="payment"]').forEach(function (method) {
         method.addEventListener("change", updateBankQR);
     });
 
@@ -674,7 +493,7 @@
     }
 
     // ==========================================
-    // 10. KIỂM TRA THÔNG TIN KHÁCH HÀNG
+    // 8. KIỂM TRA THÔNG TIN KHÁCH HÀNG
     // ==========================================
 
     function validateCustomer() {
@@ -737,7 +556,7 @@
         }
 
         if (!address.ward) {
-            alert("Vui lòng chọn hoặc nhập phường/xã.");
+            alert("Vui lòng chọn phường/xã.");
 
             if (wardInput) wardInput.focus();
 
@@ -745,7 +564,7 @@
         }
 
         if (!address.province) {
-            alert("Vui lòng chọn hoặc nhập tỉnh/thành phố.");
+            alert("Vui lòng chọn tỉnh/thành phố.");
 
             if (provinceInput) provinceInput.focus();
 
@@ -762,7 +581,9 @@
             phone: phone,
             email: email,
             address: address,
+
             paymentCode: selectedPayment.value,
+
             payment: selectedPayment.value === "cod"
                 ? "Thanh toán khi nhận hàng"
                 : "Chuyển khoản ngân hàng"
@@ -770,7 +591,7 @@
     }
 
     // ==========================================
-    // 11. TẠO VÀ LƯU ĐƠN HÀNG
+    // 9. LƯU ĐƠN HÀNG
     // ==========================================
 
     function saveOrderLocally(payload) {
@@ -778,11 +599,18 @@
 
         const order = {
             id: String(Date.now()),
+
             customer: payload.customer,
             payment: payload.payment,
             paymentCode: payload.paymentCode,
+
             products: payload.products,
+
+            subtotal: payload.subtotal,
+            discount: payload.discount,
+            voucherCode: payload.voucherCode,
             total: payload.total,
+
             status: "Chờ xử lý",
             note: "",
             createdAt: new Date().toLocaleString("vi-VN")
@@ -790,7 +618,6 @@
 
         orders.push(order);
 
-        // Nếu lưu thất bại, localStorage sẽ ném lỗi.
         localStorage.setItem(
             ORDERS_KEY,
             JSON.stringify(orders)
@@ -813,13 +640,18 @@
                 payment: payload.payment,
                 paymentCode: payload.paymentCode,
                 products: payload.products,
+
+                subtotal: payload.subtotal,
+                discount: payload.discount,
+                voucherCode: payload.voucherCode,
                 total: payload.total,
+
                 note: ""
             });
 
-            if (!order || order.id === undefined || order.id === null) {
+            if (!order || order.id == null) {
                 throw new Error(
-                    "CheckoutModel.createOrder() không trả về mã đơn hàng hợp lệ."
+                    "Không nhận được mã đơn hàng hợp lệ."
                 );
             }
 
@@ -830,7 +662,7 @@
     }
 
     // ==========================================
-    // 12. KHÓA / MỞ NÚT ĐẶT HÀNG
+    // 10. KHÓA NÚT ĐẶT HÀNG
     // ==========================================
 
     function setSubmittingState(isSubmitting) {
@@ -839,32 +671,33 @@
         submitButton.disabled = isSubmitting;
 
         if (
-            submitButton.tagName === "BUTTON" ||
-            submitButton.tagName === "INPUT"
+            submitButton.tagName !== "BUTTON" &&
+            submitButton.tagName !== "INPUT"
         ) {
-            if (!submitButton.dataset.originalText) {
-                submitButton.dataset.originalText =
-                    submitButton.tagName === "INPUT"
-                        ? submitButton.value
-                        : submitButton.textContent;
-            }
+            return;
+        }
 
-            const originalText = submitButton.dataset.originalText;
+        if (!submitButton.dataset.originalText) {
+            submitButton.dataset.originalText =
+                submitButton.tagName === "INPUT"
+                    ? submitButton.value
+                    : submitButton.textContent;
+        }
 
-            if (submitButton.tagName === "INPUT") {
-                submitButton.value = isSubmitting
-                    ? "ĐANG TẠO ĐƠN HÀNG..."
-                    : originalText;
-            } else {
-                submitButton.textContent = isSubmitting
-                    ? "ĐANG TẠO ĐƠN HÀNG..."
-                    : originalText;
-            }
+        const originalText = submitButton.dataset.originalText;
+        const text = isSubmitting
+            ? "ĐANG TẠO ĐƠN HÀNG..."
+            : originalText;
+
+        if (submitButton.tagName === "INPUT") {
+            submitButton.value = text;
+        } else {
+            submitButton.textContent = text;
         }
     }
 
     // ==========================================
-    // 13. XỬ LÝ ĐẶT HÀNG
+    // 11. XỬ LÝ ĐẶT HÀNG
     // ==========================================
 
     form.addEventListener("submit", async function (event) {
@@ -883,7 +716,9 @@
 
         if (!customerInfo) return;
 
-        const total = calculateTotal(cart);
+        const subtotal = calculateTotal(cart);
+        const discount = getVoucherDiscount(subtotal);
+        const total = Math.max(0, subtotal - discount);
 
         if (!Number.isFinite(total) || total < 0) {
             alert("Tổng tiền đơn hàng không hợp lệ.");
@@ -894,6 +729,7 @@
             name: customerInfo.name,
             phone: customerInfo.phone,
             email: customerInfo.email,
+
             address: customerInfo.address.address,
             streetAddress: customerInfo.address.streetAddress,
             ward: customerInfo.address.ward,
@@ -902,9 +738,15 @@
 
         const payload = {
             customer: customer,
+
             payment: customerInfo.payment,
             paymentCode: customerInfo.paymentCode,
+
             products: cart,
+
+            subtotal: subtotal,
+            discount: discount,
+            voucherCode: activeVoucherCode,
             total: total
         };
 
@@ -914,7 +756,6 @@
         try {
             const order = await createOrder(payload);
 
-            // Chỉ xóa giỏ hàng sau khi tạo đơn thành công.
             clearCart();
 
             localStorage.setItem(
@@ -941,20 +782,18 @@
     });
 
     // ==========================================
-    // 14. KHỞI TẠO TRANG CHECKOUT
+    // 12. KHỞI TẠO TRANG
     // ==========================================
 
     installLocationButton();
-    updateBankQR();
+    refreshVoucherSummary();
 
-    // Cập nhật QR nếu giỏ hàng thay đổi ở tab khác.
     window.addEventListener("storage", function (event) {
         if (
             event.key === CART_KEY ||
             event.key === LEGACY_CART_KEY
         ) {
-            updateBankQR();
+            refreshVoucherSummary();
         }
     });
-
 })();
