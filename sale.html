@@ -10,142 +10,235 @@
     <link rel="stylesheet" href="./src/style.css">
 
     <style>
+        /* ===== TRANG SALE ===== */
         .category-page {
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 30px 20px 50px;
+            box-sizing: border-box;
         }
 
+        /* Banner Sale */
         .category-banner {
             padding: 45px 20px;
             margin-bottom: 35px;
             text-align: center;
-            background: linear-gradient(135deg, #171717, #454545);
-            color: white;
+            color: #fff;
+            background: linear-gradient(135deg, #111, #414141);
             border-radius: 12px;
         }
 
         .category-banner h1 {
             margin: 0 0 12px;
             font-size: 36px;
+            font-weight: 900;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .category-banner p {
             margin: 0;
+            color: #eee;
             font-size: 16px;
-            color: #eeeeee;
         }
 
+        /* ===== DANH SÁCH SẢN PHẨM THÀNH HÀNG NGANG ===== */
+        #productList.product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            align-items: stretch;
+            gap: 24px;
+            width: 100%;
+        }
+
+        /* Thẻ sản phẩm */
+        #productList .product-card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #e9e9e9;
+            border-radius: 10px;
+            box-sizing: border-box;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        #productList .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.09);
+        }
+
+        /* Ảnh sản phẩm */
+        #productList .product-image {
+            display: block;
+            width: 100%;
+            height: 230px;
+            padding: 12px;
+            box-sizing: border-box;
+            object-fit: contain;
+            background: #f7f7f7;
+        }
+
+        /* Thông tin sản phẩm */
+        #productList .product-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            align-items: center;
+            padding: 16px 12px 18px;
+            text-align: center;
+        }
+
+        #productList .product-name {
+            width: 100%;
+            min-height: 44px;
+            margin: 0 0 8px;
+            color: #222;
+            font-size: 15px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        /* Nhãn giảm giá */
         .sale-label {
             display: inline-block;
             padding: 6px 12px;
-            margin: 10px 0;
-            color: white;
+            margin: 8px 0;
+            color: #fff;
             background: #e53935;
             font-size: 12px;
-            font-weight: bold;
-            border-radius: 5px;
+            font-weight: 700;
+            border-radius: 4px;
         }
 
+        /* Giá sản phẩm */
         .sale-price {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
-            margin: 12px 0;
+            gap: 8px;
+            margin: 10px 0;
         }
 
         .old-price {
             color: #888;
+            font-size: 13px;
             text-decoration: line-through;
-            font-size: 14px;
         }
 
         .new-price {
             color: #e53935;
-            font-size: 19px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 800;
         }
 
-        .sale-status {
+        /* Nút xem sản phẩm */
+        #productList .product-button {
+            display: inline-block;
+            margin-top: auto;
+            padding: 11px 16px;
+            background: #111;
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid #111;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        #productList .product-button:hover {
+            background: #fff;
+            color: #111;
+        }
+
+        /* Trạng thái tải sản phẩm */
+        #productList .sale-status {
             grid-column: 1 / -1;
             padding: 35px 15px;
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             color: #555;
         }
 
-        .sale-status.error {
+        #productList .sale-status.error {
             color: #c62828;
         }
 
-        .product-card {
-            overflow: hidden;
-            background: #fff;
-            border: 1px solid #eeeeee;
-            border-radius: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-image {
-            display: block;
+        /* ===== FOOTER DÙNG STYLE CHUNG ===== */
+        .footer {
             width: 100%;
-            height: 230px;
-            object-fit: contain;
-            padding: 12px;
-            background: #f7f7f7;
+            box-sizing: border-box;
+            margin-top: 30px;
         }
 
-        .product-info {
-            padding: 16px;
-            text-align: center;
+        /* ===== MÀN HÌNH LAPTOP NHỎ ===== */
+        @media (max-width: 1000px) {
+            #productList.product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            #productList .product-image {
+                height: 210px;
+            }
         }
 
-        .product-name {
-            min-height: 44px;
-            margin: 0 0 10px;
-            font-size: 16px;
-            color: #222;
-        }
-
-        .product-button {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 10px 18px;
-            background: #111;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .product-button:hover {
-            background: #444;
-        }
-
-        @media (max-width: 600px) {
+        /* ===== TABLET ===== */
+        @media (max-width: 700px) {
             .category-page {
-                padding: 20px 12px 35px;
+                padding: 22px 14px 35px;
             }
 
             .category-banner {
-                padding: 30px 15px;
+                padding: 32px 15px;
+                margin-bottom: 25px;
             }
 
             .category-banner h1 {
-                font-size: 27px;
+                font-size: 28px;
             }
 
-            .product-image {
-                height: 180px;
+            #productList.product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 14px;
+            }
+
+            #productList .product-image {
+                height: 185px;
+                padding: 8px;
+            }
+
+            #productList .product-info {
+                padding: 12px 9px 15px;
+            }
+
+            #productList .product-name {
+                font-size: 14px;
+            }
+
+            .new-price {
+                font-size: 16px;
+            }
+        }
+
+        /* ===== ĐIỆN THOẠI NHỎ ===== */
+        @media (max-width: 380px) {
+            #productList.product-grid {
+                gap: 10px;
+            }
+
+            #productList .product-image {
+                height: 150px;
+            }
+
+            #productList .product-button {
+                padding: 9px 10px;
+                font-size: 12px;
             }
         }
     </style>
@@ -153,6 +246,7 @@
 
 <body>
 
+    <!-- MENU -->
     <header class="header">
         <div class="logo">adidas</div>
 
@@ -171,6 +265,7 @@
         </div>
     </header>
 
+    <!-- NỘI DUNG SALE -->
     <main class="container category-page">
 
         <section class="category-banner">
@@ -184,6 +279,7 @@
 
     </main>
 
+    <!-- FOOTER -->
     <footer class="footer">
         <p>© 2026 Adidas</p>
     </footer>

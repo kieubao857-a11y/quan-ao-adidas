@@ -2739,3 +2739,248 @@ body:has(#checkoutForm) .footer p {
         width: 100%;
     }
 }
+/* ===== SỬA HEADER VÀ MENU ADIDAS ===== */
+
+.header {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 16px 40px;
+}
+
+.header .logo {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.header .menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.header .menu a {
+    display: inline-block;
+    white-space: nowrap;
+    margin: 0;
+    padding: 8px 0;
+    text-decoration: none;
+}
+
+.header .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    gap: 16px;
+    margin: 0;
+}
+
+.header .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* Màn hình nhỏ */
+@media (max-width: 900px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 15px 20px;
+    }
+
+    .header .menu {
+        order: 3;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px 20px;
+    }
+
+    .header .header-right {
+        margin-left: auto;
+    }
+}
+/* ===== MENU ADIDAS HIỆN ĐẠI ===== */
+
+.header {
+    width: 100%;
+    min-height: 82px;
+    padding: 0 45px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+
+    position: relative;
+    z-index: 1000;
+}
+
+/* LOGO */
+.header .logo {
+    flex-shrink: 0;
+    margin: 0;
+
+    color: #111111;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-transform: lowercase;
+    cursor: pointer;
+}
+
+/* DANH SÁCH MENU */
+.header .menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 30px;
+
+    margin: 0;
+    padding: 0;
+}
+
+/* CHỮ TRÊN MENU */
+.header .menu a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    padding: 30px 0;
+    margin: 0;
+
+    color: #222222;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: color 0.25s ease;
+}
+
+/* GẠCH CHÂN CHUYỂN ĐỘNG */
+.header .menu a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 21px;
+
+    width: 0;
+    height: 3px;
+    background: #111111;
+
+    transition: width 0.25s ease;
+}
+
+.header .menu a:hover {
+    color: #777777;
+}
+
+.header .menu a:hover::after {
+    width: 100%;
+}
+
+/* ICON BÊN PHẢI */
+.header .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    gap: 12px;
+
+    margin: 0;
+    padding: 0;
+}
+
+.header .header-right .icon {
+    width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #f5f5f5;
+
+    font-size: 19px;
+    text-decoration: none;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.header .header-right .icon:hover {
+    background: #e5e5e5;
+    transform: translateY(-2px);
+}
+
+/* MÀN HÌNH LAPTOP NHỎ */
+@media (max-width: 1100px) {
+    .header {
+        padding: 0 22px;
+        gap: 20px;
+    }
+
+    .header .menu {
+        gap: 18px;
+    }
+
+    .header .menu a {
+        font-size: 12px;
+    }
+}
+
+/* ĐIỆN THOẠI VÀ MÁY TÍNH BẢNG */
+@media (max-width: 768px) {
+    .header {
+        min-height: auto;
+        padding: 16px 18px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .header .logo {
+        font-size: 29px;
+    }
+
+    .header .header-right {
+        margin-left: auto;
+    }
+
+    .header .menu {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 0 22px;
+    }
+
+    .header .menu a {
+        padding: 12px 0;
+        font-size: 12px;
+    }
+
+    .header .menu a::after {
+        bottom: 5px;
+    }
+}
