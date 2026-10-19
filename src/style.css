@@ -3458,4 +3458,451 @@ body:has(#checkoutForm) .footer p {
     .footer-bottom {
         padding: 16px 12px;
     }
+    
+/* =====================================================
+   FIX TRANG SẢN PHẨM — products.html
+   Đồng bộ giao diện Adidas Shop
+===================================================== */
+
+/* Nền và bố cục tổng thể */
+body {
+    min-height: 100vh;
+}
+
+/* Khu vực danh sách sản phẩm */
+#productList {
+    width: min(1320px, calc(100% - 48px));
+    margin: 36px auto 64px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px 22px;
+    align-items: stretch;
+}
+
+/* Thẻ sản phẩm */
+#productList .product-card,
+#productList .product-item,
+#productList .product {
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    transition: box-shadow 0.25s ease,
+                transform 0.25s ease;
+}
+
+#productList .product-card:hover,
+#productList .product-item:hover,
+#productList .product:hover {
+    box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
+    transform: translateY(-3px);
+}
+
+/* Ảnh sản phẩm */
+#productList img {
+    display: block;
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    background: #f5f5f5;
+}
+
+/* Nội dung thẻ sản phẩm */
+#productList .product-info,
+#productList .product-content,
+#productList .product-details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 16px;
+}
+
+#productList h2,
+#productList h3,
+#productList .product-name {
+    margin: 0;
+    color: #111;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+#productList .product-category,
+#productList .category {
+    color: #777;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#productList .product-price,
+#productList .price {
+    margin-top: auto;
+    padding-top: 14px;
+    color: #111;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+/* Nút xem chi tiết */
+#productList a,
+#productList .btn-detail,
+#productList button {
+    text-decoration: none;
+}
+
+#productList a.btn,
+#productList a.btn-detail,
+#productList .product-info > a,
+#productList .product-content > a,
+#productList .product-details > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid #111;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 0.2s ease;
+}
+
+#productList a.btn:hover,
+#productList a.btn-detail:hover,
+#productList .product-info > a:hover,
+#productList .product-content > a:hover,
+#productList .product-details > a:hover {
+    background: #333;
+}
+
+/* =====================================================
+   FIX FOOTER — dùng chung cho trang sản phẩm
+===================================================== */
+
+body > footer,
+footer {
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    padding: 0;
+    background: #080808;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Các bố cục footer phổ biến */
+footer .footer-container,
+footer .footer-inner,
+footer .footer-content,
+footer .footer-top,
+footer .container {
+    width: min(1320px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 44px 0 36px;
+}
+
+/* Chia cột footer */
+footer .footer-content,
+footer .footer-top,
+footer .footer-container,
+footer .footer-inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 36px;
+    align-items: start;
+}
+
+/* Tiêu đề footer */
+footer h2,
+footer h3,
+footer h4 {
+    margin: 0 0 16px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+/* Văn bản */
+footer p {
+    margin: 0 0 12px;
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* Liên kết chính sách, mạng xã hội */
+footer a {
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+footer a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Danh sách link trong footer */
+footer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+footer li {
+    margin-bottom: 9px;
+}
+
+/* Phần bản quyền */
+footer .footer-bottom,
+footer .footer-copyright,
+footer .copyright {
+    width: 100%;
+    margin: 0;
+    padding: 18px 24px;
+    border-top: 1px solid #333;
+    background: #080808;
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1.7;
+    text-align: center;
+}
+
+/* Tránh các phần tử trong footer tràn chiều ngang */
+footer * {
+    box-sizing: border-box;
+}
+
+footer img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1050px) {
+    #productList {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    #productList img {
+        height: 230px;
+    }
+
+    footer .footer-content,
+    footer .footer-top,
+    footer .footer-container,
+    footer .footer-inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px;
+    }
+}
+
+@media (max-width: 700px) {
+    #productList {
+        width: calc(100% - 28px);
+        margin: 24px auto 40px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    #productList img {
+        height: 190px;
+    }
+
+    #productList .product-info,
+    #productList .product-content,
+    #productList .product-details {
+        padding: 12px;
+    }
+
+    #productList h2,
+    #productList h3,
+    #productList .product-name {
+        font-size: 14px;
+    }
+
+    #productList .product-price,
+    #productList .price {
+        font-size: 15px;
+    }
+
+    footer .footer-content,
+    footer .footer-top,
+    footer .footer-container,
+    footer .footer-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    footer .footer-container,
+    footer .footer-inner,
+    footer .footer-content,
+    footer .footer-top {
+        width: calc(100% - 36px);
+        padding: 30px 0;
+    }
+}
+
+@media (max-width: 380px) {
+    #productList img {
+        height: 155px;
+    }
+}
+
+/* ==========================================
+   FOOTER ADIDAS SHOP
+   Áp dụng cho products.html
+========================================== */
+
+.footer {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #080808;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.footer,
+.footer * {
+    box-sizing: border-box;
+}
+
+.footer-container {
+    width: min(1200px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 45px 0 38px;
+
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 36px;
+    align-items: start;
+}
+
+.footer-column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-column h3 {
+    margin: 0 0 18px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.footer-column p {
+    margin: 0 0 9px;
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.footer-column a {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.6;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Mạng xã hội */
+.footer-column .social-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.footer-column .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.footer-column .social-links a:hover {
+    background: #e30613;
+    border-color: #e30613;
+    text-decoration: none;
+}
+
+/* Dòng bản quyền */
+.footer-bottom {
+    width: 100%;
+    margin: 0;
+    padding: 18px 24px;
+    border-top: 1px solid #303030;
+    background: #080808;
+    text-align: center;
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #999;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 30px;
+    }
+}
+
+/* Điện thoại */
+@media (max-width: 500px) {
+    .footer-container {
+        width: calc(100% - 36px);
+        grid-template-columns: 1fr;
+        gap: 26px;
+        padding: 32px 0;
+    }
+
+    .footer-column h3 {
+        margin-bottom: 12px;
+    }
+
+    .footer-bottom {
+        padding: 16px;
+    }
+}
 }
