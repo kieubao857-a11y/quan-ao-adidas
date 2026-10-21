@@ -1,651 +1,660 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thanh toán Adidas</title>
 
-    <link rel="stylesheet" href="./src/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="./src/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
 
     <style>
-        [hidden] {
-            display: none !important;
-        }
+      [hidden] {
+        display: none !important;
+      }
 
-        .address-section,
+      .address-section,
+      .voucher-section {
+        margin: 24px 0;
+      }
+
+      .address-section .form-group {
+        margin: 14px 0;
+      }
+
+      .address-section label {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .address-section input,
+      .address-section select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: #fff;
+      }
+
+      .location-actions,
+      .voucher-row,
+      .voucher-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 12px 0;
+      }
+
+      .location-actions button {
+        border: none;
+        border-radius: 5px;
+        padding: 12px 15px;
+        background: #111;
+        color: white;
+        cursor: pointer;
+      }
+
+      #addressMap {
+        width: 100%;
+        height: 350px;
+        margin: 12px 0;
+        border-radius: 8px;
+      }
+
+      #addressStatus,
+      #voucherMessage {
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .address-help {
+        color: #666;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .voucher-section {
+        padding: 20px;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .voucher-section h2 {
+        margin-top: 0;
+      }
+
+      .voucher-row input {
+        flex: 1;
+        min-width: 180px;
+        box-sizing: border-box;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-transform: uppercase;
+      }
+
+      .voucher-row button {
+        padding: 12px 16px;
+        border: none;
+        border-radius: 5px;
+        background: #111;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .voucher-chip {
+        padding: 10px;
+        border: 1px dashed #d71920;
+        border-radius: 5px;
+        background: #fff7f7;
+        color: #b5121b;
+        cursor: pointer;
+        text-align: left;
+      }
+
+      .voucher-chip:hover {
+        background: #ffe8e8;
+      }
+
+      .checkout-summary {
+        padding-top: 12px;
+        border-top: 1px solid #ddd;
+      }
+
+      .summary-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 12px 0;
+      }
+
+      .summary-line strong {
+        text-align: right;
+      }
+
+      .summary-line.total {
+        padding-top: 12px;
+        border-top: 1px solid #ddd;
+        font-size: 18px;
+      }
+
+      .summary-line.total strong {
+        color: #d71920;
+      }
+
+      @media (max-width: 600px) {
         .voucher-section {
-            margin: 24px 0;
+          padding: 14px;
         }
 
-        .address-section .form-group {
-            margin: 14px 0;
+        .voucher-row {
+          flex-direction: column;
         }
 
-        .address-section label {
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .address-section input,
-        .address-section select {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: #fff;
-        }
-
-        .location-actions,
-        .voucher-row,
-        .voucher-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 12px 0;
-        }
-
-        .location-actions button {
-            border: none;
-            border-radius: 5px;
-            padding: 12px 15px;
-            background: #111;
-            color: white;
-            cursor: pointer;
-        }
-
-        #addressMap {
-            width: 100%;
-            height: 350px;
-            margin: 12px 0;
-            border-radius: 8px;
-        }
-
-        #addressStatus,
-        #voucherMessage {
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .address-help {
-            color: #666;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-        .voucher-section {
-            padding: 20px;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            background: #fff;
-        }
-
-        .voucher-section h2 {
-            margin-top: 0;
-        }
-
-        .voucher-row input {
-            flex: 1;
-            min-width: 180px;
-            box-sizing: border-box;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-transform: uppercase;
-        }
-
+        .voucher-row input,
         .voucher-row button {
-            padding: 12px 16px;
-            border: none;
-            border-radius: 5px;
-            background: #111;
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
+          width: 100%;
         }
-
-        .voucher-chip {
-            padding: 10px;
-            border: 1px dashed #d71920;
-            border-radius: 5px;
-            background: #fff7f7;
-            color: #b5121b;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .voucher-chip:hover {
-            background: #ffe8e8;
-        }
-
-        .checkout-summary {
-            padding-top: 12px;
-            border-top: 1px solid #ddd;
-        }
-
-        .summary-line {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            margin: 12px 0;
-        }
-
-        .summary-line strong {
-            text-align: right;
-        }
-
-        .summary-line.total {
-            padding-top: 12px;
-            border-top: 1px solid #ddd;
-            font-size: 18px;
-        }
-
-        .summary-line.total strong {
-            color: #d71920;
-        }
-
-        @media (max-width: 600px) {
-            .voucher-section {
-                padding: 14px;
-            }
-
-            .voucher-row {
-                flex-direction: column;
-            }
-
-            .voucher-row input,
-            .voucher-row button {
-                width: 100%;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-<header class="header">
-    <div class="logo">adidas</div>
+  <body>
+    <header class="header">
+      <div class="logo">adidas</div>
 
-    <nav class="menu">
+      <nav class="menu">
         <a href="index.html">Trang chủ</a>
         <a href="product.html">Sản phẩm</a>
         <a href="nam.html">Nam</a>
         <a href="nu.html">Nữ</a>
         <a href="the-thao.html">Thể thao</a>
         <a href="sale.html">Sale</a>
-    </nav>
+      </nav>
 
-    <div class="header-right">
+      <div class="header-right">
         <a href="cart.html" class="icon">🛒</a>
         <a href="#" class="icon">👤</a>
-    </div>
-</header>
+      </div>
+    </header>
 
-<main class="container">
-    <h1>Thanh toán</h1>
+    <main class="container">
+      <h1>Thanh toán</h1>
 
-    <form id="checkoutForm">
+      <form id="checkoutForm">
         <h2>Thông tin người nhận</h2>
 
         <div class="form-group">
-            <label for="name">Họ và tên</label>
-            <input type="text" id="name"
-                   placeholder="Nhập họ và tên" required>
+          <label for="name">Họ và tên</label>
+          <input type="text" id="name" placeholder="Nhập họ và tên" required />
         </div>
 
         <div class="form-group">
-            <label for="phone">Số điện thoại</label>
-            <input type="tel" id="phone"
-                   placeholder="Nhập số điện thoại" required>
+          <label for="phone">Số điện thoại</label>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="Nhập số điện thoại"
+            required
+          />
         </div>
 
         <div class="form-group">
-            <label for="email">Email (không bắt buộc)</label>
-            <input type="email" id="email" placeholder="Nhập email">
+          <label for="email">Email (không bắt buộc)</label>
+          <input type="email" id="email" placeholder="Nhập email" />
         </div>
 
         <section class="address-section">
-            <h2>Địa chỉ nhận hàng</h2>
+          <h2>Địa chỉ nhận hàng</h2>
 
-            <div class="form-group">
-                <label for="province">Tỉnh/Thành phố *</label>
-                <select id="province" required>
-                    <option value="">Đang tải tỉnh/thành phố...</option>
-                </select>
-            </div>
+          <div class="form-group">
+            <label for="province">Tỉnh/Thành phố *</label>
+            <select id="province" required>
+              <option value="">Đang tải tỉnh/thành phố...</option>
+            </select>
+          </div>
 
-            <div class="form-group">
-                <label for="ward">Phường/Xã *</label>
-                <select id="ward" required disabled>
-                    <option value="">Chọn tỉnh/thành phố trước</option>
-                </select>
-            </div>
+          <div class="form-group">
+            <label for="ward">Phường/Xã *</label>
+            <select id="ward" required disabled>
+              <option value="">Chọn tỉnh/thành phố trước</option>
+            </select>
+          </div>
 
-            <div class="form-group">
-                <label for="streetAddress">Số nhà, tên đường *</label>
-                <input type="text" id="streetAddress"
-                       placeholder="Ví dụ: 12 Nguyễn Trãi" required>
-            </div>
+          <div class="form-group">
+            <label for="streetAddress">Số nhà, tên đường *</label>
+            <input
+              type="text"
+              id="streetAddress"
+              placeholder="Ví dụ: 12 Nguyễn Trãi"
+              required
+            />
+          </div>
 
-            <div class="location-actions">
-                <button type="button" id="getCurrentLocation">
-                    📍 Lấy địa chỉ hiện tại
-                </button>
+          <div class="location-actions">
+            <button type="button" id="getCurrentLocation">
+              📍 Lấy địa chỉ hiện tại
+            </button>
 
-                <button type="button" id="showMap">
-                    🗺️ Chọn trên bản đồ
-                </button>
-            </div>
+            <button type="button" id="showMap">🗺️ Chọn trên bản đồ</button>
+          </div>
 
-            <p id="addressStatus" role="status" aria-live="polite">
-                Đang tải dữ liệu địa chỉ...
-            </p>
+          <p id="addressStatus" role="status" aria-live="polite">
+            Đang tải dữ liệu địa chỉ...
+          </p>
 
-            <p class="address-help">
-                Cho phép trình duyệt truy cập vị trí khi dùng GPS.
-                Bạn cũng có thể bấm trực tiếp lên bản đồ để chọn địa chỉ.
-                Vui lòng kiểm tra lại địa chỉ trước khi đặt hàng.
-            </p>
+          <p class="address-help">
+            Cho phép trình duyệt truy cập vị trí khi dùng GPS. Bạn cũng có thể
+            bấm trực tiếp lên bản đồ để chọn địa chỉ. Vui lòng kiểm tra lại địa
+            chỉ trước khi đặt hàng.
+          </p>
 
-            <div id="mapWrap" hidden>
-                <div id="addressMap"></div>
-                <p class="address-help">
-                    Bấm vào bản đồ để tìm địa chỉ gần nhất.
-                </p>
-            </div>
+          <div id="mapWrap" hidden>
+            <div id="addressMap"></div>
+            <p class="address-help">Bấm vào bản đồ để tìm địa chỉ gần nhất.</p>
+          </div>
 
-            <input type="hidden" id="address">
+          <input type="hidden" id="address" />
         </section>
 
         <!-- VOUCHER -->
         <section class="voucher-section">
-            <h2>🎟️ Mã giảm giá</h2>
-            <p>Nhập mã voucher hoặc chọn một mã bên dưới.</p>
+          <h2>🎟️ Mã giảm giá</h2>
+          <p>Nhập mã voucher hoặc chọn một mã bên dưới.</p>
 
-            <div class="voucher-row">
-                <input
-                    type="text"
-                    id="voucherCode"
-                    placeholder="Nhập mã: ADIDAS10"
-                    aria-label="Mã giảm giá"
-                    autocomplete="off"
-                >
+          <div class="voucher-row">
+            <input
+              type="text"
+              id="voucherCode"
+              placeholder="Nhập mã: ADIDAS10"
+              aria-label="Mã giảm giá"
+              autocomplete="off"
+            />
 
-                <button type="button" id="applyVoucher">
-                    ÁP DỤNG
-                </button>
+            <button type="button" id="applyVoucher">ÁP DỤNG</button>
 
-                <button type="button" id="removeVoucher" hidden>
-                    GỠ MÃ
-                </button>
+            <button type="button" id="removeVoucher" hidden>GỠ MÃ</button>
+          </div>
+
+          <div class="voucher-options">
+            <button type="button" class="voucher-chip" data-voucher="ADIDAS10">
+              ADIDAS10 - Giảm 10% từ 1.000.000đ
+            </button>
+
+            <button type="button" class="voucher-chip" data-voucher="ADIDAS15">
+              ADIDAS15 - Giảm 15% từ 2.000.000đ
+            </button>
+
+            <button type="button" class="voucher-chip" data-voucher="ADIDAS20">
+              ADIDAS20 - Giảm 20% từ 3.000.000đ
+            </button>
+
+            <button type="button" class="voucher-chip" data-voucher="FREESHIP">
+              FREESHIP - Giảm 30.000đ
+            </button>
+          </div>
+
+          <p id="voucherMessage" role="status" aria-live="polite"></p>
+
+          <div class="checkout-summary">
+            <div class="summary-line">
+              <span>Tạm tính</span>
+              <strong id="checkoutSubtotal">0 VNĐ</strong>
             </div>
 
-            <div class="voucher-options">
-                <button type="button" class="voucher-chip"
-                        data-voucher="ADIDAS10">
-                    ADIDAS10 - Giảm 10% từ 1.000.000đ
-                </button>
-
-                <button type="button" class="voucher-chip"
-                        data-voucher="ADIDAS15">
-                    ADIDAS15 - Giảm 15% từ 2.000.000đ
-                </button>
-
-                <button type="button" class="voucher-chip"
-                        data-voucher="ADIDAS20">
-                    ADIDAS20 - Giảm 20% từ 3.000.000đ
-                </button>
-
-                <button type="button" class="voucher-chip"
-                        data-voucher="FREESHIP">
-                    FREESHIP - Giảm 30.000đ
-                </button>
+            <div class="summary-line">
+              <span>Giảm voucher</span>
+              <strong id="checkoutDiscount">0 VNĐ</strong>
             </div>
 
-            <p id="voucherMessage" role="status" aria-live="polite"></p>
-
-            <div class="checkout-summary">
-                <div class="summary-line">
-                    <span>Tạm tính</span>
-                    <strong id="checkoutSubtotal">0 VNĐ</strong>
-                </div>
-
-                <div class="summary-line">
-                    <span>Giảm voucher</span>
-                    <strong id="checkoutDiscount">0 VNĐ</strong>
-                </div>
-
-                <div class="summary-line total">
-                    <span>Tổng thanh toán</span>
-                    <strong id="checkoutTotal">0 VNĐ</strong>
-                </div>
+            <div class="summary-line total">
+              <span>Tổng thanh toán</span>
+              <strong id="checkoutTotal">0 VNĐ</strong>
             </div>
+          </div>
         </section>
 
         <h2>Phương thức thanh toán</h2>
 
         <div class="payment-method">
-            <label>
-                <input type="radio" name="payment" value="cod" checked>
-                Thanh toán khi nhận hàng
-            </label>
+          <label>
+            <input type="radio" name="payment" value="cod" checked />
+            Thanh toán khi nhận hàng
+          </label>
 
-            <br>
+          <br />
 
-            <label>
-                <input type="radio" name="payment" value="bank">
-                Chuyển khoản ngân hàng
-            </label>
+          <label>
+            <input type="radio" name="payment" value="bank" />
+            Chuyển khoản ngân hàng
+          </label>
         </div>
 
-        <div id="bankInfo" class="bank-info" style="display: none;">
-            <h3>Thông tin chuyển khoản</h3>
-            <p>Ngân hàng: <strong>Vietcombank</strong></p>
-            <p>Số tài khoản: <strong>0778366446</strong></p>
-            <p>Chủ tài khoản:
-                <strong>NGUYỄN CÔNG ĐỨC ANH</strong>
-            </p>
-            <p>Số tiền: <strong id="qrAmount">0 VNĐ</strong></p>
-            <p>Nội dung chuyển khoản:
-                <strong>ADIDAS + SỐ ĐIỆN THOẠI</strong>
-            </p>
+        <div id="bankInfo" class="bank-info" style="display: none">
+          <h3>Thông tin chuyển khoản</h3>
+          <p>Ngân hàng: <strong>Vietcombank</strong></p>
+          <p>Số tài khoản: <strong>0778366446</strong></p>
+          <p>
+            Chủ tài khoản:
+            <strong>NGUYỄN CÔNG ĐỨC ANH</strong>
+          </p>
+          <p>Số tiền: <strong id="qrAmount">0 VNĐ</strong></p>
+          <p>
+            Nội dung chuyển khoản:
+            <strong>ADIDAS + SỐ ĐIỆN THOẠI</strong>
+          </p>
 
-            <h3>Quét mã QR để thanh toán</h3>
-            <div class="qr-box">
-                <img id="bankQR" src="" alt="Mã QR chuyển khoản">
-            </div>
-            <p class="qr-note">
-                Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
-            </p>
+          <h3>Quét mã QR để thanh toán</h3>
+          <div class="qr-box">
+            <img id="bankQR" src="" alt="Mã QR chuyển khoản" />
+          </div>
+          <p class="qr-note">
+            Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
+          </p>
         </div>
 
-        <br>
+        <br />
         <button type="submit" class="btn">ĐẶT HÀNG</button>
-    </form>
-</main>
+      </form>
+    </main>
 
-<footer class="footer">
-    <p>© 2026 Adidas</p>
-</footer>
+    <footer class="footer">
+      <p>© 2026 Adidas</p>
+    </footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-(() => {
-    "use strict";
+    <script>
+      (() => {
+        "use strict";
 
-    const provinceSelect = document.getElementById("province");
-    const wardSelect = document.getElementById("ward");
-    const streetInput = document.getElementById("streetAddress");
-    const hiddenAddress = document.getElementById("address");
-    const statusBox = document.getElementById("addressStatus");
-    const gpsButton = document.getElementById("getCurrentLocation");
-    const mapButton = document.getElementById("showMap");
-    const mapWrap = document.getElementById("mapWrap");
+        const provinceSelect = document.getElementById("province");
+        const wardSelect = document.getElementById("ward");
+        const streetInput = document.getElementById("streetAddress");
+        const hiddenAddress = document.getElementById("address");
+        const statusBox = document.getElementById("addressStatus");
+        const gpsButton = document.getElementById("getCurrentLocation");
+        const mapButton = document.getElementById("showMap");
+        const mapWrap = document.getElementById("mapWrap");
 
-    const API = "https://provinces.open-api.vn/api/v2/";
+        const API = "https://provinces.open-api.vn/api/v2/";
 
-    let provinces = [];
-    let map = null;
-    let marker = null;
-    let mapReady = false;
-    let searchSequence = 0;
+        let provinces = [];
+        let map = null;
+        let marker = null;
+        let mapReady = false;
+        let searchSequence = 0;
 
-    function showStatus(message, isError = false) {
-        statusBox.textContent = message;
-        statusBox.style.color = isError ? "#b42318" : "#333";
-    }
+        function showStatus(message, isError = false) {
+          statusBox.textContent = message;
+          statusBox.style.color = isError ? "#b42318" : "#333";
+        }
 
-    function normalize(value) {
-        return String(value || "")
+        function normalize(value) {
+          return String(value || "")
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .replace(/[đĐ]/g, "d")
             .toLowerCase()
             .replace(/^(tinh|thanh pho|phuong|xa|dac khu)\s+/, "")
             .trim();
-    }
-
-    async function fetchJSON(url) {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error("Lỗi HTTP " + response.status);
         }
-        return response.json();
-    }
 
-    async function loadProvinces() {
-        provinceSelect.disabled = true;
+        async function fetchJSON(url) {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error("Lỗi HTTP " + response.status);
+          }
+          return response.json();
+        }
 
-        try {
+        async function loadProvinces() {
+          provinceSelect.disabled = true;
+
+          try {
             const data = await fetchJSON(API + "?depth=1");
 
             if (!Array.isArray(data) || data.length === 0) {
-                throw new Error("Không có dữ liệu tỉnh/thành phố.");
+              throw new Error("Không có dữ liệu tỉnh/thành phố.");
             }
 
             provinces = data;
             provinceSelect.innerHTML =
-                '<option value="">-- Chọn tỉnh/thành phố --</option>';
+              '<option value="">-- Chọn tỉnh/thành phố --</option>';
 
-            provinces.forEach(province => {
-                const option = document.createElement("option");
-                option.value = String(province.code);
-                option.textContent = province.name;
-                provinceSelect.appendChild(option);
+            provinces.forEach((province) => {
+              const option = document.createElement("option");
+              option.value = String(province.code);
+              option.textContent = province.name;
+              provinceSelect.appendChild(option);
             });
 
             provinceSelect.disabled = false;
             showStatus("Đã tải danh sách tỉnh/thành phố.");
-        } catch (error) {
+          } catch (error) {
             console.error(error);
             provinceSelect.innerHTML =
-                '<option value="">Không tải được dữ liệu</option>';
+              '<option value="">Không tải được dữ liệu</option>';
             showStatus(
-                "Không tải được tỉnh/thành phố. Kiểm tra mạng hoặc API.",
-                true
+              "Không tải được tỉnh/thành phố. Kiểm tra mạng hoặc API.",
+              true,
             );
+          }
         }
-    }
 
-    function getSelectedProvince() {
-        return provinces.find(
-            province => String(province.code) === provinceSelect.value
-        );
-    }
+        function getSelectedProvince() {
+          return provinces.find(
+            (province) => String(province.code) === provinceSelect.value,
+          );
+        }
 
-    async function loadWards(province, preferredNames = []) {
-        wardSelect.disabled = true;
-        wardSelect.innerHTML =
+        async function loadWards(province, preferredNames = []) {
+          wardSelect.disabled = true;
+          wardSelect.innerHTML =
             '<option value="">Đang tải phường/xã...</option>';
 
-        if (!province) {
+          if (!province) {
             wardSelect.innerHTML =
-                '<option value="">Chọn tỉnh/thành phố trước</option>';
+              '<option value="">Chọn tỉnh/thành phố trước</option>';
             return false;
-        }
+          }
 
-        try {
+          try {
             const detail = await fetchJSON(
-                API + "p/" + encodeURIComponent(province.code) + "?depth=2"
+              API + "p/" + encodeURIComponent(province.code) + "?depth=2",
             );
 
             const wards = Array.isArray(detail.wards) ? detail.wards : [];
 
             if (String(provinceSelect.value) !== String(province.code)) {
-                return false;
+              return false;
             }
 
             if (!wards.length) {
-                wardSelect.innerHTML =
-                    '<option value="">Không có dữ liệu phường/xã</option>';
-                showStatus("Không có dữ liệu phường/xã cho tỉnh này.", true);
-                return false;
+              wardSelect.innerHTML =
+                '<option value="">Không có dữ liệu phường/xã</option>';
+              showStatus("Không có dữ liệu phường/xã cho tỉnh này.", true);
+              return false;
             }
 
             wardSelect.innerHTML =
-                '<option value="">-- Chọn phường/xã --</option>';
+              '<option value="">-- Chọn phường/xã --</option>';
 
-            wards.forEach(ward => {
-                const option = document.createElement("option");
-                option.value = String(ward.code);
-                option.textContent = ward.name;
-                wardSelect.appendChild(option);
+            wards.forEach((ward) => {
+              const option = document.createElement("option");
+              option.value = String(ward.code);
+              option.textContent = ward.name;
+              wardSelect.appendChild(option);
             });
 
             wardSelect.disabled = false;
 
             for (const name of preferredNames) {
-                const wanted = normalize(name);
-                if (!wanted) continue;
+              const wanted = normalize(name);
+              if (!wanted) continue;
 
-                const options = Array.from(wardSelect.options)
-                    .filter(option => option.value);
+              const options = Array.from(wardSelect.options).filter(
+                (option) => option.value,
+              );
 
-                const match = options.find(option =>
-                    normalize(option.textContent) === wanted
-                ) || options.find(option => {
-                    const current = normalize(option.textContent);
-                    return current &&
-                        (current.includes(wanted) || wanted.includes(current));
+              const match =
+                options.find(
+                  (option) => normalize(option.textContent) === wanted,
+                ) ||
+                options.find((option) => {
+                  const current = normalize(option.textContent);
+                  return (
+                    current &&
+                    (current.includes(wanted) || wanted.includes(current))
+                  );
                 });
 
-                if (match) {
-                    wardSelect.value = match.value;
-                    break;
-                }
+              if (match) {
+                wardSelect.value = match.value;
+                break;
+              }
             }
 
             return true;
-        } catch (error) {
+          } catch (error) {
             console.error(error);
             wardSelect.innerHTML =
-                '<option value="">Không tải được phường/xã</option>';
+              '<option value="">Không tải được phường/xã</option>';
             showStatus("Không tải được phường/xã. Hãy thử lại.", true);
             return false;
+          }
         }
-    }
 
-    function syncAddress() {
-        const province = getSelectedProvince();
-        const ward = wardSelect.selectedOptions[0];
+        function syncAddress() {
+          const province = getSelectedProvince();
+          const ward = wardSelect.selectedOptions[0];
 
-        hiddenAddress.value = [
+          hiddenAddress.value = [
             streetInput.value.trim(),
             ward && ward.value ? ward.textContent.trim() : "",
-            province ? province.name : ""
-        ].filter(Boolean).join(", ");
-    }
+            province ? province.name : "",
+          ]
+            .filter(Boolean)
+            .join(", ");
+        }
 
-    provinceSelect.addEventListener("change", async () => {
-        await loadWards(getSelectedProvince());
-        syncAddress();
-    });
+        provinceSelect.addEventListener("change", async () => {
+          await loadWards(getSelectedProvince());
+          syncAddress();
+        });
 
-    wardSelect.addEventListener("change", syncAddress);
-    streetInput.addEventListener("input", syncAddress);
+        wardSelect.addEventListener("change", syncAddress);
+        streetInput.addEventListener("input", syncAddress);
 
-    async function reverseGeocode(latitude, longitude) {
-        const photonURL = new URL("https://photon.komoot.io/reverse");
+        async function reverseGeocode(latitude, longitude) {
+          const photonURL = new URL("https://photon.komoot.io/reverse");
 
-        photonURL.search = new URLSearchParams({
+          photonURL.search = new URLSearchParams({
             lat: String(latitude),
             lon: String(longitude),
-            lang: "en"
-        }).toString();
+            lang: "en",
+          }).toString();
 
-        try {
+          try {
             const data = await fetchJSON(photonURL.toString());
             const p = data.features?.[0]?.properties;
 
             if (p) {
-                return {
-                    display_name: [
-                        p.housenumber, p.street, p.district,
-                        p.city, p.state, p.country
-                    ].filter(Boolean).join(", "),
-                    address: {
-                        house_number: p.housenumber || "",
-                        road: p.street || "",
-                        suburb: p.district || p.suburb || "",
-                        city_district: p.district || "",
-                        city: p.city || p.locality || "",
-                        town: p.town || "",
-                        village: p.village || "",
-                        state: p.state || "",
-                        province: p.province || "",
-                        country: p.country || ""
-                    }
-                };
+              return {
+                display_name: [
+                  p.housenumber,
+                  p.street,
+                  p.district,
+                  p.city,
+                  p.state,
+                  p.country,
+                ]
+                  .filter(Boolean)
+                  .join(", "),
+                address: {
+                  house_number: p.housenumber || "",
+                  road: p.street || "",
+                  suburb: p.district || p.suburb || "",
+                  city_district: p.district || "",
+                  city: p.city || p.locality || "",
+                  town: p.town || "",
+                  village: p.village || "",
+                  state: p.state || "",
+                  province: p.province || "",
+                  country: p.country || "",
+                },
+              };
             }
-        } catch (error) {
+          } catch (error) {
             console.warn("Photon lỗi, thử Nominatim:", error);
-        }
+          }
 
-        const url = new URL(
-            "https://nominatim.openstreetmap.org/reverse"
-        );
+          const url = new URL("https://nominatim.openstreetmap.org/reverse");
 
-        url.search = new URLSearchParams({
+          url.search = new URLSearchParams({
             format: "jsonv2",
             lat: String(latitude),
             lon: String(longitude),
             zoom: "18",
             addressdetails: "1",
-            "accept-language": "vi"
-        }).toString();
+            "accept-language": "vi",
+          }).toString();
 
-        const result = await fetchJSON(url.toString());
+          const result = await fetchJSON(url.toString());
 
-        if (!result.address) {
+          if (!result.address) {
             throw new Error("Không tìm được địa chỉ.");
+          }
+
+          return result;
         }
 
-        return result;
-    }
+        function findProvince(address) {
+          const names = [address.state, address.province]
+            .filter(Boolean)
+            .map(normalize);
 
-    function findProvince(address) {
-        const names = [
-            address.state,
-            address.province
-        ].filter(Boolean).map(normalize);
+          let province = provinces.find((item) =>
+            names.includes(normalize(item.name)),
+          );
 
-        let province = provinces.find(item =>
-            names.includes(normalize(item.name))
-        );
+          if (province) return province;
 
-        if (province) return province;
+          const fallbackNames = [address.city, address.town]
+            .filter(Boolean)
+            .map(normalize);
 
-        const fallbackNames = [
-            address.city,
-            address.town
-        ].filter(Boolean).map(normalize);
+          province = provinces.find((item) =>
+            fallbackNames.includes(normalize(item.name)),
+          );
 
-        province = provinces.find(item =>
-            fallbackNames.includes(normalize(item.name))
-        );
+          return province || null;
+        }
 
-        return province || null;
-    }
+        async function fillAddressFromCoordinates(latitude, longitude) {
+          const currentSearch = ++searchSequence;
+          showStatus("Đang tìm địa chỉ gần vị trí bạn chọn...");
 
-    async function fillAddressFromCoordinates(latitude, longitude) {
-        const currentSearch = ++searchSequence;
-        showStatus("Đang tìm địa chỉ gần vị trí bạn chọn...");
-
-        if (mapReady && map) {
+          if (mapReady && map) {
             const point = [latitude, longitude];
 
             if (marker) {
-                marker.setLatLng(point);
+              marker.setLatLng(point);
             } else {
-                marker = L.marker(point).addTo(map);
+              marker = L.marker(point).addTo(map);
             }
 
             map.setView(point, 18);
             marker.bindPopup("Đang tìm địa chỉ...").openPopup();
-        }
+          }
 
-        try {
+          try {
             const result = await reverseGeocode(latitude, longitude);
 
             if (currentSearch !== searchSequence) return;
@@ -654,148 +663,144 @@
             const province = findProvince(address);
 
             const wardNames = [
-                address.suburb,
-                address.quarter,
-                address.city_district,
-                address.ward,
-                address.village,
-                address.town,
-                address.neighbourhood,
-                address.hamlet,
-                address.district
+              address.suburb,
+              address.quarter,
+              address.city_district,
+              address.ward,
+              address.village,
+              address.town,
+              address.neighbourhood,
+              address.hamlet,
+              address.district,
             ].filter(Boolean);
 
             if (province) {
-                provinceSelect.value = String(province.code);
-                await loadWards(province, wardNames);
+              provinceSelect.value = String(province.code);
+              await loadWards(province, wardNames);
 
-                if (currentSearch !== searchSequence) return;
+              if (currentSearch !== searchSequence) return;
             }
 
             const street = [
-                address.house_number,
-                address.road || address.pedestrian || address.residential
-            ].filter(Boolean).join(" ");
+              address.house_number,
+              address.road || address.pedestrian || address.residential,
+            ]
+              .filter(Boolean)
+              .join(" ");
 
             if (street) {
-                streetInput.value = street;
+              streetInput.value = street;
             } else if (result.display_name) {
-                streetInput.value = result.display_name;
+              streetInput.value = result.display_name;
             }
 
             syncAddress();
 
             if (mapReady && marker) {
-                marker.bindPopup(
-                    result.display_name || "Vị trí đã chọn"
-                ).openPopup();
+              marker
+                .bindPopup(result.display_name || "Vị trí đã chọn")
+                .openPopup();
             }
 
             showStatus(
-                province
-                    ? "Đã tìm địa chỉ gần nhất. Hãy kiểm tra trước khi đặt hàng."
-                    : "Chưa xác định được tỉnh/thành phố. Vui lòng chọn thủ công."
+              province
+                ? "Đã tìm địa chỉ gần nhất. Hãy kiểm tra trước khi đặt hàng."
+                : "Chưa xác định được tỉnh/thành phố. Vui lòng chọn thủ công.",
             );
-        } catch (error) {
+          } catch (error) {
             console.error(error);
             showStatus(
-                "Không tìm được địa chỉ. Hãy thử lại hoặc nhập thủ công.",
-                true
+              "Không tìm được địa chỉ. Hãy thử lại hoặc nhập thủ công.",
+              true,
             );
+          }
         }
-    }
 
-    function initializeMap() {
-        if (mapReady) return true;
+        function initializeMap() {
+          if (mapReady) return true;
 
-        if (!window.L) {
+          if (!window.L) {
             showStatus("Không tải được thư viện bản đồ.", true);
             return false;
+          }
+
+          map = L.map("addressMap").setView([21.0285, 105.8542], 12);
+
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors",
+          }).addTo(map);
+
+          map.on("click", (event) => {
+            fillAddressFromCoordinates(event.latlng.lat, event.latlng.lng);
+          });
+
+          mapReady = true;
+          return true;
         }
 
-        map = L.map("addressMap").setView([21.0285, 105.8542], 12);
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap contributors'
-            }
-        ).addTo(map);
-
-        map.on("click", event => {
-            fillAddressFromCoordinates(
-                event.latlng.lat,
-                event.latlng.lng
-            );
-        });
-
-        mapReady = true;
-        return true;
-    }
-
-    gpsButton.addEventListener("click", () => {
-        if (!navigator.geolocation) {
+        gpsButton.addEventListener("click", () => {
+          if (!navigator.geolocation) {
             showStatus("Trình duyệt không hỗ trợ GPS.", true);
             return;
-        }
+          }
 
-        gpsButton.disabled = true;
-        showStatus("Đang lấy vị trí GPS...");
+          gpsButton.disabled = true;
+          showStatus("Đang lấy vị trí GPS...");
 
-        navigator.geolocation.getCurrentPosition(
-            async position => {
-                try {
-                    mapWrap.hidden = false;
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              try {
+                mapWrap.hidden = false;
 
-                    if (initializeMap()) {
-                        setTimeout(() => map?.invalidateSize(), 150);
-                    }
-
-                    await fillAddressFromCoordinates(
-                        position.coords.latitude,
-                        position.coords.longitude
-                    );
-                } finally {
-                    gpsButton.disabled = false;
+                if (initializeMap()) {
+                  setTimeout(() => map?.invalidateSize(), 150);
                 }
-            },
-            error => {
-                gpsButton.disabled = false;
 
-                const messages = {
-                    1: "Bạn chưa cho phép truy cập vị trí.",
-                    2: "Không xác định được vị trí GPS.",
-                    3: "Lấy vị trí quá lâu. Hãy thử lại."
-                };
-
-                showStatus(
-                    messages[error.code] || "Không lấy được GPS.",
-                    true
+                await fillAddressFromCoordinates(
+                  position.coords.latitude,
+                  position.coords.longitude,
                 );
+              } finally {
+                gpsButton.disabled = false;
+              }
+            },
+            (error) => {
+              gpsButton.disabled = false;
+
+              const messages = {
+                1: "Bạn chưa cho phép truy cập vị trí.",
+                2: "Không xác định được vị trí GPS.",
+                3: "Lấy vị trí quá lâu. Hãy thử lại.",
+              };
+
+              showStatus(messages[error.code] || "Không lấy được GPS.", true);
             },
             {
-                enableHighAccuracy: true,
-                timeout: 20000,
-                maximumAge: 60000
-            }
-        );
-    });
+              enableHighAccuracy: true,
+              timeout: 20000,
+              maximumAge: 60000,
+            },
+          );
+        });
 
-    mapButton.addEventListener("click", () => {
-        mapWrap.hidden = !mapWrap.hidden;
+        mapButton.addEventListener("click", () => {
+          mapWrap.hidden = !mapWrap.hidden;
 
-        if (!mapWrap.hidden && initializeMap()) {
+          if (!mapWrap.hidden && initializeMap()) {
             setTimeout(() => map.invalidateSize(), 150);
             showStatus("Bấm vào bản đồ để tìm địa chỉ gần nhất.");
-        }
-    });
+          }
+        });
 
-    gpsButton.dataset.locationBound = "true";
-    loadProvinces();
-})();
-</script>
+        gpsButton.dataset.locationBound = "true";
+        loadProvinces();
+      })();
+    </script>
 
-<script src="./js/checkout.js"></script>
-</body>
+    <script src="./js/checkout.js"></script>
+    <script src="./js/sv3-checkout-auth.js"></script>
+    <script src="./js/account-auth.js"></script>
+    <script src="./js/support.js"></script>
+  </body>
 </html>

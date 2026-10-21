@@ -1,194 +1,193 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Sản phẩm Sale - Adidas</title>
 
-    <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" href="./src/style.css" />
 
     <style>
+      .category-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 20px 50px;
+      }
+
+      .category-banner {
+        padding: 45px 20px;
+        margin-bottom: 35px;
+        text-align: center;
+        background: linear-gradient(135deg, #171717, #454545);
+        color: white;
+        border-radius: 12px;
+      }
+
+      .category-banner h1 {
+        margin: 0 0 12px;
+        font-size: 36px;
+        text-transform: uppercase;
+      }
+
+      .category-banner p {
+        margin: 0;
+        font-size: 16px;
+        color: #eeeeee;
+      }
+
+      .sale-label {
+        display: inline-block;
+        padding: 6px 12px;
+        margin: 10px 0;
+        color: white;
+        background: #e53935;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 5px;
+      }
+
+      .sale-price {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 12px 0;
+      }
+
+      .old-price {
+        color: #888;
+        text-decoration: line-through;
+        font-size: 14px;
+      }
+
+      .new-price {
+        color: #e53935;
+        font-size: 19px;
+        font-weight: bold;
+      }
+
+      .sale-status {
+        grid-column: 1 / -1;
+        padding: 35px 15px;
+        text-align: center;
+        font-size: 18px;
+        color: #555;
+      }
+
+      .sale-status.error {
+        color: #c62828;
+      }
+
+      .product-card {
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #eeeeee;
+        border-radius: 10px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-image {
+        display: block;
+        width: 100%;
+        height: 230px;
+        object-fit: contain;
+        padding: 12px;
+        background: #f7f7f7;
+      }
+
+      .product-info {
+        padding: 16px;
+        text-align: center;
+      }
+
+      .product-name {
+        min-height: 44px;
+        margin: 0 0 10px;
+        font-size: 16px;
+        color: #222;
+      }
+
+      .product-button {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 10px 18px;
+        background: #111;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background 0.2s;
+      }
+
+      .product-button:hover {
+        background: #444;
+      }
+
+      @media (max-width: 600px) {
         .category-page {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 20px 50px;
+          padding: 20px 12px 35px;
         }
 
         .category-banner {
-            padding: 45px 20px;
-            margin-bottom: 35px;
-            text-align: center;
-            background: linear-gradient(135deg, #171717, #454545);
-            color: white;
-            border-radius: 12px;
+          padding: 30px 15px;
         }
 
         .category-banner h1 {
-            margin: 0 0 12px;
-            font-size: 36px;
-            text-transform: uppercase;
-        }
-
-        .category-banner p {
-            margin: 0;
-            font-size: 16px;
-            color: #eeeeee;
-        }
-
-        .sale-label {
-            display: inline-block;
-            padding: 6px 12px;
-            margin: 10px 0;
-            color: white;
-            background: #e53935;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        .sale-price {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 12px 0;
-        }
-
-        .old-price {
-            color: #888;
-            text-decoration: line-through;
-            font-size: 14px;
-        }
-
-        .new-price {
-            color: #e53935;
-            font-size: 19px;
-            font-weight: bold;
-        }
-
-        .sale-status {
-            grid-column: 1 / -1;
-            padding: 35px 15px;
-            text-align: center;
-            font-size: 18px;
-            color: #555;
-        }
-
-        .sale-status.error {
-            color: #c62828;
-        }
-
-        .product-card {
-            overflow: hidden;
-            background: #fff;
-            border: 1px solid #eeeeee;
-            border-radius: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+          font-size: 27px;
         }
 
         .product-image {
-            display: block;
-            width: 100%;
-            height: 230px;
-            object-fit: contain;
-            padding: 12px;
-            background: #f7f7f7;
+          height: 180px;
         }
-
-        .product-info {
-            padding: 16px;
-            text-align: center;
-        }
-
-        .product-name {
-            min-height: 44px;
-            margin: 0 0 10px;
-            font-size: 16px;
-            color: #222;
-        }
-
-        .product-button {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 10px 18px;
-            background: #111;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .product-button:hover {
-            background: #444;
-        }
-
-        @media (max-width: 600px) {
-            .category-page {
-                padding: 20px 12px 35px;
-            }
-
-            .category-banner {
-                padding: 30px 15px;
-            }
-
-            .category-banner h1 {
-                font-size: 27px;
-            }
-
-            .product-image {
-                height: 180px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <header class="header">
-        <div class="logo">adidas</div>
+      <div class="logo">adidas</div>
 
-        <nav class="menu">
-            <a href="index.html">Trang chủ</a>
-            <a href="product.html">Sản phẩm</a>
-            <a href="nam.html">Nam</a>
-            <a href="nu.html">Nữ</a>
-            <a href="the-thao.html">Thể thao</a>
-            <a href="sale.html">Sale</a>
-        </nav>
+      <nav class="menu">
+        <a href="index.html">Trang chủ</a>
+        <a href="product.html">Sản phẩm</a>
+        <a href="nam.html">Nam</a>
+        <a href="nu.html">Nữ</a>
+        <a href="the-thao.html">Thể thao</a>
+        <a href="sale.html">Sale</a>
+      </nav>
 
-        <div class="header-right">
-            <a href="cart.html" class="icon" aria-label="Giỏ hàng">🛒</a>
-            <a href="orders.html" class="icon" aria-label="Đơn hàng">📦</a>
-        </div>
+      <div class="header-right">
+        <a href="cart.html" class="icon" aria-label="Giỏ hàng">🛒</a>
+        <a href="orders.html" class="icon" aria-label="Đơn hàng">📦</a>
+      </div>
     </header>
 
     <main class="container category-page">
+      <section class="category-banner">
+        <h1>Sản phẩm Sale</h1>
+        <p>Ưu đãi đặc biệt dành cho các sản phẩm Adidas</p>
+      </section>
 
-        <section class="category-banner">
-            <h1>Sản phẩm Sale</h1>
-            <p>Ưu đãi đặc biệt dành cho các sản phẩm Adidas</p>
-        </section>
-
-        <div id="productList" class="product-grid">
-            <p class="sale-status">Đang tải sản phẩm Sale...</p>
-        </div>
-
+      <div id="productList" class="product-grid">
+        <p class="sale-status">Đang tải sản phẩm Sale...</p>
+      </div>
     </main>
 
     <footer class="footer">
-        <p>© 2026 Adidas</p>
+      <p>© 2026 Adidas</p>
     </footer>
 
     <script src="./js/sale.js" defer></script>
-
-</body>
+    <script src="./js/account-auth.js"></script>
+    <script src="./js/support.js"></script>
+  </body>
 </html>
