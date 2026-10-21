@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adidas Sportwear | Đăng nhập</title>
+
+    <style>
+      :root {
+        --blue: #397df5;
+        --ink: #111827;
+        --muted: #758096;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        background-color: #f3f5f8;
+        background-image:
+          linear-gradient(to right, #dce3ed 1px, transparent 1px),
+          linear-gradient(to bottom, #dce3ed 1px, transparent 1px);
+        background-size: 70px 70px;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        min-height: 100vh;
+        padding: 24px 5%;
+        position: relative;
+        overflow: hidden;
+      }
+      .navbar {
+        position: relative;
+        z-index: 3;
+        max-width: 1120px;
+        min-height: 64px;
+        margin: auto;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid #e0e6ef;
+        border-radius: 17px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 5px 18px #26364c0a;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        font-size: 19px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .logo {
+        height: 31px;
+        display: flex;
+        align-items: end;
+        gap: 3px;
+        transform: skew(-25deg);
+      }
+      .logo span {
+        width: 7px;
+        display: block;
+        background: #111;
+      }
+      .logo span:nth-child(1) {
+        height: 13px;
+      }
+      .logo span:nth-child(2) {
+        height: 21px;
+      }
+      .logo span:nth-child(3) {
+        height: 29px;
+      }
+      .brand em {
+        font-style: normal;
+        color: var(--blue);
+      }
+      .nav-links {
+        display: flex;
+        gap: 25px;
+        color: #586276;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .nav-links a:hover {
+        color: var(--blue);
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        white-space: nowrap;
+      }
+      .nav-login {
+        border: 0;
+        background: transparent;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .nav-start {
+        padding: 10px 16px;
+        border: 1px solid #a6caff;
+        border-radius: 25px;
+        background: #e3efff;
+        color: #286cf4;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .hero {
+        max-width: 900px;
+        margin: auto;
+        padding: 85px 10px 0;
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 17px;
+        margin-bottom: 27px;
+        border: 1px solid #e0e6ef;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.72);
+        color: #69758b;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--blue);
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(38px, 5.2vw, 70px);
+        line-height: 1.14;
+        letter-spacing: -2.8px;
+        font-weight: 900;
+      }
+      h1 .blue {
+        display: block;
+        margin-top: 7px;
+        color: var(--blue);
+      }
+      .description {
+        max-width: 640px;
+        margin: 21px auto 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.9;
+      }
+      .actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 13px;
+        margin-top: 33px;
+      }
+      .primary,
+      .secondary {
+        min-width: 150px;
+        padding: 16px 25px;
+        border-radius: 15px;
+        font-size: 13px;
+        font-weight: 800;
+        transition: 0.2s;
+      }
+      .primary {
+        border: 1px solid #a6caff;
+        background: #dfecff;
+        color: #286cf4;
+      }
+      .secondary {
+        border: 1px solid #e0e5ed;
+        background: white;
+        color: #111827;
+      }
+      .primary:hover,
+      .secondary:hover {
+        transform: translateY(-2px);
+      }
+      .benefits {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 12px 23px;
+        flex-wrap: wrap;
+        color: #737e91;
+        font-size: 11px;
+      }
+      .benefit {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .check {
+        width: 15px;
+        height: 15px;
+        display: grid;
+        place-items: center;
+        border-radius: 5px;
+        background: #3b91f5;
+        color: white;
+        font-size: 10px;
+      }
+      .platforms {
+        max-width: 790px;
+        margin: 52px auto 0;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #d9e1ec;
+      }
+      .platform-title {
+        margin: 0 0 22px;
+        color: #9aa3b2;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2px;
+      }
+      .platform-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px 30px;
+      }
+      .platform {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #8993a5;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .platform-mark {
+        width: 37px;
+        height: 37px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: white;
+        color: #111;
+        border: 1px solid #e1e6ee;
+        font-size: 12px;
+        font-weight: 900;
+      }
+      .floating {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .float {
+        position: absolute;
+        width: 55px;
+        height: 55px;
+        display: grid;
+        place-items: center;
+        border-radius: 16px;
+        background: white;
+        border: 1px solid #e1e6ee;
+        box-shadow: 0 8px 24px #18243a0c;
+        font-size: 22px;
+        font-weight: 900;
+        animation: bob 5s ease-in-out infinite;
+      }
+      .float:nth-child(even) {
+        animation-delay: -2s;
+      }
+      .f1 {
+        top: 105px;
+        left: 8%;
+      }
+      .f2 {
+        top: 105px;
+        right: 8%;
+      }
+      .f3 {
+        top: 340px;
+        left: 3%;
+      }
+      .f4 {
+        top: 340px;
+        right: 3%;
+      }
+      .f5 {
+        top: 580px;
+        left: 7%;
+      }
+      .f6 {
+        top: 580px;
+        right: 7%;
+      }
+      @keyframes bob {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-4deg);
+        }
+        50% {
+          transform: translateY(-9px) rotate(4deg);
+        }
+      }
+      .footer {
+        margin: 30px 0 0;
+        color: #939cad;
+        text-align: center;
+        font-size: 11px;
+      }
+
+      /* Hộp đăng nhập / đăng ký */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        padding: 18px;
+        align-items: center;
+        justify-content: center;
+        background: #10182780;
+        backdrop-filter: blur(6px);
+      }
+      .modal.open {
+        display: flex;
+      }
+      .card {
+        position: relative;
+        width: min(420px, 100%);
+        padding: 31px;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow: 0 25px 80px #0002;
+      }
+      .close {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 50%;
+        background: #f0f2f6;
+        font-size: 22px;
+      }
+      .card-logo {
+        margin: 0 auto 16px;
+        width: 45px;
+        height: 35px;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        gap: 4px;
+        transform: skew(-22deg);
+      }
+      .card-logo span {
+        width: 9px;
+        background: #111;
+      }
+      .card-logo span:nth-child(1) {
+        height: 15px;
+      }
+      .card-logo span:nth-child(2) {
+        height: 24px;
+      }
+      .card-logo span:nth-child(3) {
+        height: 33px;
+      }
+      .card h2 {
+        margin: 0;
+        text-align: center;
+        font-size: 25px;
+        font-weight: 900;
+      }
+      .subtitle {
+        margin: 10px 0 23px;
+        text-align: center;
+        color: #7a8496;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .field {
+        margin: 15px 0;
+      }
+      .field label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .field input {
+        width: 100%;
+        height: 47px;
+        padding: 0 13px;
+        border: 1px solid #d9e0ea;
+        border-radius: 10px;
+        outline: none;
+      }
+      .field input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px #397df51c;
+      }
+      .submit {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 10px;
+        border: 0;
+        border-radius: 10px;
+        background: #111;
+        color: white;
+        font-size: 13px;
+        font-weight: 900;
+      }
+      .submit:hover {
+        background: #333;
+      }
+      .switch {
+        margin: 18px 0 0;
+        text-align: center;
+        color: #737e91;
+        font-size: 12px;
+      }
+      .switch button {
+        border: 0;
+        background: none;
+        color: var(--blue);
+        font-weight: 800;
+      }
+      .message {
+        display: none;
+        margin-top: 13px;
+        padding: 11px;
+        border-radius: 9px;
+        font-size: 12px;
+      }
+      .message.show {
+        display: block;
+      }
+      .message.error {
+        background: #fff0f0;
+        color: #b42318;
+      }
+      .message.success {
+        background: #eaf8ef;
+        color: #18703c;
+      }
+
+      @media (max-width: 850px) {
+        .nav-links {
+          gap: 13px;
+        }
+        .nav-links a:nth-child(n + 3) {
+          display: none;
+        }
+        .hero {
+          padding-top: 75px;
+        }
+        .float {
+          width: 45px;
+          height: 45px;
+        }
+        .f3 {
+          left: 1%;
+        }
+        .f4 {
+          right: 1%;
+        }
+      }
+      @media (max-width: 600px) {
+        .page {
+          padding: 15px 4%;
+        }
+        .navbar {
+          padding: 10px 12px;
+          gap: 10px;
+        }
+        .brand {
+          font-size: 15px;
+          gap: 7px;
+        }
+        .logo {
+          transform: scale(0.8) skew(-25deg);
+        }
+        .nav-links {
+          display: none;
+        }
+        .nav-actions {
+          gap: 9px;
+        }
+        .nav-start {
+          padding: 9px 11px;
+        }
+        .nav-login {
+          font-size: 11px;
+        }
+        .hero {
+          padding: 65px 3px 0;
+        }
+        h1 {
+          font-size: clamp(36px, 10vw, 49px);
+          letter-spacing: -1.8px;
+        }
+        .description {
+          font-size: 13px;
+        }
+        .platform-list {
+          gap: 15px;
+        }
+        .platform {
+          font-size: 11px;
+        }
+        .platform-mark {
+          width: 32px;
+          height: 32px;
+        }
+        .f1,
+        .f2 {
+          top: 100px;
+        }
+        .f3,
+        .f4 {
+          top: 390px;
+        }
+        .f5,
+        .f6 {
+          top: 620px;
+        }
+        .card {
+          padding: 27px 21px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <div class="floating" aria-hidden="true">
+        <div class="float f1">▲</div>
+        <div class="float f2">⚡</div>
+        <div class="float f3">◢</div>
+        <div class="float f4">★</div>
+        <div class="float f5">◆</div>
+        <div class="float f6">◈</div>
+      </div>
+
+      <header class="navbar">
+        <a class="brand" href="../index.html">
+          <span class="logo"><span></span><span></span><span></span></span>
+          <span>ADIDAS <em>SPORT</em></span>
+        </a>
+
+        <nav class="nav-links">
+          <a href="../index.html">Trang chủ</a>
+          <a href="../nam.html">Nam</a>
+          <a href="../nu.html">Nữ</a>
+          <a href="../the-thao.html">Thể thao</a>
+          <a href="../sale.html">Sale</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="nav-login" type="button" data-open="login">
+            Đăng nhập
+          </button>
+          <button class="nav-start" type="button" data-open="register">
+            Tạo tài khoản
+          </button>
+        </div>
+      </header>
+
+      <main class="hero">
+        <div class="pill">
+          <span class="dot"></span> BỘ SƯU TẬP THỂ THAO MỚI 2026
+        </div>
+
+        <h1>
+          Nâng tầm phong cách
+          <span class="blue">ADIDAS SPORTWEAR</span>
+          của bạn
+        </h1>
+
+        <p class="description">
+          Khám phá quần áo, giày thể thao và phụ kiện dành cho mọi chuyển động.
+          Tạo tài khoản để mua sắm, theo dõi đơn hàng và cập nhật bộ sưu tập
+          mới.
+        </p>
+
+        <div class="actions">
+          <button class="primary" type="button" data-open="register">
+            Đăng Ký
+          </button>
+          <button class="secondary" type="button" data-open="login">
+            Đăng Nhập
+          </button>
+        </div>
+
+        <div class="benefits">
+          <div class="benefit">
+            <span class="check">✓</span> Mua sắm dễ dàng
+          </div>
+          <div class="benefit">
+            <span class="check">✓</span> Theo dõi đơn hàng
+          </div>
+          <div class="benefit">
+            <span class="check">✓</span> Quản lý tài khoản
+          </div>
+          <div class="benefit"><span class="check">✓</span> Bộ sưu tập mới</div>
+        </div>
+
+        <section class="platforms">
+          <p class="platform-title">KHÁM PHÁ DANH MỤC SẢN PHẨM</p>
+          <div class="platform-list">
+            <a class="platform" href="../nam.html"
+              ><span class="platform-mark">M</span> NAM</a
+            >
+            <a class="platform" href="../nu.html"
+              ><span class="platform-mark">W</span> NỮ</a
+            >
+            <a class="platform" href="../the-thao.html"
+              ><span class="platform-mark">↗</span> THỂ THAO</a
+            >
+            <a class="platform" href="../sale.html"
+              ><span class="platform-mark">%</span> ƯU ĐÃI</a
+            >
+            <a class="platform" href="../cart.html"
+              ><span class="platform-mark">▱</span> GIỎ HÀNG</a
+            >
+          </div>
+        </section>
+
+        <p class="footer">
+          © <span id="year"></span> Adidas Sportwear — Website đồ án bán quần áo
+          thể thao
+        </p>
+      </main>
+    </div>
+
+    <!-- Hộp đăng nhập và đăng ký -->
+    <div
+      class="modal"
+      id="authModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="authTitle"
+    >
+      <section class="card">
+        <button class="close" id="closeModal" type="button" aria-label="Đóng">
+          ×
+        </button>
+        <div class="card-logo"><span></span><span></span><span></span></div>
+
+        <h2 id="authTitle">Đăng nhập</h2>
+        <p class="subtitle" id="authSubtitle">Đăng nhập để tiếp tục mua sắm.</p>
+
+        <form id="authForm">
+          <div class="field" id="nameField" hidden>
+            <label for="name">HỌ VÀ TÊN</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              placeholder="Nhập họ và tên"
+            />
+          </div>
+
+          <div class="field">
+            <label for="email">EMAIL</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="email@example.com"
+            />
+          </div>
+
+          <div class="field">
+            <label for="password">MẬT KHẨU</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              minlength="6"
+              required
+              placeholder="Nhập mật khẩu"
+            />
+          </div>
+
+          <div class="message" id="authMessage" role="status"></div>
+          <button class="submit" id="submitButton" type="submit">
+            ĐĂNG NHẬP →
+          </button>
+        </form>
+
+        <p class="switch">
+          <span id="switchText">Bạn chưa có tài khoản?</span>
+          <button type="button" id="switchMode">Đăng ký ngay</button>
+        </p>
+      </section>
+    </div>
+
+    <script src="./admin-setup.js"></script>
+    <script>
+      (() => {
+        "use strict";
+
+        const USERS_KEY = "adidasUsers";
+        const CURRENT_USER_KEY = "currentUser";
+
+        const modal = document.getElementById("authModal");
+        const form = document.getElementById("authForm");
+        const nameField = document.getElementById("nameField");
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const message = document.getElementById("authMessage");
+        const submitButton = document.getElementById("submitButton");
+
+        let mode = "login";
+
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        function readUsers() {
+          try {
+            const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+            return Array.isArray(users) ? users : [];
+          } catch {
+            return [];
+          }
+        }
+
+        function showMessage(text, type = "error") {
+          message.textContent = text;
+          message.className = "message show " + type;
+        }
+
+        function clearMessage() {
+          message.textContent = "";
+          message.className = "message";
+        }
+
+        function setMode(nextMode) {
+          mode = nextMode;
+          const registering = mode === "register";
+
+          document.getElementById("authTitle").textContent = registering
+            ? "Tạo tài khoản"
+            : "Đăng nhập";
+
+          document.getElementById("authSubtitle").textContent = registering
+            ? "Đăng ký để mua sắm và theo dõi đơn hàng của bạn."
+            : "Đăng nhập để tiếp tục mua sắm.";
+
+          nameField.hidden = !registering;
+          nameInput.required = registering;
+          passwordInput.autocomplete = registering
+            ? "new-password"
+            : "current-password";
+
+          submitButton.textContent = registering
+            ? "TẠO TÀI KHOẢN →"
+            : "ĐĂNG NHẬP →";
+
+          document.getElementById("switchText").textContent = registering
+            ? "Bạn đã có tài khoản?"
+            : "Bạn chưa có tài khoản?";
+
+          document.getElementById("switchMode").textContent = registering
+            ? "Đăng nhập"
+            : "Đăng ký ngay";
+
+          clearMessage();
+        }
+
+        function openModal(nextMode) {
+          setMode(nextMode);
+          modal.classList.add("open");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+          modal.classList.remove("open");
+          document.body.style.overflow = "";
+          form.reset();
+          clearMessage();
+        }
+
+        function redirectAfterLogin(user) {
+          const params = new URLSearchParams(location.search);
+          const next = params.get("next");
+
+          if (String(user.role || "").toLowerCase() === "admin") {
+            location.href = "./admin.html";
+          } else if (next === "checkout.html") {
+            location.href = "../checkout.html";
+          } else if (next === "cart.html") {
+            location.href = "../cart.html";
+          } else {
+            location.href = "../index.html";
+          }
+        }
+
+        document.querySelectorAll("[data-open]").forEach((button) => {
+          button.addEventListener("click", () =>
+            openModal(button.dataset.open),
+          );
+        });
+
+        document
+          .getElementById("closeModal")
+          .addEventListener("click", closeModal);
+
+        modal.addEventListener("click", (event) => {
+          if (event.target === modal) closeModal();
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") closeModal();
+        });
+
+        document.getElementById("switchMode").addEventListener("click", () => {
+          setMode(mode === "login" ? "register" : "login");
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          clearMessage();
+
+          const email = emailInput.value.trim().toLowerCase();
+          const password = passwordInput.value;
+          const users = readUsers();
+
+          if (mode === "register") {
+            const name = nameInput.value.trim();
+
+            if (!name) {
+              showMessage("Vui lòng nhập họ và tên.");
+              return;
+            }
+
+            if (password.length < 6) {
+              showMessage("Mật khẩu phải có ít nhất 6 ký tự.");
+              return;
+            }
+
+            if (
+              users.some(
+                (user) =>
+                  String(user.email || "")
+                    .trim()
+                    .toLowerCase() === email,
+              )
+            ) {
+              showMessage("Email này đã tồn tại. Vui lòng đăng nhập.");
+              return;
+            }
+
+            const newUser = {
+              id: "user-" + Date.now(),
+              name,
+              email,
+              password,
+              role: "customer",
+              provider: "local",
+              picture: "",
+              createdAt: new Date().toISOString(),
+            };
+
+            try {
+              users.push(newUser);
+              localStorage.setItem(USERS_KEY, JSON.stringify(users));
+              localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
+              showMessage(
+                "Đăng ký thành công! Đang chuyển trang...",
+                "success",
+              );
+              submitButton.disabled = true;
+              setTimeout(() => redirectAfterLogin(newUser), 500);
+            } catch {
+              showMessage("Không thể lưu tài khoản trong trình duyệt.");
+            }
+
+            return;
+          }
+
+          const user = users.find(
+            (item) =>
+              String(item.email || "")
+                .trim()
+                .toLowerCase() === email &&
+              String(item.password || "") === password,
+          );
+
+          if (!user) {
+            showMessage("Email hoặc mật khẩu không chính xác.");
+            return;
+          }
+
+          try {
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+            showMessage(
+              "Đăng nhập thành công! Đang chuyển trang...",
+              "success",
+            );
+            submitButton.disabled = true;
+            setTimeout(() => redirectAfterLogin(user), 400);
+          } catch {
+            showMessage("Không thể lưu phiên đăng nhập.");
+          }
+        });
+
+        // Mở hộp đăng nhập khi trang được gọi từ bước thanh toán.
+        if (new URLSearchParams(location.search).has("next")) {
+          openModal("login");
+        }
+      })();
+    </script>
+  </body>
+</html>

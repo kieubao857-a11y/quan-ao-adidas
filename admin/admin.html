@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Adidas Store</title>
+    <link rel="stylesheet" href="./admin.css" />
+  </head>
+  <body>
+    <div class="admin-layout">
+      <!-- THANH MENU -->
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-logo">adidas</span>
+          <span class="brand-subtitle">ADMIN PANEL</span>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-view="dashboard">
+            <span>▦</span> Tổng quan
+          </button>
+          <button class="nav-item" data-view="products">
+            <span>▣</span> Quản lý sản phẩm
+          </button>
+          <button class="nav-item" data-view="orders">
+            <span>▤</span> Quản lý đơn hàng
+          </button>
+          <button class="nav-item" data-view="customers">
+            <span>♙</span> Khách hàng
+          </button>
+          <button class="nav-item" data-view="accounts">
+            <span>♧</span> Quản lý tài khoản
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <a href="../index.html" class="back-store">← Quay lại cửa hàng</a>
+          <button id="adminLogout" class="logout-button">Đăng xuất</button>
+        </div>
+      </aside>
+
+      <!-- NỘI DUNG CHÍNH -->
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">ADIDAS STORE</p>
+            <h1 id="pageTitle">Tổng quan</h1>
+          </div>
+
+          <div class="admin-profile">
+            <div class="avatar">A</div>
+            <div>
+              <strong id="adminName">Quản trị viên</strong>
+              <small>Administrator</small>
+            </div>
+          </div>
+        </header>
+
+        <div
+          id="adminMessage"
+          class="message"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <!-- TỔNG QUAN -->
+        <section class="view active" id="view-dashboard">
+          <div class="welcome">
+            <div>
+              <h2>Chào mừng đến trang quản trị!</h2>
+              <p>Quản lý cửa hàng Adidas tại một nơi.</p>
+            </div>
+            <span class="welcome-icon">◆</span>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span class="stat-label">Tổng sản phẩm</span>
+              <strong id="statProducts">0</strong>
+              <span class="stat-note">Sản phẩm trong hệ thống</span>
+            </article>
+
+            <article class="stat-card">
+              <span class="stat-label">Tổng đơn hàng</span>
+              <strong id="statOrders">0</strong>
+              <span class="stat-note">Đơn hàng đã ghi nhận</span>
+            </article>
+
+            <article class="stat-card">
+              <span class="stat-label">Khách hàng</span>
+              <strong id="statCustomers">0</strong>
+              <span class="stat-note">Tài khoản khách hàng</span>
+            </article>
+
+            <article class="stat-card">
+              <span class="stat-label">Đơn chờ xử lý</span>
+              <strong id="statPending">0</strong>
+              <span class="stat-note">Cần kiểm tra</span>
+            </article>
+          </div>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Đơn hàng gần đây</h2>
+                <p>Các đơn hàng mới nhất trong hệ thống</p>
+              </div>
+              <button class="button button-dark" data-go="orders">
+                Xem tất cả
+              </button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody id="recentOrdersBody">
+                  <tr>
+                    <td colspan="5" class="empty-state">
+                      Đang tải đơn hàng...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <!-- QUẢN LÝ SẢN PHẨM -->
+        <section class="view" id="view-products">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Danh sách sản phẩm</h2>
+                <p>Thêm mới và quản lý sản phẩm của cửa hàng.</p>
+              </div>
+              <button id="addProductButton" class="button button-dark">
+                + Thêm sản phẩm
+              </button>
+            </div>
+
+            <div class="toolbar">
+              <input
+                id="productSearch"
+                type="search"
+                placeholder="Tìm theo tên hoặc mã sản phẩm..."
+              />
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Mã</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Danh mục</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="productsBody">
+                  <tr>
+                    <td colspan="5" class="empty-state">
+                      Đang tải sản phẩm...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel form-panel" id="productFormPanel" hidden>
+            <div class="panel-heading">
+              <div>
+                <h2 id="productFormTitle">Thêm sản phẩm</h2>
+                <p>Điền thông tin sản phẩm bên dưới.</p>
+              </div>
+              <button id="cancelProductButton" class="button button-light">
+                Đóng
+              </button>
+            </div>
+
+            <form id="productForm">
+              <input id="productId" type="hidden" />
+
+              <div class="form-grid">
+                <label>
+                  Tên sản phẩm *
+                  <input id="productName" required maxlength="150" />
+                </label>
+
+                <label>
+                  Giá bán (VNĐ) *
+                  <input
+                    id="productPrice"
+                    type="number"
+                    required
+                    min="0"
+                    step="1000"
+                  />
+                </label>
+
+                <label>
+                  Danh mục
+                  <input id="productCategory" maxlength="100" />
+                </label>
+
+                <label>
+                  Đường dẫn ảnh
+                  <input
+                    id="productImage"
+                    type="url"
+                    placeholder="https://..."
+                  />
+                </label>
+
+                <label class="full-width">
+                  Mô tả
+                  <textarea id="productDescription" rows="4"></textarea>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="button button-dark">
+                  Lưu sản phẩm
+                </button>
+                <button type="reset" class="button button-light">
+                  Xóa nội dung nhập
+                </button>
+              </div>
+            </form>
+          </section>
+        </section>
+
+        <!-- QUẢN LÝ ĐƠN HÀNG -->
+        <section class="view" id="view-orders">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Quản lý đơn hàng</h2>
+                <p>Theo dõi đơn hàng khách đã đặt.</p>
+              </div>
+            </div>
+
+            <div class="toolbar">
+              <input
+                id="orderSearch"
+                type="search"
+                placeholder="Tìm mã đơn hoặc khách hàng..."
+              />
+              <select id="orderStatusFilter" aria-label="Lọc trạng thái đơn">
+                <option value="">Tất cả trạng thái</option>
+                <option value="pending">Chờ xử lý</option>
+                <option value="processing">Đang xử lý</option>
+                <option value="shipping">Đang giao</option>
+                <option value="completed">Hoàn thành</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersBody">
+                  <tr>
+                    <td colspan="6" class="empty-state">
+                      Đang tải đơn hàng...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <!-- KHÁCH HÀNG -->
+        <section class="view" id="view-customers">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Danh sách khách hàng</h2>
+                <p>Thông tin người dùng đã đăng ký tài khoản.</p>
+              </div>
+            </div>
+
+            <div class="toolbar">
+              <input
+                id="customerSearch"
+                type="search"
+                placeholder="Tìm theo tên hoặc email..."
+              />
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tên tài khoản</th>
+                    <th>Email</th>
+                    <th>Ngày đăng ký</th>
+                    <th>Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody id="customersBody">
+                  <tr>
+                    <td colspan="4" class="empty-state">
+                      Đang tải khách hàng...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <!-- QUẢN LÝ TÀI KHOẢN -->
+        <section class="view" id="view-accounts">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Quản lý tài khoản</h2>
+                <p>Quản lý quyền truy cập và trạng thái tài khoản.</p>
+              </div>
+            </div>
+
+            <div class="notice">
+              Không chia sẻ mật khẩu của người dùng. Quyền Admin chỉ được cấp
+              bởi quản trị viên có thẩm quyền.
+            </div>
+
+            <div class="toolbar">
+              <input
+                id="accountSearch"
+                type="search"
+                placeholder="Tìm theo tên hoặc email..."
+              />
+              <select id="accountRoleFilter" aria-label="Lọc vai trò">
+                <option value="">Tất cả vai trò</option>
+                <option value="user">Khách hàng</option>
+                <option value="admin">Quản trị viên</option>
+              </select>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tên tài khoản</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="accountsBody">
+                  <tr>
+                    <td colspan="5" class="empty-state">
+                      Đang tải tài khoản...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <footer class="admin-footer">
+          Adidas Store Admin · Hệ thống quản lý cửa hàng
+        </footer>
+      </main>
+    </div>
+
+    <!-- Tạo ở phần tiếp theo -->
+    <script src="./admin-auth.js" defer></script>
+    <script src="./admin.js" defer></script>
+  </body>
+</html>
