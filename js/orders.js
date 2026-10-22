@@ -1,354 +1,580 @@
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
+// =====================================
+// QUẢN LÝ ĐƠN HÀNG ADIDAS
+// =====================================
 
 const orderList = document.getElementById("orderList");
+const ordersSummary = document.getElementById("ordersSummary");
+const orderNotice = document.getElementById("orderNotice");
+
+const cancelModal = document.getElementById("cancelModal");
+const otherReasonInput = document.getElementById("otherReason");
+
+let orders = [];
+let selectedOrderId = null;
+let noticeTimer;
 
 
-// HIỂN THỊ ĐƠN HÀNG
+// =====================================
+// ĐỌC DỮ LIỆU
+// =====================================
+
+function loadOrders() {
+    try {
+        const savedOrders = JSON.parse(
+            localStorage.getItem("orders") || "[]"
+        );
+
+        orders = Array.isArray(savedOrders) ? savedOrders : [];
+    } catch (error) {
+        console.error("Không thể đọc đơn hàng:", error);
+        orders = [];
+    }
+}
+
+
+// =====================================
+// LƯU DỮ LIỆU
+// =====================================
+
+function saveOrders() {
+    try {
+        localStorage.setItem("orders", JSON.stringify(orders));
+        return true;
+    } catch (error) {
+        console.error("Không thể lưu đơn hàng:", error);
+        alert("Không thể lưu thay đổi. Vui lòng thử lại.");
+        return false;
+    }
+}
+
+
+// =====================================
+// HÀM HỖ TRỢ
+// =====================================
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function (char) {
+        const entities = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        };
+
+        return entities[char];
+    });
+}
+
+
+function formatPrice(price) {
+    return (Number(price) || 0).toLocaleString("vi-VN") + " VNĐ";
+}
+
+
+function getOrderStatus(order) {
+    return String(order.status || "Chờ xử lý");
+}
+
+
+function getStatusClass(status) {
+    const normalized = status.toLowerCase();
+
+    if (normalized.includes("hủy")) {
+        return "status-cancelled";
+    }
+
+    if (
+        normalized.includes("hoàn thành") ||
+        normalized.includes("đã giao")
+    ) {
+        return "status-completed";
+    }
+
+    if (
+        normalized.includes("chờ") ||
+        normalized.includes("xử lý")
+    ) {
+        return "status-pending";
+    }
+
+    return "status-other";
+}
+
+
+function getOrderProducts(order) {
+    return Array.isArray(order.products) ? order.products : [];
+}
+
+
+function getOrderId(order, index) {
+    return String(order.id ?? `legacy-${index}`);
+}
+
+
+function findOrderById(orderId) {
+    return orders.find(function (order, index) {
+        return getOrderId(order, index) === String(orderId);
+    });
+}
+
+
+function showNotice(message) {
+    orderNotice.textContent = message;
+    orderNotice.hidden = false;
+
+    clearTimeout(noticeTimer);
+
+    noticeTimer = setTimeout(function () {
+        orderNotice.hidden = true;
+    }, 4000);
+}
+
+
+// =====================================
+// THỐNG KÊ
+// =====================================
+
+function renderSummary() {
+    const totalOrders = orders.length;
+
+    const pendingOrders = orders.filter(function (order) {
+        return getOrderStatus(order) === "Chờ xử lý";
+    }).length;
+
+    const cancelledOrders = orders.filter(function (order) {
+        return getOrderStatus(order) === "Đã hủy";
+    }).length;
+
+    ordersSummary.innerHTML = `
+        <div class="summary-card">
+            <span>Tổng số đơn hàng</span>
+            <strong>${totalOrders}</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Đơn đang xử lý</span>
+            <strong>${pendingOrders}</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Đơn đã hủy</span>
+            <strong>${cancelledOrders}</strong>
+        </div>
+    `;
+}
+
+
+// =====================================
+// HIỂN THỊ SẢN PHẨM
+// =====================================
+
+function renderProducts(products) {
+    if (products.length === 0) {
+        return `<p>Đơn hàng chưa có thông tin sản phẩm.</p>`;
+    }
+
+    return products.map(function (item) {
+        const name = escapeHTML(item.name || "Sản phẩm Adidas");
+        const image = escapeHTML(item.image || "");
+        const size = escapeHTML(item.size || "Không có");
+        const color = escapeHTML(item.color || "Không có");
+        const quantity = Math.max(1, Number(item.quantity) || 1);
+        const price = Number(item.price) || 0;
+
+        return `
+            <div class="order-product">
+
+                <img
+                    src="${image}"
+                    alt="${name}"
+                    loading="lazy"
+                    onerror="this.style.display='none'"
+                >
+
+                <div class="order-product-info">
+                    <h4>${name}</h4>
+
+                    <div class="product-detail-line">
+                        <span>Size: ${size}</span>
+                        <span>Màu: ${color}</span>
+                        <span>Số lượng: ${quantity}</span>
+                    </div>
+
+                    <div class="product-price">
+                        ${formatPrice(price)}
+                    </div>
+                </div>
+
+            </div>
+        `;
+    }).join("");
+}
+
+
+// =====================================
+// HIỂN THỊ DANH SÁCH ĐƠN HÀNG
+// =====================================
+
 function renderOrders() {
-
-    orderList.innerHTML = "";
+    loadOrders();
+    renderSummary();
 
     if (orders.length === 0) {
-
         orderList.innerHTML = `
             <div class="empty-order">
-                <h2>Chưa có đơn hàng</h2>
+                <div class="empty-icon">📦</div>
 
-                <a href="product.html">
-                    Tiếp tục mua hàng
-                </a>
+                <h2>Bạn chưa có đơn hàng nào</h2>
+
+                <p>
+                    Những đơn hàng bạn đặt sẽ xuất hiện tại đây.
+                </p>
+
+                <a href="product.html">KHÁM PHÁ SẢN PHẨM</a>
             </div>
         `;
 
         return;
     }
 
+    // Đơn mới nhất hiển thị trước.
+    const sortedOrders = orders.map(function (order, index) {
+        return {
+            order: order,
+            originalIndex: index
+        };
+    }).reverse();
 
-    orders.forEach(function (order, index) {
+    orderList.innerHTML = sortedOrders.map(function (entry) {
+        const order = entry.order;
+        const index = entry.originalIndex;
 
-        let productsHTML = "";
+        const orderId = getOrderId(order, index);
+        const status = getOrderStatus(order);
+        const statusClass = getStatusClass(status);
 
+        const customer = order.customer || {};
+        const products = getOrderProducts(order);
 
-        // HIỂN THỊ SẢN PHẨM
-        order.products.forEach(function (item) {
+        const orderCode = escapeHTML(order.id ?? orderId);
+        const createdAt = escapeHTML(
+            order.createdAt || "Không có thông tin"
+        );
 
-            productsHTML += `
-                <div class="order-product">
+        const customerName = escapeHTML(
+            customer.name || "Chưa cập nhật"
+        );
 
-                    <img
-                        src="${item.image}"
-                        alt="${item.name}"
-                    >
+        const customerPhone = escapeHTML(
+            customer.phone || "Chưa cập nhật"
+        );
 
-                    <div>
+        const customerAddress = escapeHTML(
+            customer.address || "Chưa cập nhật"
+        );
 
-                        <h3>${item.name}</h3>
+        const payment = escapeHTML(
+            order.payment || "Chưa cập nhật"
+        );
 
-                        <p>Size: ${item.size}</p>
+        const total = Number(order.total) || 0;
+        const canCancel = status === "Chờ xử lý";
 
-                        <p>Màu: ${item.color}</p>
+        let cancelReasonHTML = "";
 
-                        <p>Số lượng: ${item.quantity}</p>
-
-                        <p>
-                            Giá:
-                            ${item.price.toLocaleString("vi-VN")}
-                            VNĐ
-                        </p>
-
-                    </div>
-
+        if (order.cancelReason) {
+            cancelReasonHTML = `
+                <div class="cancel-reason-display">
+                    <strong>Lý do hủy:</strong>
+                    ${escapeHTML(order.cancelReason)}
                 </div>
             `;
-        });
+        }
 
+        // Chỉ hiện nút hủy nếu đơn đang chờ xử lý.
+        // Không còn nút xóa đơn hàng.
+        let actionsHTML = "";
 
-        // NÚT HỦY ĐƠN
-        let cancelButton = "";
-
-        if (order.status === "Chờ xử lý") {
-
-            cancelButton = `
+        if (canCancel) {
+            actionsHTML = `
                 <button
                     type="button"
                     class="cancel-order-btn"
-                    onclick="cancelOrder(${index})"
+                    data-action="cancel"
+                    data-order-id="${escapeHTML(orderId)}"
                 >
                     HỦY ĐƠN HÀNG
                 </button>
             `;
         }
 
+        return `
+            <article class="order-item">
 
-        // NÚT XÓA ĐƠN ĐÃ HỦY
-        let deleteButton = "";
+                <div class="order-top">
+                    <div>
+                        <h2 class="order-code">
+                            ĐƠN HÀNG #${orderCode}
+                        </h2>
 
-        if (order.status === "Đã hủy") {
+                        <p class="order-date">
+                            Ngày đặt: ${createdAt}
+                        </p>
+                    </div>
 
-            deleteButton = `
-                <button
-                    type="button"
-                    class="delete-order-btn"
-                    onclick="deleteOrder(${index})"
-                >
-                    XÓA ĐƠN HÀNG
-                </button>
-            `;
-        }
+                    <span class="order-status ${statusClass}">
+                        ● ${escapeHTML(status)}
+                    </span>
+                </div>
 
+                <div class="order-body">
 
-        // LÝ DO HỦY
-        let cancelReasonHTML = "";
+                    <h3 class="order-section-title">
+                        THÔNG TIN NGƯỜI NHẬN
+                    </h3>
 
-        if (order.cancelReason) {
+                    <div class="customer-info">
 
-            cancelReasonHTML = `
-                <p>
-                    Lý do hủy:
-                    ${order.cancelReason}
-                </p>
-            `;
-        }
+                        <div class="customer-field">
+                            <span>Họ và tên</span>
+                            <strong>${customerName}</strong>
+                        </div>
 
+                        <div class="customer-field">
+                            <span>Số điện thoại</span>
+                            <strong>${customerPhone}</strong>
+                        </div>
 
-        // HIỂN THỊ ĐƠN
-        orderList.innerHTML += `
+                        <div class="customer-field">
+                            <span>Địa chỉ giao hàng</span>
+                            <strong>${customerAddress}</strong>
+                        </div>
 
-            <div class="order-item">
+                        <div class="customer-field">
+                            <span>Phương thức thanh toán</span>
+                            <strong>${payment}</strong>
+                        </div>
 
-                <h2>
-                    Đơn hàng #${order.id}
-                </h2>
+                    </div>
 
-                <p>
-                    Ngày đặt:
-                    ${order.createdAt}
-                </p>
+                    <h3 class="order-section-title">
+                        SẢN PHẨM ĐÃ ĐẶT
+                    </h3>
 
-                <h3>
-                    Thông tin người nhận
-                </h3>
+                    <div class="order-products">
+                        ${renderProducts(products)}
+                    </div>
 
-                <p>
-                    Họ tên:
-                    ${order.customer.name}
-                </p>
+                    <div class="order-bottom">
 
-                <p>
-                    Số điện thoại:
-                    ${order.customer.phone}
-                </p>
+                        <div class="order-payment">
+                            Phương thức thanh toán:
+                            <strong>${payment}</strong>
+                        </div>
 
-                <p>
-                    Địa chỉ:
-                    ${order.customer.address}
-                </p>
+                        <div class="order-total">
+                            <span>Tổng thanh toán</span>
+                            <strong>${formatPrice(total)}</strong>
+                        </div>
 
-                <p>
-                    Thanh toán:
-                    ${order.payment}
-                </p>
+                    </div>
 
-                <h3>
-                    Sản phẩm
-                </h3>
+                    ${cancelReasonHTML}
 
-                ${productsHTML}
+                    <div class="order-actions">
+                        ${actionsHTML}
+                    </div>
 
-                <h2>
-                    Tổng tiền:
-                    ${order.total.toLocaleString("vi-VN")}
-                    VNĐ
-                </h2>
+                </div>
 
-                <p>
-                    Trạng thái:
-                    <strong>
-                        ${order.status}
-                    </strong>
-                </p>
-
-                ${cancelReasonHTML}
-
-                ${cancelButton}
-
-                ${deleteButton}
-
-            </div>
+            </article>
         `;
-    });
+    }).join("");
 }
 
 
+// =====================================
 // MỞ POPUP HỦY ĐƠN
-function cancelOrder(index) {
+// =====================================
 
-    const modal = document.getElementById("cancelModal");
+function cancelOrder(orderId) {
+    const order = findOrderById(orderId);
 
-    modal.style.display = "flex";
-
-    modal.dataset.orderIndex = index;
-
-
-    document
-        .querySelectorAll(".cancel-reason")
-        .forEach(function (button) {
-
-            button.classList.remove("selected");
-
-        });
-
-
-    document.getElementById("otherReason").value = "";
-}
-
-
-// XÓA ĐƠN HÀNG ĐÃ HỦY
-function deleteOrder(index) {
-
-    const confirmDelete = confirm(
-        "Bạn có chắc muốn xóa đơn hàng này không?"
-    );
-
-    if (!confirmDelete) {
+    if (!order) {
+        alert("Không tìm thấy đơn hàng.");
+        renderOrders();
         return;
     }
 
+    if (getOrderStatus(order) !== "Chờ xử lý") {
+        alert("Đơn hàng này không còn ở trạng thái chờ xử lý.");
+        renderOrders();
+        return;
+    }
 
-    orders.splice(index, 1);
+    selectedOrderId = String(orderId);
 
+    document.querySelectorAll(".cancel-reason").forEach(function (button) {
+        button.classList.remove("selected");
+    });
 
-    localStorage.setItem(
-        "orders",
-        JSON.stringify(orders)
-    );
-
-
-    renderOrders();
+    otherReasonInput.value = "";
+    cancelModal.style.display = "flex";
 }
 
 
-// CHỌN LÝ DO
-document
-    .querySelectorAll(".cancel-reason")
-    .forEach(function (button) {
+// =====================================
+// ĐÓNG POPUP
+// =====================================
 
-        button.addEventListener(
-            "click",
-            function () {
+function closeCancelModal() {
+    cancelModal.style.display = "none";
+    selectedOrderId = null;
 
-                document
-                    .querySelectorAll(".cancel-reason")
-                    .forEach(function (item) {
-
-                        item.classList.remove("selected");
-
-                    });
-
-                this.classList.add("selected");
-            }
-        );
-
+    document.querySelectorAll(".cancel-reason").forEach(function (button) {
+        button.classList.remove("selected");
     });
 
+    otherReasonInput.value = "";
+}
 
-// ĐÓNG POPUP - NÚT X
-document
-    .getElementById("closeCancelModal")
-    .addEventListener(
-        "click",
-        function () {
 
-            document.getElementById(
-                "cancelModal"
-            ).style.display = "none";
+document.getElementById("closeCancelModal").addEventListener(
+    "click",
+    closeCancelModal
+);
 
+document.getElementById("cancelBack").addEventListener(
+    "click",
+    closeCancelModal
+);
+
+
+cancelModal.addEventListener("click", function (event) {
+    if (event.target === cancelModal) {
+        closeCancelModal();
+    }
+});
+
+
+document.addEventListener("keydown", function (event) {
+    if (
+        event.key === "Escape" &&
+        cancelModal.style.display === "flex"
+    ) {
+        closeCancelModal();
+    }
+});
+
+
+// =====================================
+// CHỌN LÝ DO HỦY
+// =====================================
+
+document.querySelectorAll(".cancel-reason").forEach(function (button) {
+    button.addEventListener("click", function () {
+        document.querySelectorAll(".cancel-reason").forEach(function (item) {
+            item.classList.remove("selected");
+        });
+
+        this.classList.add("selected");
+
+        otherReasonInput.value = "";
+    });
+});
+
+
+// =====================================
+// XÁC NHẬN HỦY ĐƠN
+// =====================================
+
+document.getElementById("confirmCancel").addEventListener(
+    "click",
+    function () {
+        if (selectedOrderId === null) {
+            alert("Không xác định được đơn hàng cần hủy.");
+            return;
         }
-    );
 
+        const order = findOrderById(selectedOrderId);
 
-// ĐÓNG POPUP - NÚT QUAY LẠI
-document
-    .getElementById("cancelBack")
-    .addEventListener(
-        "click",
-        function () {
-
-            document.getElementById(
-                "cancelModal"
-            ).style.display = "none";
-
-        }
-    );
-
-
-// XÁC NHẬN HỦY
-document
-    .getElementById("confirmCancel")
-    .addEventListener(
-        "click",
-        function () {
-
-            const modal =
-                document.getElementById("cancelModal");
-
-            const selectedReason =
-                document.querySelector(
-                    ".cancel-reason.selected"
-                );
-
-            const otherReason =
-                document
-                    .getElementById("otherReason")
-                    .value
-                    .trim();
-
-            let reason = "";
-
-
-            if (selectedReason) {
-
-                reason =
-                    selectedReason.dataset.reason;
-
-            } else if (otherReason !== "") {
-
-                reason = otherReason;
-
-            } else {
-
-                alert(
-                    "Vui lòng chọn lý do hủy đơn hàng!"
-                );
-
-                return;
-            }
-
-
-            const index =
-                Number(
-                    modal.dataset.orderIndex
-                );
-
-
-            orders[index].status = "Đã hủy";
-
-            orders[index].cancelReason = reason;
-
-
-            localStorage.setItem(
-                "orders",
-                JSON.stringify(orders)
-            );
-
-
-            modal.style.display = "none";
-
+        if (!order) {
+            alert("Đơn hàng không còn tồn tại.");
+            closeCancelModal();
             renderOrders();
-
+            return;
         }
+
+        if (getOrderStatus(order) !== "Chờ xử lý") {
+            alert("Đơn hàng này không thể hủy.");
+            closeCancelModal();
+            renderOrders();
+            return;
+        }
+
+        const selectedReason = document.querySelector(
+            ".cancel-reason.selected"
+        );
+
+        const otherReason = otherReasonInput.value.trim();
+
+        let reason = "";
+
+        if (otherReason !== "") {
+            reason = otherReason;
+        } else if (selectedReason) {
+            reason = selectedReason.dataset.reason;
+        }
+
+        if (!reason) {
+            alert("Vui lòng chọn hoặc nhập lý do hủy đơn hàng.");
+            return;
+        }
+
+        const oldStatus = order.status;
+        const oldReason = order.cancelReason;
+        const oldCancelledAt = order.cancelledAt;
+
+        // Giữ đơn hàng cũ, chỉ đổi trạng thái.
+        order.status = "Đã hủy";
+        order.cancelReason = reason;
+        order.cancelledAt = new Date().toLocaleString("vi-VN");
+
+        if (!saveOrders()) {
+            order.status = oldStatus;
+            order.cancelReason = oldReason;
+            order.cancelledAt = oldCancelledAt;
+            return;
+        }
+
+        closeCancelModal();
+        renderOrders();
+
+        showNotice("Đơn hàng đã được hủy thành công.");
+    }
+);
+
+
+// =====================================
+// BẮT SỰ KIỆN NÚT HỦY ĐƠN
+// =====================================
+
+orderList.addEventListener("click", function (event) {
+    const button = event.target.closest(
+        'button[data-action="cancel"]'
     );
 
+    if (!button) {
+        return;
+    }
 
-// CHẠY KHI MỞ TRANG
+    cancelOrder(button.dataset.orderId);
+});
+
+
+// =====================================
+// KHỞI TẠO
+// =====================================
+
 renderOrders();

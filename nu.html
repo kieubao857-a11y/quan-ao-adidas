@@ -1,367 +1,413 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Thời trang Nữ | Adidas</title>
 
-    <meta
-      name="description"
-      content="Khám phá bộ sưu tập thời trang nữ Adidas: áo, quần, giày và phụ kiện thể thao."
-    />
+    <meta name="description"
+          content="Khám phá bộ sưu tập thời trang nữ Adidas: áo, quần, giày và phụ kiện thể thao.">
 
-    <link rel="stylesheet" href="./src/style.css" />
+    <link rel="stylesheet" href="./src/style.css">
 
     <style>
-      /* Giao diện riêng trang Nữ */
-      .category-page {
-        width: min(1100px, calc(100% - 40px));
-        margin: 42px auto 60px;
-      }
-
-      .category-page .category-banner {
-        position: relative;
-        isolation: isolate;
-        min-height: 310px;
-        margin-bottom: 32px;
-        padding: 45px 34px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 14px;
-        overflow: hidden;
-        color: #fff;
-        background:
-          radial-gradient(
-            circle at 85% 20%,
-            rgba(170, 100, 125, 0.22),
-            transparent 42%
-          ),
-          linear-gradient(120deg, #090909, #30262a 75%, #111);
-      }
-
-      .category-page .category-banner::after {
-        content: "ADIDAS";
-        position: absolute;
-        z-index: -1;
-        right: 18px;
-        bottom: -14px;
-        color: rgba(255, 255, 255, 0.07);
-        font-size: clamp(65px, 12vw, 140px);
-        font-weight: 900;
-        line-height: 1;
-        pointer-events: none;
-      }
-
-      .category-page .category-banner h1 {
-        margin: 0 0 8px;
-        font-size: clamp(30px, 4.5vw, 48px);
-        font-weight: 900;
-        line-height: 1.15;
-      }
-
-      .category-page .category-banner p {
-        margin: 0;
-        font-size: 15px;
-        line-height: 1.7;
-      }
-
-      .category-heading {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 15px;
-        margin-bottom: 20px;
-      }
-
-      .category-page .section-title {
-        margin: 0;
-        font-size: 23px;
-        font-weight: 800;
-      }
-
-      .category-description {
-        margin-top: 7px;
-        color: #666;
-        font-size: 14px;
-      }
-
-      .product-count {
-        flex-shrink: 0;
-        color: #666;
-        font-size: 13px;
-      }
-
-      .category-page .product-grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        align-items: stretch;
-        gap: 20px;
-      }
-
-      .category-page .product-card {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        overflow: hidden;
-        background: #fff;
-        border: 1px solid #e5e5e5;
-        transition:
-          transform 0.25s ease,
-          box-shadow 0.25s ease;
-      }
-
-      .category-page .product-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
-      }
-
-      .category-page .product-image-link {
-        display: block;
-        width: 100%;
-        aspect-ratio: 4 / 5;
-        overflow: hidden;
-        background: #f3f3f3;
-      }
-
-      .category-page .product-image {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        object-position: center;
-        transition: transform 0.3s ease;
-      }
-
-      .category-page .product-card:hover .product-image {
-        transform: scale(1.04);
-      }
-
-      .category-page .product-info {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 14px;
-      }
-
-      .category-page .product-name {
-        display: -webkit-box;
-        width: 100%;
-        min-height: 42px;
-        margin: 0 0 9px;
-        overflow: hidden;
-        font-size: 15px;
-        font-weight: 700;
-        line-height: 1.45;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-      }
-
-      .category-page .product-price {
-        margin: 0 0 15px;
-        font-size: 15px;
-        font-weight: 800;
-      }
-
-      .category-page .product-actions {
-        width: 100%;
-        margin-top: auto;
-      }
-
-      .category-page .product-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        min-height: 42px;
-        padding: 10px;
-        background: #111;
-        border: 1px solid #111;
-        color: #fff;
-        font-size: 12px;
-        font-weight: 700;
-        text-align: center;
-        text-decoration: none;
-        transition: background 0.2s ease;
-      }
-
-      .category-page .product-btn:hover {
-        background: #e30613;
-        border-color: #e30613;
-      }
-
-      .category-page .product-image-fallback {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        padding: 12px;
-        background: linear-gradient(145deg, #f5f5f5, #e5e5e5);
-        color: #555;
-        text-align: center;
-      }
-
-      .category-page .fallback-brand {
-        color: #222;
-        font-size: 36px;
-        font-weight: 900;
-        letter-spacing: -2px;
-      }
-
-      .category-page .fallback-label {
-        font-size: 12px;
-        overflow-wrap: anywhere;
-      }
-
-      .category-page .loading-message,
-      .category-page .empty-message,
-      .category-page .error-message {
-        grid-column: 1 / -1;
-        padding: 40px 20px;
-        background: #f5f5f5;
-        color: #555;
-        text-align: center;
-        line-height: 1.8;
-      }
-
-      .category-page .empty-message h3,
-      .category-page .error-message h3 {
-        margin-bottom: 8px;
-        color: #111;
-      }
-
-      .category-page .error-message {
-        border-left: 3px solid #e30613;
-      }
-
-      @media (max-width: 900px) {
-        .category-page .product-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 15px;
-        }
-      }
-
-      @media (max-width: 600px) {
+        /* Giao diện riêng trang Nữ */
         .category-page {
-          width: calc(100% - 24px);
-          margin: 24px auto 40px;
+            width: min(1100px, calc(100% - 40px));
+            margin: 42px auto 60px;
         }
 
         .category-page .category-banner {
-          min-height: 230px;
-          padding: 28px 20px;
+            position: relative;
+            isolation: isolate;
+            min-height: 310px;
+            margin-bottom: 32px;
+            padding: 45px 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 14px;
+            overflow: hidden;
+            color: #fff;
+            background:
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(170, 100, 125, .22),
+                    transparent 42%
+                ),
+                linear-gradient(120deg, #090909, #30262a 75%, #111);
+        }
+
+        .category-page .category-banner::after {
+            content: "ADIDAS";
+            position: absolute;
+            z-index: -1;
+            right: 18px;
+            bottom: -14px;
+            color: rgba(255, 255, 255, .07);
+            font-size: clamp(65px, 12vw, 140px);
+            font-weight: 900;
+            line-height: 1;
+            pointer-events: none;
         }
 
         .category-page .category-banner h1 {
-          font-size: 29px;
+            margin: 0 0 8px;
+            font-size: clamp(30px, 4.5vw, 48px);
+            font-weight: 900;
+            line-height: 1.15;
         }
 
         .category-page .category-banner p {
-          font-size: 13px;
-        }
-
-        .category-page .section-title {
-          font-size: 19px;
-        }
-
-        .category-description {
-          font-size: 12px;
-        }
-
-        .category-page .product-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 12px;
-        }
-
-        .category-page .product-info {
-          padding: 10px;
-        }
-
-        .category-page .product-name {
-          min-height: 38px;
-          font-size: 13px;
-        }
-
-        .category-page .product-price {
-          font-size: 13px;
-        }
-
-        .category-page .product-btn {
-          min-height: 38px;
-          padding: 8px 4px;
-          font-size: 11px;
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.7;
         }
 
         .category-heading {
-          align-items: flex-start;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
         }
-      }
 
-      @media (prefers-reduced-motion: reduce) {
-        .category-page .product-card,
-        .category-page .product-image,
+        .category-page .section-title {
+            margin: 0;
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .category-description {
+            margin-top: 7px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .product-count {
+            flex-shrink: 0;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .category-page .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            align-items: stretch;
+            gap: 20px;
+        }
+
+        .category-page .product-card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .category-page .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, .10);
+        }
+
+        .category-page .product-image-link {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            overflow: hidden;
+            background: #f3f3f3;
+        }
+
+        .category-page .product-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            transition: transform .3s ease;
+        }
+
+        .category-page .product-card:hover .product-image {
+            transform: scale(1.04);
+        }
+
+        .category-page .product-info {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 14px;
+        }
+
+        .category-page .product-name {
+            display: -webkit-box;
+            width: 100%;
+            min-height: 42px;
+            margin: 0 0 9px;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.45;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .category-page .product-price {
+            margin: 0 0 15px;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .category-page .product-actions {
+            width: 100%;
+            margin-top: auto;
+        }
+
         .category-page .product-btn {
-          transition: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 42px;
+            padding: 10px;
+            background: #111;
+            border: 1px solid #111;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            transition: background .2s ease;
         }
-      }
+
+        .category-page .product-btn:hover {
+            background: #e30613;
+            border-color: #e30613;
+        }
+
+        .category-page .product-image-fallback {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px;
+            background: linear-gradient(145deg, #f5f5f5, #e5e5e5);
+            color: #555;
+            text-align: center;
+        }
+
+        .category-page .fallback-brand {
+            color: #222;
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .category-page .fallback-label {
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .category-page .loading-message,
+        .category-page .empty-message,
+        .category-page .error-message {
+            grid-column: 1 / -1;
+            padding: 40px 20px;
+            background: #f5f5f5;
+            color: #555;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .category-page .empty-message h3,
+        .category-page .error-message h3 {
+            margin-bottom: 8px;
+            color: #111;
+        }
+
+        .category-page .error-message {
+            border-left: 3px solid #e30613;
+        }
+
+        @media (max-width: 900px) {
+            .category-page .product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .category-page {
+                width: calc(100% - 24px);
+                margin: 24px auto 40px;
+            }
+
+            .category-page .category-banner {
+                min-height: 230px;
+                padding: 28px 20px;
+            }
+
+            .category-page .category-banner h1 {
+                font-size: 29px;
+            }
+
+            .category-page .category-banner p {
+                font-size: 13px;
+            }
+
+            .category-page .section-title {
+                font-size: 19px;
+            }
+
+            .category-description {
+                font-size: 12px;
+            }
+
+            .category-page .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .category-page .product-info {
+                padding: 10px;
+            }
+
+            .category-page .product-name {
+                min-height: 38px;
+                font-size: 13px;
+            }
+
+            .category-page .product-price {
+                font-size: 13px;
+            }
+
+            .category-page .product-btn {
+                min-height: 38px;
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+
+            .category-heading {
+                align-items: flex-start;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .category-page .product-card,
+            .category-page .product-image,
+            .category-page .product-btn {
+                transition: none;
+            }
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <header class="header">
-      <a href="index.html" class="logo">adidas</a>
+        <a href="index.html" class="logo">adidas</a>
 
-      <nav class="menu">
-        <a href="index.html">Trang chủ</a>
-        <a href="product.html">Sản phẩm</a>
-        <a href="nam.html">Nam</a>
-        <a href="nu.html" class="active">Nữ</a>
-        <a href="the-thao.html">Thể thao</a>
-        <a href="sale.html">Sale</a>
-      </nav>
+        <nav class="menu">
+            <a href="index.html">Trang chủ</a>
+            <a href="products.html">Sản phẩm</a>
+            <a href="nam.html">Nam</a>
+            <a href="nu.html" class="active">Nữ</a>
+            <a href="the-thao.html">Thể thao</a>
+            <a href="sale.html">Sale</a>
+        </nav>
 
-      <div class="header-right">
-        <a href="cart.html" class="icon" aria-label="Giỏ hàng">🛒</a>
-        <a href="orders.html" class="icon" aria-label="Đơn hàng">📦</a>
-      </div>
+        <div class="header-right">
+            <a href="cart.html" class="icon" aria-label="Giỏ hàng">🛒</a>
+            <a href="orders.html" class="icon" aria-label="Đơn hàng">📦</a>
+        </div>
     </header>
 
     <main class="container category-page">
-      <section class="category-banner">
-        <h1>THỜI TRANG NỮ</h1>
-        <p>Khám phá bộ sưu tập Adidas dành cho nữ.</p>
-        <p>Hiện đại – Cá tính – Năng động mỗi ngày.</p>
-      </section>
+        <section class="category-banner">
+            <h1>THỜI TRANG NỮ</h1>
+            <p>Khám phá bộ sưu tập Adidas dành cho nữ.</p>
+            <p>Hiện đại – Cá tính – Năng động mỗi ngày.</p>
+        </section>
 
-      <div class="category-heading">
-        <div>
-          <h2 class="section-title">SẢN PHẨM NỮ</h2>
-          <p class="category-description">
-            Khám phá phong cách thể thao dành riêng cho bạn.
-          </p>
+        <div class="category-heading">
+            <div>
+                <h2 class="section-title">SẢN PHẨM NỮ</h2>
+                <p class="category-description">
+                    Khám phá phong cách thể thao dành riêng cho bạn.
+                </p>
+            </div>
+
+            <span id="productCount" class="product-count">
+                Đang tải...
+            </span>
         </div>
 
-        <span id="productCount" class="product-count"> Đang tải... </span>
-      </div>
-
-      <div id="productList" class="product-grid" aria-live="polite">
-        <p class="loading-message">Đang tải sản phẩm Nữ...</p>
-      </div>
+        <div id="productList" class="product-grid" aria-live="polite">
+            <p class="loading-message">Đang tải sản phẩm Nữ...</p>
+        </div>
     </main>
 
-    <footer class="footer">
-      <p>ADIDAS — IMPOSSIBLE IS NOTHING</p>
-      <p>© 2026 Adidas Shop</p>
-    </footer>
+   <!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-container">
+
+        <!-- CỘT 1 -->
+        <div class="footer-column">
+            <h3>ADIDAS SHOP</h3>
+
+            <p>Website bán quần áo thể thao Adidas.</p>
+            <p>Phong cách thể thao hiện đại.</p>
+
+            <div class="social-links">
+                <a href="#" aria-label="Facebook">f</a>
+                <a href="#" aria-label="Instagram">◎</a>
+                <a href="#" aria-label="TikTok">♪</a>
+            </div>
+        </div>
+
+        <!-- CỘT 2 -->
+        <div class="footer-column">
+            <h3>CHÍNH SÁCH</h3>
+
+            <a href="#">Chính sách đổi trả</a>
+            <a href="#">Chính sách bảo hành</a>
+            <a href="#">Chính sách giao hàng</a>
+            <a href="#">Chính sách bảo mật</a>
+        </div>
+
+        <!-- CỘT 3 -->
+        <div class="footer-column footer-contact">
+            <h3>LIÊN HỆ</h3>
+
+            <p>📍 Hà Nội, Việt Nam</p>
+            <p>☎ 0383374104</p>
+            <p>✉ adidas@gmail.com</p>
+        </div>
+
+        <!-- CỘT 4 -->
+        <div class="footer-column">
+            <h3>THEO DÕI</h3>
+
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+            <a href="#">TikTok</a>
+            <a href="login.html">♙ Đăng nhập Admin</a>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Adidas Shop. All rights reserved.</p>
+    </div>
+</footer>
 
     <script src="./js/nu.js" defer></script>
-    <script src="./js/account-auth.js"></script>
-    <script src="./js/support.js"></script>
-  </body>
+</body>
 </html>

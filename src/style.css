@@ -2739,3 +2739,1170 @@ body:has(#checkoutForm) .footer p {
         width: 100%;
     }
 }
+/* ===== SỬA HEADER VÀ MENU ADIDAS ===== */
+
+.header {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 16px 40px;
+}
+
+.header .logo {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.header .menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.header .menu a {
+    display: inline-block;
+    white-space: nowrap;
+    margin: 0;
+    padding: 8px 0;
+    text-decoration: none;
+}
+
+.header .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    gap: 16px;
+    margin: 0;
+}
+
+.header .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* Màn hình nhỏ */
+@media (max-width: 900px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 15px 20px;
+    }
+
+    .header .menu {
+        order: 3;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px 20px;
+    }
+
+    .header .header-right {
+        margin-left: auto;
+    }
+}
+/* ===== MENU ADIDAS HIỆN ĐẠI ===== */
+
+.header {
+    width: 100%;
+    min-height: 82px;
+    padding: 0 45px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+
+    position: relative;
+    z-index: 1000;
+}
+
+/* LOGO */
+.header .logo {
+    flex-shrink: 0;
+    margin: 0;
+
+    color: #111111;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-transform: lowercase;
+    cursor: pointer;
+}
+
+/* DANH SÁCH MENU */
+.header .menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 30px;
+
+    margin: 0;
+    padding: 0;
+}
+
+/* CHỮ TRÊN MENU */
+.header .menu a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    padding: 30px 0;
+    margin: 0;
+
+    color: #222222;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: color 0.25s ease;
+}
+
+/* GẠCH CHÂN CHUYỂN ĐỘNG */
+.header .menu a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 21px;
+
+    width: 0;
+    height: 3px;
+    background: #111111;
+
+    transition: width 0.25s ease;
+}
+
+.header .menu a:hover {
+    color: #777777;
+}
+
+.header .menu a:hover::after {
+    width: 100%;
+}
+
+/* ICON BÊN PHẢI */
+.header .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    gap: 12px;
+
+    margin: 0;
+    padding: 0;
+}
+
+.header .header-right .icon {
+    width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #f5f5f5;
+
+    font-size: 19px;
+    text-decoration: none;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.header .header-right .icon:hover {
+    background: #e5e5e5;
+    transform: translateY(-2px);
+}
+
+/* MÀN HÌNH LAPTOP NHỎ */
+@media (max-width: 1100px) {
+    .header {
+        padding: 0 22px;
+        gap: 20px;
+    }
+
+    .header .menu {
+        gap: 18px;
+    }
+
+    .header .menu a {
+        font-size: 12px;
+    }
+}
+
+/* ĐIỆN THOẠI VÀ MÁY TÍNH BẢNG */
+@media (max-width: 768px) {
+    .header {
+        min-height: auto;
+        padding: 16px 18px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .header .logo {
+        font-size: 29px;
+    }
+
+    .header .header-right {
+        margin-left: auto;
+    }
+
+    .header .menu {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 0 22px;
+    }
+
+    .header .menu a {
+        padding: 12px 0;
+        font-size: 12px;
+    }
+
+    .header .menu a::after {
+        bottom: 5px;
+    }
+}
+/* ================================
+   FOOTER ADIDAS SHOP
+================================ */
+
+.footer {
+    width: 100%;
+    background: #08090b;
+    color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    margin-top: 50px;
+    box-sizing: border-box;
+}
+
+/* Nội dung footer */
+.footer-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 60px 50px 50px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    column-gap: 70px;
+    box-sizing: border-box;
+}
+
+/* Tiêu đề từng cột */
+.footer-column h3 {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+    letter-spacing: 0.3px;
+}
+
+/* Nội dung */
+.footer-column p {
+    color: #e0e0e0;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0 0 12px;
+}
+
+/* Danh sách liên kết */
+.footer-column a {
+    display: block;
+    color: #eeeeee;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 19px;
+    transition: color 0.25s ease;
+}
+
+.footer-column a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Thông tin liên hệ */
+.footer-contact p {
+    margin-bottom: 15px;
+    white-space: normal;
+}
+
+/* Các icon mạng xã hội */
+.footer-social {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.footer-social a {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #555;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    transition: all 0.25s ease;
+}
+
+.footer-social a:hover {
+    background: #ffffff;
+    color: #08090b;
+    border-color: #ffffff;
+    text-decoration: none;
+}
+
+/* Đăng nhập Admin */
+.footer-admin {
+    margin-top: 26px;
+}
+
+.footer-column .footer-admin a {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* Thanh bản quyền */
+.footer-bottom {
+    border-top: 1px solid #303030;
+    min-height: 61px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.footer-bottom p {
+    color: #cfcfcf;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Responsive máy tính bảng */
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 40px;
+        padding: 40px 30px;
+    }
+}
+
+/* Responsive điện thoại */
+@media (max-width: 550px) {
+    .footer {
+        margin-top: 30px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 35px 22px;
+    }
+
+    .footer-column h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+    }
+
+    .footer-column p,
+    .footer-column a {
+        font-size: 14px;
+    }
+
+    .footer-social a {
+        width: 38px;
+        height: 38px;
+    }
+
+    .footer-bottom {
+        padding: 18px 12px;
+    }
+
+    .footer-bottom p {
+        font-size: 12px;
+    }
+}
+/* ===== FIX FOOTER GIỐNG ẢNH MẪU ===== */
+
+.footer {
+    width: 100%;
+    background: #08090b;
+    color: #fff;
+    margin-top: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+
+.footer-container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 60px 50px 50px;
+    display: grid;
+    grid-template-columns: 1.25fr 0.9fr 0.9fr 0.9fr;
+    column-gap: 65px;
+    box-sizing: border-box;
+}
+
+.footer-column {
+    min-width: 0;
+}
+
+.footer-column h3 {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 24px;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+.footer-column p {
+    color: #e5e5e5;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 16px;
+}
+
+.footer-column a {
+    display: block;
+    width: fit-content;
+    color: #e5e5e5;
+    font-size: 14px;
+    line-height: 1.5;
+    text-decoration: none;
+    margin: 0 0 17px;
+    transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Icon mạng xã hội nằm ngang */
+.footer-social {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.footer-column .footer-social a {
+    display: inline-flex !important;
+    flex: 0 0 40px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 15px;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.footer-column .footer-social a:hover {
+    background: #fff;
+    color: #08090b;
+    border-color: #fff;
+    text-decoration: none;
+}
+
+/* Cột liên hệ */
+.footer-contact p {
+    margin-bottom: 17px;
+    white-space: normal;
+}
+
+/* Nút đăng nhập Admin */
+.footer-column .footer-admin a {
+    display: block;
+    margin-top: 25px;
+    margin-bottom: 0;
+    color: #fff;
+    font-weight: 500;
+}
+
+/* Thanh bản quyền */
+.footer-bottom {
+    width: 100%;
+    min-height: 56px;
+    padding: 18px 20px;
+    border-top: 1px solid #303030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.footer-bottom p {
+    color: #cfcfcf;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 35px;
+        padding: 40px 30px;
+    }
+}
+
+/* Điện thoại */
+@media (max-width: 550px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 35px 22px;
+    }
+
+    .footer-column h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+    }
+
+    .footer-column p,
+    .footer-column a {
+        font-size: 14px;
+    }
+
+    .footer-social {
+        gap: 12px;
+    }
+
+    .footer-bottom {
+        padding: 16px 12px;
+    }
+}
+/* ===== FOOTER ADIDAS ===== */
+
+.footer {
+    width: 100%;
+    margin-top: 30px;
+    background: #08090b;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+
+.footer-container {
+    width: 100%;
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 60px 8% 50px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    column-gap: 55px;
+    box-sizing: border-box;
+}
+
+.footer-column {
+    min-width: 0;
+}
+
+.footer-column h3 {
+    margin: 0 0 24px;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.footer-column p {
+    margin: 0 0 16px;
+    color: #e5e5e5;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.footer-column > a {
+    display: block;
+    width: fit-content;
+    margin-bottom: 17px;
+    color: #e5e5e5;
+    font-size: 14px;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-column > a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* ICON MẠNG XÃ HỘI NẰM NGANG */
+.footer-column .social-links {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.footer-column .social-links a {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 15px;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.footer-column .social-links a:hover {
+    color: #08090b;
+    background: #fff;
+    border-color: #fff;
+}
+
+/* LIÊN HỆ */
+.footer-contact p {
+    margin-bottom: 17px;
+}
+
+/* BẢN QUYỀN */
+.footer-bottom {
+    width: 100%;
+    min-height: 56px;
+    padding: 18px 15px;
+    border-top: 1px solid #303030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #cfcfcf;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 35px;
+        padding: 40px 30px;
+    }
+}
+
+/* ĐIỆN THOẠI */
+@media (max-width: 550px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 35px 22px;
+    }
+
+    .footer-column h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+    }
+
+    .footer-column p,
+    .footer-column > a {
+        font-size: 14px;
+    }
+
+    .footer-bottom {
+        padding: 16px 12px;
+    }
+    
+/* =====================================================
+   FIX TRANG SẢN PHẨM — products.html
+   Đồng bộ giao diện Adidas Shop
+===================================================== */
+
+/* Nền và bố cục tổng thể */
+body {
+    min-height: 100vh;
+}
+
+/* Khu vực danh sách sản phẩm */
+#productList {
+    width: min(1320px, calc(100% - 48px));
+    margin: 36px auto 64px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px 22px;
+    align-items: stretch;
+}
+
+/* Thẻ sản phẩm */
+#productList .product-card,
+#productList .product-item,
+#productList .product {
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    transition: box-shadow 0.25s ease,
+                transform 0.25s ease;
+}
+
+#productList .product-card:hover,
+#productList .product-item:hover,
+#productList .product:hover {
+    box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
+    transform: translateY(-3px);
+}
+
+/* Ảnh sản phẩm */
+#productList img {
+    display: block;
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    background: #f5f5f5;
+}
+
+/* Nội dung thẻ sản phẩm */
+#productList .product-info,
+#productList .product-content,
+#productList .product-details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 16px;
+}
+
+#productList h2,
+#productList h3,
+#productList .product-name {
+    margin: 0;
+    color: #111;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+#productList .product-category,
+#productList .category {
+    color: #777;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#productList .product-price,
+#productList .price {
+    margin-top: auto;
+    padding-top: 14px;
+    color: #111;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+/* Nút xem chi tiết */
+#productList a,
+#productList .btn-detail,
+#productList button {
+    text-decoration: none;
+}
+
+#productList a.btn,
+#productList a.btn-detail,
+#productList .product-info > a,
+#productList .product-content > a,
+#productList .product-details > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid #111;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 0.2s ease;
+}
+
+#productList a.btn:hover,
+#productList a.btn-detail:hover,
+#productList .product-info > a:hover,
+#productList .product-content > a:hover,
+#productList .product-details > a:hover {
+    background: #333;
+}
+
+/* =====================================================
+   FIX FOOTER — dùng chung cho trang sản phẩm
+===================================================== */
+
+body > footer,
+footer {
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    padding: 0;
+    background: #080808;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Các bố cục footer phổ biến */
+footer .footer-container,
+footer .footer-inner,
+footer .footer-content,
+footer .footer-top,
+footer .container {
+    width: min(1320px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 44px 0 36px;
+}
+
+/* Chia cột footer */
+footer .footer-content,
+footer .footer-top,
+footer .footer-container,
+footer .footer-inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 36px;
+    align-items: start;
+}
+
+/* Tiêu đề footer */
+footer h2,
+footer h3,
+footer h4 {
+    margin: 0 0 16px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+/* Văn bản */
+footer p {
+    margin: 0 0 12px;
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* Liên kết chính sách, mạng xã hội */
+footer a {
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+footer a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Danh sách link trong footer */
+footer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+footer li {
+    margin-bottom: 9px;
+}
+
+/* Phần bản quyền */
+footer .footer-bottom,
+footer .footer-copyright,
+footer .copyright {
+    width: 100%;
+    margin: 0;
+    padding: 18px 24px;
+    border-top: 1px solid #333;
+    background: #080808;
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1.7;
+    text-align: center;
+}
+
+/* Tránh các phần tử trong footer tràn chiều ngang */
+footer * {
+    box-sizing: border-box;
+}
+
+footer img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1050px) {
+    #productList {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    #productList img {
+        height: 230px;
+    }
+
+    footer .footer-content,
+    footer .footer-top,
+    footer .footer-container,
+    footer .footer-inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px;
+    }
+}
+
+@media (max-width: 700px) {
+    #productList {
+        width: calc(100% - 28px);
+        margin: 24px auto 40px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    #productList img {
+        height: 190px;
+    }
+
+    #productList .product-info,
+    #productList .product-content,
+    #productList .product-details {
+        padding: 12px;
+    }
+
+    #productList h2,
+    #productList h3,
+    #productList .product-name {
+        font-size: 14px;
+    }
+
+    #productList .product-price,
+    #productList .price {
+        font-size: 15px;
+    }
+
+    footer .footer-content,
+    footer .footer-top,
+    footer .footer-container,
+    footer .footer-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    footer .footer-container,
+    footer .footer-inner,
+    footer .footer-content,
+    footer .footer-top {
+        width: calc(100% - 36px);
+        padding: 30px 0;
+    }
+}
+
+@media (max-width: 380px) {
+    #productList img {
+        height: 155px;
+    }
+}
+
+/* ==========================================
+   FOOTER ADIDAS SHOP
+   Áp dụng cho products.html
+========================================== */
+
+.footer {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #080808;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.footer,
+.footer * {
+    box-sizing: border-box;
+}
+
+.footer-container {
+    width: min(1200px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 45px 0 38px;
+
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 36px;
+    align-items: start;
+}
+
+.footer-column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-column h3 {
+    margin: 0 0 18px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.footer-column p {
+    margin: 0 0 9px;
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.footer-column a {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #c5c5c5;
+    font-size: 13px;
+    line-height: 1.6;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Mạng xã hội */
+.footer-column .social-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.footer-column .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.footer-column .social-links a:hover {
+    background: #e30613;
+    border-color: #e30613;
+    text-decoration: none;
+}
+
+/* Dòng bản quyền */
+.footer-bottom {
+    width: 100%;
+    margin: 0;
+    padding: 18px 24px;
+    border-top: 1px solid #303030;
+    background: #080808;
+    text-align: center;
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #999;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 30px;
+    }
+}
+
+/* Điện thoại */
+@media (max-width: 500px) {
+    .footer-container {
+        width: calc(100% - 36px);
+        grid-template-columns: 1fr;
+        gap: 26px;
+        padding: 32px 0;
+    }
+
+    .footer-column h3 {
+        margin-bottom: 12px;
+    }
+
+    .footer-bottom {
+        padding: 16px;
+    }
+}
+}
