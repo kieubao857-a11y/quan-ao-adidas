@@ -2,17 +2,48 @@
   "use strict";
 
   const CURRENT_KEY = "currentUser";
+  const USERS_KEY = "adidasUsers";
+  const LOGIN_URL = "/admin/login.html";
+
+  function readJSON(key, fallback) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || "null");
+      return value == null ? fallback : value;
+    } catch (error) {
+      return fallback;
+    }
+  }
 
   function getUser() {
-    try {
-      const user = JSON.parse(localStorage.getItem(CURRENT_KEY) || "null");
+    const user = readJSON(CURRENT_KEY, null);
 
-      return user && typeof user.email === "string" && user.email.trim()
-        ? user
-        : null;
-    } catch (error) {
-      return null;
-    }
+    return user && typeof user.email === "string" && user.email.trim()
+      ? user
+      : null;
+  }
+
+  function isAdmin(user) {
+    if (!user) return false;
+
+    const users = readJSON(USERS_KEY, []);
+    if (!Array.isArray(users)) return false;
+
+    const email = String(user.email || "")
+      .trim()
+      .toLowerCase();
+
+    const storedUser = users.find(function (item) {
+      return (
+        item &&
+        String(item.email || "")
+          .trim()
+          .toLowerCase() === email
+      );
+    });
+
+    return (
+      !!storedUser && String(storedUser.role || "").toLowerCase() === "admin"
+    );
   }
 
   function escapeHTML(value) {
@@ -32,6 +63,7 @@
 
     const style = document.createElement("style");
     style.id = "account-auth-style";
+
     style.textContent = `
       .account-auth-wrap {
         position: relative;
@@ -43,14 +75,22 @@
       .account-auth-trigger {
         display: inline-flex;
         align-items: center;
-        gap: 7px;
-        padding: 9px 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background: #fff;
-        color: #111;
+        justify-content: center;
+        min-width: 38px;
+        min-height: 38px;
+        padding: 5px 8px;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: inherit;
         font: inherit;
+        font-size: 24px;
+        line-height: 1;
         cursor: pointer;
+      }
+
+      .account-auth-trigger:hover {
+        background: #eee;
       }
 
       .account-auth-menu {
@@ -58,6 +98,7 @@
         top: calc(100% + 8px);
         right: 0;
         width: 255px;
+        max-width: calc(100vw - 24px);
         padding: 10px;
         border: 1px solid #e5e5e5;
         border-radius: 12px;
@@ -65,6 +106,7 @@
         color: #111;
         box-shadow: 0 10px 30px #0002;
         display: none;
+        text-align: left;
       }
 
       .account-auth-menu.open {
@@ -112,14 +154,6 @@
       .account-auth-menu .logout {
         color: #c62828;
       }
-
-      .account-auth-notice {
-        margin: 15px;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background: #f8f8f8;
-      }
     `;
 
     document.head.appendChild(style);
@@ -127,14 +161,11 @@
 
   function setupHeader() {
     const headerRight = document.querySelector(".header-right");
-
-    // Chỉ chèn vào khu vực tài khoản của header hiện tại.
     if (!headerRight) return;
 
     let wrap = headerRight.querySelector(".account-auth-wrap");
 
     if (!wrap) {
-      // Tìm nút tài khoản cũ để thay thế, không xóa các nút khác.
       const oldButton = Array.from(
         headerRight.querySelectorAll("a, button"),
       ).find(function (element) {
@@ -175,7 +206,9 @@
       trigger.type = "button";
       trigger.className = "account-auth-trigger";
       trigger.setAttribute("aria-label", "Tài khoản");
+      trigger.setAttribute("title", "Tài khoản");
       trigger.setAttribute("aria-expanded", "false");
+      trigger.textContent = "♙";
       wrap.appendChild(trigger);
     }
 
@@ -185,65 +218,75 @@
       wrap.appendChild(menu);
     }
 
+    function closeMenu() {
+      menu.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
     function renderMenu() {
       const user = getUser();
 
-      if (user) {
-        trigger.innerHTML = "👤 " + escapeHTML(user.name || "Tài khoản") + " ▾";
+      trigger.textContent = "♙";
 
-        menu.innerHTML = `
-          <div class="account-auth-user">
-            <strong>${escapeHTML(user.name || "Khách hàng")}</strong>
-            <small>${escapeHTML(user.email)}</small>
-          </div>
-          <a href="orders.html">📦 Đơn hàng của tôi</a>
-          <a href="index.html">🏠 Tiếp tục mua sắm</a>
-          <button type="button" class="logout">Đăng xuất</button>
-        `;
-      } else {
-        trigger.innerHTML = "👤 Tài khoản ▾";
-
-        menu.innerHTML = `
-          <div class="account-auth-user">
-            <strong>Chào mừng bạn!</strong>
-            <small>Đăng nhập để đặt hàng và theo dõi đơn hàng.</small>
-          </div>
-          <a href="login.html">Đăng nhập</a>
-          <a href="login.html#register">Tạo tài khoản mới</a>
-          <a href="orders.html">📦 Đơn hàng của tôi</a>
-        `;
+      if (!user) {
+        menu.innerHTML = "";
+        trigger.setAttribute("aria-label", "Đăng nhập tài khoản");
+        closeMenu();
+        return;
       }
 
-      trigger.setAttribute("aria-expanded", "false");
-      menu.classList.remove("open");
+      trigger.setAttribute("aria-label", "Mở menu tài khoản");
+
+      const adminLink = isAdmin(user)
+        ? '<a href="/admin/admin.html">🛠 Quản trị viên</a>'
+        : "";
+
+      menu.innerHTML = `
+        <div class="account-auth-user">
+          <strong>${escapeHTML(user.name || "Khách hàng")}</strong>
+          <small>${escapeHTML(user.email)}</small>
+        </div>
+
+        <a href="/orders.html">📦 Đơn hàng của tôi</a>
+        ${adminLink}
+        <button type="button" class="logout">Đăng xuất</button>
+      `;
+
+      closeMenu();
     }
 
     if (wrap.dataset.authEvents !== "1") {
       trigger.addEventListener("click", function () {
+        if (!getUser()) {
+          window.location.href = LOGIN_URL;
+          return;
+        }
+
         const isOpen = menu.classList.toggle("open");
         trigger.setAttribute("aria-expanded", String(isOpen));
       });
 
       menu.addEventListener("click", function (event) {
         const logoutButton = event.target.closest(".logout");
-
         if (!logoutButton) return;
 
         event.preventDefault();
+        event.stopPropagation();
 
-        // Chỉ xóa phiên đăng nhập, không xóa tài khoản hay đơn hàng.
+        // Chỉ xóa phiên đăng nhập, giữ nguyên dữ liệu khác.
         localStorage.removeItem(CURRENT_KEY);
 
-        renderMenu();
-
-        window.location.href = "index.html?loggedOut=1";
+        window.location.replace(LOGIN_URL);
       });
 
       document.addEventListener("click", function (event) {
         if (!wrap.contains(event.target)) {
-          menu.classList.remove("open");
-          trigger.setAttribute("aria-expanded", "false");
+          closeMenu();
         }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeMenu();
       });
 
       wrap.dataset.authEvents = "1";
@@ -257,39 +300,17 @@
 
     if (!isCheckout || getUser()) return;
 
-    const loginURL = new URL("login.html", window.location.href);
+    const loginURL = new URL(LOGIN_URL, window.location.origin);
     loginURL.searchParams.set("next", "checkout.html");
     loginURL.searchParams.set("reason", "checkout");
 
     window.location.replace(loginURL.href);
   }
 
-  function showLogoutNotice() {
-    const params = new URLSearchParams(window.location.search);
-
-    if (params.get("loggedOut") !== "1") return;
-
-    const main = document.querySelector("main");
-    if (!main || document.querySelector(".account-auth-notice")) return;
-
-    const notice = document.createElement("div");
-    notice.className = "account-auth-notice";
-    notice.textContent = "Bạn đã đăng xuất thành công.";
-
-    main.prepend(notice);
-
-    // Xóa tham số thông báo khỏi URL.
-    const cleanURL = new URL(window.location.href);
-    cleanURL.searchParams.delete("loggedOut");
-
-    window.history.replaceState({}, "", cleanURL.href);
-  }
-
   function init() {
     addStyles();
     setupHeader();
     requireLoginForCheckout();
-    showLogoutNotice();
   }
 
   if (document.readyState === "loading") {
@@ -298,9 +319,8 @@
     init();
   }
 
-  // Đồng bộ menu nếu phiên đăng nhập thay đổi ở tab khác.
   window.addEventListener("storage", function (event) {
-    if (event.key === CURRENT_KEY) {
+    if (event.key === CURRENT_KEY || event.key === USERS_KEY) {
       setupHeader();
     }
   });
