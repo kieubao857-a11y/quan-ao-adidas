@@ -26,10 +26,25 @@
             <span>▤</span> Quản lý đơn hàng
           </button>
           <button class="nav-item" data-view="customers">
-            <span>♙</span> Khách hàng
+            <span>♙</span> Quản lý khách hàng
           </button>
-          <button class="nav-item" data-view="accounts">
-            <span>♧</span> Quản lý tài khoản
+          <button class="nav-item" data-view="inventory">
+            <span>▥</span> Kho hàng
+          </button>
+          <button class="nav-item" data-view="promotions">
+            <span>％</span> Khuyến mãi & mã giảm giá
+          </button>
+          <button class="nav-item" data-view="messages">
+            <span>✉</span> Tin nhắn hỗ trợ
+          </button>
+          <button class="nav-item" data-view="content">
+            <span>▧</span> Nội dung website
+          </button>
+          <button class="nav-item" data-view="reports">
+            <span>▤</span> Báo cáo doanh thu
+          </button>
+          <button class="nav-item" data-view="settings">
+            <span>⚙</span> Cài đặt cửa hàng
           </button>
         </nav>
 
@@ -98,6 +113,16 @@
               <strong id="statPending">0</strong>
               <span class="stat-note">Cần kiểm tra</span>
             </article>
+            <article class="stat-card">
+              <span class="stat-label">Doanh thu ghi nhận</span>
+              <strong id="statRevenue">0 VNĐ</strong>
+              <span class="stat-note">Không tính đơn đã hủy</span>
+            </article>
+            <article class="stat-card">
+              <span class="stat-label">Sản phẩm sắp hết</span>
+              <strong id="statLowStock">0</strong>
+              <span class="stat-note">Tồn kho từ 5 sản phẩm trở xuống</span>
+            </article>
           </div>
 
           <section class="panel">
@@ -163,6 +188,7 @@
                     <th>Tên sản phẩm</th>
                     <th>Giá</th>
                     <th>Danh mục</th>
+                    <th>Tồn kho</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>
@@ -208,10 +234,52 @@
                   />
                 </label>
 
+                <label
+                  >Đối tượng
+                  <select id="productGender">
+                    <option value="">Chung / Unisex</option>
+                    <option value="nam">Nam</option>
+                    <option value="nu">Nữ</option>
+                    <option value="the-thao">Thể thao</option>
+                  </select>
+                </label>
                 <label>
                   Danh mục
-                  <input id="productCategory" maxlength="100" />
+                  <select id="productCategory">
+                    <option value="">Chọn danh mục</option>
+                    <option>Áo</option>
+                    <option>Quần</option>
+                    <option>Giày</option>
+                    <option>Phụ kiện</option>
+                    <option>Thể thao</option>
+                    <option>Khác</option>
+                  </select>
                 </label>
+                <label
+                  >Giá khuyến mãi (VNĐ)<input
+                    id="productSalePrice"
+                    type="number"
+                    min="0"
+                    step="1000"
+                /></label>
+                <label
+                  >Số lượng tồn kho<input
+                    id="productStock"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value="0"
+                /></label>
+                <label
+                  >Size (phân cách bằng dấu phẩy)<input
+                    id="productSizes"
+                    placeholder="S, M, L, XL"
+                /></label>
+                <label
+                  >Màu sắc (phân cách bằng dấu phẩy)<input
+                    id="productColors"
+                    placeholder="Đen, Trắng"
+                /></label>
 
                 <label>
                   Đường dẫn ảnh
@@ -290,93 +358,371 @@
           </section>
         </section>
 
-        <!-- KHÁCH HÀNG -->
+        <!-- QUẢN LÝ KHÁCH HÀNG & TÀI KHOẢN GỘP -->
         <section class="view" id="view-customers">
           <section class="panel">
             <div class="panel-heading">
               <div>
-                <h2>Danh sách khách hàng</h2>
-                <p>Thông tin người dùng đã đăng ký tài khoản.</p>
+                <h2>Quản lý khách hàng & thành viên</h2>
+                <p>
+                  Quản lý hồ sơ, tài khoản, số dư, cấp bậc, trạng thái và lịch
+                  sử giao dịch tại một nơi.
+                </p>
               </div>
+              <button
+                class="button button-light"
+                id="exportCustomersButton"
+                type="button"
+              >
+                Xuất danh sách CSV
+              </button>
             </div>
-
-            <div class="toolbar">
+            <div class="toolbar member-toolbar">
               <input
                 id="customerSearch"
                 type="search"
-                placeholder="Tìm theo tên hoặc email..."
+                placeholder="Tìm tên, email, tên tài khoản..."
+                aria-label="Tìm khách hàng"
               />
+              <select id="customerStatusFilter" aria-label="Lọc trạng thái">
+                <option value="">Tất cả trạng thái</option>
+                <option value="active">Hoạt động</option>
+                <option value="locked">Bị khóa</option>
+              </select>
+              <select id="customerRoleFilter" aria-label="Lọc cấp bậc">
+                <option value="">Tất cả cấp bậc</option>
+                <option value="customer">Thành viên</option>
+                <option value="admin">Quản trị viên</option>
+              </select>
             </div>
-
-            <div class="table-wrap">
-              <table>
+            <div class="table-wrap member-table-wrap">
+              <table class="member-table">
                 <thead>
                   <tr>
-                    <th>Tên tài khoản</th>
-                    <th>Email</th>
-                    <th>Ngày đăng ký</th>
-                    <th>Trạng thái</th>
+                    <th>Người dùng</th>
+                    <th>Tài khoản & số dư</th>
+                    <th>Cấp bậc</th>
+                    <th>Trạng thái & bảo mật</th>
+                    <th>Thời gian</th>
+                    <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody id="customersBody">
                   <tr>
-                    <td colspan="4" class="empty-state">
-                      Đang tải khách hàng...
+                    <td colspan="6" class="empty-state">
+                      Đang tải danh sách thành viên...
                     </td>
                   </tr>
                 </tbody>
+              </table>
+            </div>
+            <p class="member-footnote">
+              Thông tin IP, số dư và tổng nạp chỉ hiển thị nếu dữ liệu tài khoản
+              của website đã lưu các trường tương ứng. Không hiển thị mật khẩu
+              người dùng.
+            </p>
+          </section>
+        </section>
+
+        <!-- KHO HÀNG -->
+        <section class="view" id="view-inventory">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Kho hàng & tồn kho</h2>
+                <p>Theo dõi số lượng tồn, cập nhật nhanh số lượng sản phẩm.</p>
+              </div>
+              <button class="button button-light" id="exportInventoryButton">
+                Xuất CSV
+              </button>
+            </div>
+            <div class="toolbar">
+              <input
+                id="inventorySearch"
+                type="search"
+                placeholder="Tìm sản phẩm..."
+              /><select id="inventoryFilter">
+                <option value="">Tất cả tồn kho</option>
+                <option value="low">Sắp hết (≤ 5)</option>
+                <option value="out">Hết hàng</option>
+                <option value="available">Còn hàng</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Tồn kho</th>
+                    <th>Điều chỉnh số lượng</th>
+                    <th>Tình trạng</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryBody"></tbody>
               </table>
             </div>
           </section>
         </section>
 
-        <!-- QUẢN LÝ TÀI KHOẢN -->
-        <section class="view" id="view-accounts">
+        <!-- KHUYẾN MÃI -->
+        <section class="view" id="view-promotions">
           <section class="panel">
             <div class="panel-heading">
               <div>
-                <h2>Quản lý tài khoản</h2>
-                <p>Quản lý quyền truy cập và trạng thái tài khoản.</p>
+                <h2>Mã giảm giá & khuyến mãi</h2>
+                <p>
+                  Tạo mã giảm giá để dùng trong quy trình đặt hàng của bài tập.
+                </p>
               </div>
             </div>
-
-            <div class="notice">
-              Không chia sẻ mật khẩu của người dùng. Quyền Admin chỉ được cấp
-              bởi quản trị viên có thẩm quyền.
-            </div>
-
-            <div class="toolbar">
-              <input
-                id="accountSearch"
-                type="search"
-                placeholder="Tìm theo tên hoặc email..."
-              />
-              <select id="accountRoleFilter" aria-label="Lọc vai trò">
-                <option value="">Tất cả vai trò</option>
-                <option value="user">Khách hàng</option>
-                <option value="admin">Quản trị viên</option>
-              </select>
-            </div>
-
+            <form id="promotionForm" class="inline-form">
+              <label
+                >Mã khuyến mãi<input
+                  id="promoCode"
+                  required
+                  maxlength="24"
+                  placeholder="ADIDAS10" /></label
+              ><label
+                >Loại giảm<select id="promoType">
+                  <option value="percent">Phần trăm (%)</option>
+                  <option value="fixed">Số tiền (VNĐ)</option>
+                </select></label
+              ><label
+                >Giá trị<input
+                  id="promoValue"
+                  required
+                  type="number"
+                  min="1" /></label
+              ><label
+                >Đơn tối thiểu<input
+                  id="promoMinimum"
+                  type="number"
+                  min="0"
+                  value="0" /></label
+              ><label>Hạn sử dụng<input id="promoExpiry" type="date" /></label
+              ><button class="button button-dark" type="submit">
+                + Tạo mã
+              </button>
+            </form>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>Tên tài khoản</th>
-                    <th>Email</th>
-                    <th>Vai trò</th>
+                    <th>Mã</th>
+                    <th>Mức giảm</th>
+                    <th>Đơn tối thiểu</th>
+                    <th>Hạn dùng</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>
-                <tbody id="accountsBody">
-                  <tr>
-                    <td colspan="5" class="empty-state">
-                      Đang tải tài khoản...
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody id="promotionsBody"></tbody>
               </table>
+            </div>
+          </section>
+        </section>
+
+        <!-- TIN NHẮN -->
+        <section class="view" id="view-messages">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Tin nhắn & hỗ trợ khách hàng</h2>
+                <p>Quản lý các yêu cầu hỗ trợ được lưu trong trình duyệt.</p>
+              </div>
+            </div>
+            <div class="toolbar">
+              <input
+                id="messageSearch"
+                type="search"
+                placeholder="Tìm theo tên, email hoặc nội dung..."
+              /><select id="messageFilter">
+                <option value="">Tất cả trạng thái</option>
+                <option value="new">Mới</option>
+                <option value="processing">Đang xử lý</option>
+                <option value="resolved">Đã xử lý</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Khách hàng</th>
+                    <th>Nội dung</th>
+                    <th>Ngày gửi</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="messagesBody"></tbody>
+              </table>
+            </div>
+            <p class="notice">
+              Tin nhắn sẽ xuất hiện tại đây nếu biểu mẫu hỗ trợ trên website lưu
+              vào khóa localStorage <code>adidasMessages</code> hoặc
+              <code>supportMessages</code>.
+            </p>
+          </section>
+        </section>
+
+        <!-- NỘI DUNG WEBSITE -->
+        <section class="view" id="view-content">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Quản lý nội dung trang chủ</h2>
+                <p>
+                  Thay đổi nội dung banner hiển thị trên website (lưu trong
+                  trình duyệt).
+                </p>
+              </div>
+            </div>
+            <form id="contentForm" class="form-grid">
+              <label
+                >Tiêu đề banner<input
+                  id="bannerTitle"
+                  maxlength="120"
+                  placeholder="BỨT PHÁ MỌI GIỚI HẠN" /></label
+              ><label
+                >Nút kêu gọi hành động<input
+                  id="bannerButton"
+                  maxlength="40"
+                  placeholder="MUA NGAY" /></label
+              ><label class="full-width"
+                >Mô tả banner<textarea
+                  id="bannerDescription"
+                  rows="3"
+                ></textarea></label
+              ><label class="full-width"
+                >Ảnh banner (URL)<input
+                  id="bannerImage"
+                  type="url"
+                  placeholder="https://..."
+              /></label>
+              <div class="form-actions full-width">
+                <button class="button button-dark" type="submit">
+                  Lưu nội dung</button
+                ><button
+                  class="button button-light"
+                  type="button"
+                  id="resetContentButton"
+                >
+                  Khôi phục mặc định
+                </button>
+              </div>
+            </form>
+            <div class="notice">
+              Các giá trị được lưu tại localStorage. Để thay đổi giao diện thực
+              tế trên mọi thiết bị, website cần đọc các giá trị này hoặc dùng
+              backend chung.
+            </div>
+          </section>
+        </section>
+
+        <!-- BÁO CÁO -->
+        <section class="view" id="view-reports">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Báo cáo doanh thu</h2>
+                <p>Tổng hợp từ dữ liệu đơn hàng hiện có trên trình duyệt.</p>
+              </div>
+              <button class="button button-dark" id="exportOrdersButton">
+                Xuất đơn hàng CSV
+              </button>
+            </div>
+            <div class="stats-grid report-stats">
+              <article class="stat-card">
+                <span class="stat-label">Doanh thu hợp lệ</span
+                ><strong id="reportRevenue">0 VNĐ</strong>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Đơn hoàn thành</span
+                ><strong id="reportCompleted">0</strong>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Tổng số đơn hàng</span
+                ><strong id="reportAverage">0</strong>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Tỷ lệ hủy</span
+                ><strong id="reportCancelled">0%</strong>
+              </article>
+            </div>
+            <div class="panel-heading">
+              <div>
+                <h3>Doanh thu theo tháng</h3>
+                <p>Ước tính từ ngày đặt hàng được lưu trong đơn.</p>
+              </div>
+            </div>
+            <div
+              id="revenueChart"
+              class="revenue-chart"
+              aria-label="Biểu đồ doanh thu theo tháng"
+            ></div>
+          </section>
+        </section>
+
+        <!-- CÀI ĐẶT -->
+        <section class="view" id="view-settings">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Cài đặt cửa hàng</h2>
+                <p>Thông tin cơ bản và công cụ quản lý dữ liệu demo.</p>
+              </div>
+            </div>
+            <form id="settingsForm" class="form-grid">
+              <label>Tên cửa hàng<input id="storeName" maxlength="100" /></label
+              ><label>Email liên hệ<input id="storeEmail" type="email" /></label
+              ><label>Số điện thoại<input id="storePhone" type="tel" /></label
+              ><label
+                >Địa chỉ cửa hàng<input
+                  id="storeAddress"
+                  maxlength="200" /></label
+              ><label
+                >Ngưỡng cảnh báo tồn kho<input
+                  id="lowStockThreshold"
+                  type="number"
+                  min="0"
+                  value="5"
+              /></label>
+              <div class="form-actions full-width">
+                <button class="button button-dark" type="submit">
+                  Lưu cài đặt
+                </button>
+              </div>
+            </form>
+            <hr />
+            <h3>Công cụ dữ liệu</h3>
+            <p class="muted">
+              Sao lưu dữ liệu localStorage để chuyển trình duyệt hoặc khôi phục
+              bài tập.
+            </p>
+            <div class="form-actions">
+              <button
+                class="button button-light"
+                id="backupDataButton"
+                type="button"
+              >
+                Tải bản sao lưu JSON</button
+              ><label
+                class="button button-light import-label"
+                for="restoreDataInput"
+                >Khôi phục từ JSON</label
+              ><input
+                id="restoreDataInput"
+                type="file"
+                accept="application/json,.json"
+                hidden
+              /><button
+                class="button button-danger"
+                id="clearDemoDataButton"
+                type="button"
+              >
+                Xóa dữ liệu demo
+              </button>
             </div>
           </section>
         </section>
