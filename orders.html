@@ -1,806 +1,816 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Đơn hàng của tôi | Adidas</title>
 
-    <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" href="./src/style.css" />
 
     <style>
-        /* ===== TRANG ĐƠN HÀNG ===== */
-        .orders-page {
-            max-width: 1180px;
-            width: calc(100% - 40px);
-            margin: 35px auto 70px;
-            min-height: 450px;
+      /* ===== TRANG ĐƠN HÀNG ===== */
+      .orders-page {
+        max-width: 1180px;
+        width: calc(100% - 40px);
+        margin: 35px auto 70px;
+        min-height: 450px;
+      }
+
+      /* ===== ĐẦU TRANG ===== */
+      .orders-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 30px 32px;
+        margin-bottom: 25px;
+        background: #f5f5f5;
+        border-left: 5px solid #111;
+      }
+
+      .orders-heading h1 {
+        margin: 0 0 10px;
+        font-size: 34px;
+        line-height: 1.2;
+        font-weight: 900;
+        letter-spacing: -1px;
+        color: #111;
+        text-transform: uppercase;
+      }
+
+      .orders-heading p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .continue-shopping {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 23px;
+        background: #111;
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        border: 1px solid #111;
+        transition: all 0.25s ease;
+      }
+
+      .continue-shopping:hover {
+        background: #fff;
+        color: #111;
+        transform: translateY(-2px);
+      }
+
+      /* ===== THỐNG KÊ ĐƠN HÀNG ===== */
+      .orders-summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 32px;
+      }
+
+      .summary-card {
+        padding: 23px 25px;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-bottom: 3px solid #111;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .summary-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07);
+      }
+
+      .summary-card span {
+        display: block;
+        margin-bottom: 12px;
+        color: #777;
+        font-size: 13px;
+      }
+
+      .summary-card strong {
+        display: block;
+        color: #111;
+        font-size: 32px;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .order-notice {
+        margin-bottom: 20px;
+        padding: 15px 18px;
+        background: #edf8f0;
+        color: #176b35;
+        border-left: 4px solid #218838;
+        font-size: 13px;
+      }
+
+      /* ===== DANH SÁCH ĐƠN HÀNG ===== */
+      .order-list {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+
+      .order-item {
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #e7e7e7;
+        box-shadow: 0 5px 22px rgba(0, 0, 0, 0.045);
+      }
+
+      .order-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 20px 24px;
+        background: #fafafa;
+        border-bottom: 1px solid #ededed;
+      }
+
+      .order-code {
+        margin: 0 0 7px;
+        font-size: 18px;
+        font-weight: 800;
+        color: #111;
+      }
+
+      .order-date {
+        color: #777;
+        font-size: 13px;
+        margin: 0;
+      }
+
+      .order-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .status-pending {
+        background: #fff3d6;
+        color: #966300;
+      }
+
+      .status-cancelled {
+        background: #ffe8e8;
+        color: #c62828;
+      }
+
+      .status-completed {
+        background: #e4f7e9;
+        color: #18763a;
+      }
+
+      .status-other {
+        background: #ededed;
+        color: #444;
+      }
+
+      .order-body {
+        padding: 24px;
+      }
+
+      .order-section-title {
+        margin: 0 0 15px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #111;
+      }
+
+      .customer-info {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px 25px;
+        margin-bottom: 26px;
+      }
+
+      .customer-field {
+        min-width: 0;
+      }
+
+      .customer-field span {
+        display: block;
+        margin-bottom: 5px;
+        color: #888;
+        font-size: 12px;
+      }
+
+      .customer-field strong {
+        display: block;
+        color: #333;
+        font-size: 14px;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+      }
+
+      .order-products {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 22px;
+      }
+
+      .order-product {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 17px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .order-product:first-child {
+        border-top: 1px solid #eee;
+      }
+
+      .order-product img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        flex-shrink: 0;
+        background: #f5f5f5;
+        padding: 8px;
+      }
+
+      .order-product-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .order-product-info h4 {
+        margin: 0 0 9px;
+        font-size: 15px;
+        color: #111;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .product-detail-line {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        margin-bottom: 6px;
+        color: #777;
+        font-size: 12px;
+      }
+
+      .product-price {
+        margin-top: 9px;
+        color: #111;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .order-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+
+      .order-payment {
+        color: #777;
+        font-size: 13px;
+      }
+
+      .order-payment strong {
+        color: #333;
+      }
+
+      .order-total {
+        text-align: right;
+      }
+
+      .order-total span {
+        display: block;
+        margin-bottom: 6px;
+        color: #777;
+        font-size: 12px;
+      }
+
+      .order-total strong {
+        color: #d71920;
+        font-size: 24px;
+        font-weight: 800;
+      }
+
+      .cancel-reason-display {
+        margin-top: 18px;
+        padding: 14px 16px;
+        background: #fff5f5;
+        border-left: 3px solid #d71920;
+        color: #555;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+      }
+
+      .cancel-reason-display strong {
+        color: #b91c1c;
+      }
+
+      .order-actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .cancel-order-btn {
+        border: 1px solid #d71920;
+        padding: 13px 20px;
+        background: #fff;
+        color: #d71920;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .cancel-order-btn:hover {
+        background: #d71920;
+        color: #fff;
+      }
+
+      /* ===== ĐƠN HÀNG TRỐNG ===== */
+      .empty-order {
+        padding: 65px 20px;
+        text-align: center;
+        background: #fafafa;
+        border: 1px dashed #ccc;
+      }
+
+      .empty-order .empty-icon {
+        font-size: 52px;
+        margin-bottom: 15px;
+      }
+
+      .empty-order h2 {
+        margin: 0 0 10px;
+        font-size: 23px;
+        color: #111;
+      }
+
+      .empty-order p {
+        margin: 0 0 22px;
+        color: #777;
+        font-size: 14px;
+      }
+
+      .empty-order a {
+        display: inline-block;
+        padding: 13px 23px;
+        background: #111;
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .empty-order a:hover {
+        background: #333;
+      }
+
+      /* ===== POPUP HỦY ĐƠN ===== */
+      .cancel-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        background: rgba(0, 0, 0, 0.62);
+        backdrop-filter: blur(4px);
+      }
+
+      .cancel-box {
+        width: 100%;
+        max-width: 490px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 27px;
+        background: #fff;
+        box-shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
+        animation: popupShow 0.2s ease;
+      }
+
+      @keyframes popupShow {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
         }
 
-        /* ===== ĐẦU TRANG ===== */
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .cancel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+      }
+
+      .cancel-header h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 800;
+        color: #111;
+      }
+
+      .close-modal {
+        width: 35px;
+        height: 35px;
+        border: none;
+        background: #f1f1f1;
+        color: #333;
+        font-size: 25px;
+        cursor: pointer;
+      }
+
+      .close-modal:hover {
+        background: #e2e2e2;
+      }
+
+      .cancel-description {
+        margin: 12px 0 20px;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .cancel-reasons {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+
+      .cancel-reason {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        width: 100%;
+        padding: 13px;
+        text-align: left;
+        border: 1px solid #e6e6e6;
+        background: #fff;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .cancel-reason:hover {
+        border-color: #999;
+        background: #fafafa;
+      }
+
+      .cancel-reason.selected {
+        border-color: #111;
+        background: #f5f5f5;
+        box-shadow: inset 3px 0 #111;
+      }
+
+      .reason-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        background: #f1f1f1;
+        font-size: 17px;
+      }
+
+      .cancel-reason strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #222;
+        font-size: 13px;
+      }
+
+      .cancel-reason small {
+        display: block;
+        color: #888;
+        font-size: 11px;
+      }
+
+      .other-reason {
+        margin-top: 20px;
+      }
+
+      .other-reason label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .other-reason textarea {
+        width: 100%;
+        min-height: 85px;
+        padding: 12px;
+        resize: vertical;
+        border: 1px solid #ddd;
+        outline: none;
+        font-family: inherit;
+        font-size: 13px;
+        box-sizing: border-box;
+      }
+
+      .other-reason textarea:focus {
+        border-color: #111;
+      }
+
+      .cancel-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 23px;
+      }
+
+      .cancel-back,
+      .confirm-cancel {
+        flex: 1;
+        padding: 13px 10px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .cancel-back {
+        background: #fff;
+        border: 1px solid #ddd;
+        color: #333;
+      }
+
+      .cancel-back:hover {
+        background: #f5f5f5;
+      }
+
+      .confirm-cancel {
+        background: #d71920;
+        border: 1px solid #d71920;
+        color: #fff;
+      }
+
+      .confirm-cancel:hover {
+        background: #b51218;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 650px) {
+        .orders-page {
+          width: calc(100% - 24px);
+          margin: 22px auto 45px;
+        }
+
         .orders-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 30px 32px;
-            margin-bottom: 25px;
-            background: #f5f5f5;
-            border-left: 5px solid #111;
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 23px 20px;
+          gap: 18px;
         }
 
         .orders-heading h1 {
-            margin: 0 0 10px;
-            font-size: 34px;
-            line-height: 1.2;
-            font-weight: 900;
-            letter-spacing: -1px;
-            color: #111;
-            text-transform: uppercase;
+          font-size: 26px;
         }
 
         .orders-heading p {
-            margin: 0;
-            color: #666;
-            font-size: 14px;
-            line-height: 1.7;
+          font-size: 13px;
         }
 
         .continue-shopping {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 23px;
-            background: #111;
-            color: #fff;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: .5px;
-            border: 1px solid #111;
-            transition: all .25s ease;
+          width: 100%;
+          box-sizing: border-box;
         }
 
-        .continue-shopping:hover {
-            background: #fff;
-            color: #111;
-            transform: translateY(-2px);
-        }
-
-        /* ===== THỐNG KÊ ĐƠN HÀNG ===== */
         .orders-summary {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
-            margin-bottom: 32px;
+          grid-template-columns: 1fr;
+          gap: 10px;
+          margin-bottom: 24px;
         }
 
         .summary-card {
-            padding: 23px 25px;
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-bottom: 3px solid #111;
-            transition: transform .2s, box-shadow .2s;
-        }
-
-        .summary-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, .07);
+          padding: 17px 20px;
         }
 
         .summary-card span {
-            display: block;
-            margin-bottom: 12px;
-            color: #777;
-            font-size: 13px;
+          margin-bottom: 8px;
         }
 
         .summary-card strong {
-            display: block;
-            color: #111;
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1;
+          font-size: 25px;
         }
 
-        .order-notice {
-            margin-bottom: 20px;
-            padding: 15px 18px;
-            background: #edf8f0;
-            color: #176b35;
-            border-left: 4px solid #218838;
-            font-size: 13px;
-        }
-
-        /* ===== DANH SÁCH ĐƠN HÀNG ===== */
-        .order-list {
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-
-        .order-item {
-            overflow: hidden;
-            background: #fff;
-            border: 1px solid #e7e7e7;
-            box-shadow: 0 5px 22px rgba(0, 0, 0, .045);
-        }
-
-        .order-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding: 20px 24px;
-            background: #fafafa;
-            border-bottom: 1px solid #ededed;
-        }
-
-        .order-code {
-            margin: 0 0 7px;
-            font-size: 18px;
-            font-weight: 800;
-            color: #111;
-        }
-
-        .order-date {
-            color: #777;
-            font-size: 13px;
-            margin: 0;
-        }
-
-        .order-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 8px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .status-pending {
-            background: #fff3d6;
-            color: #966300;
-        }
-
-        .status-cancelled {
-            background: #ffe8e8;
-            color: #c62828;
-        }
-
-        .status-completed {
-            background: #e4f7e9;
-            color: #18763a;
-        }
-
-        .status-other {
-            background: #ededed;
-            color: #444;
-        }
-
+        .order-top,
         .order-body {
-            padding: 24px;
-        }
-
-        .order-section-title {
-            margin: 0 0 15px;
-            font-size: 15px;
-            font-weight: 800;
-            color: #111;
+          padding: 17px;
         }
 
         .customer-info {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 13px 25px;
-            margin-bottom: 26px;
-        }
-
-        .customer-field {
-            min-width: 0;
-        }
-
-        .customer-field span {
-            display: block;
-            margin-bottom: 5px;
-            color: #888;
-            font-size: 12px;
-        }
-
-        .customer-field strong {
-            display: block;
-            color: #333;
-            font-size: 14px;
-            font-weight: 600;
-            overflow-wrap: anywhere;
-        }
-
-        .order-products {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            margin-bottom: 22px;
+          grid-template-columns: 1fr;
+          gap: 13px;
         }
 
         .order-product {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            padding: 17px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .order-product:first-child {
-            border-top: 1px solid #eee;
+          align-items: flex-start;
+          gap: 12px;
         }
 
         .order-product img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            flex-shrink: 0;
-            background: #f5f5f5;
-            padding: 8px;
-        }
-
-        .order-product-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .order-product-info h4 {
-            margin: 0 0 9px;
-            font-size: 15px;
-            color: #111;
-            font-weight: 700;
-            overflow-wrap: anywhere;
-        }
-
-        .product-detail-line {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 16px;
-            margin-bottom: 6px;
-            color: #777;
-            font-size: 12px;
-        }
-
-        .product-price {
-            margin-top: 9px;
-            color: #111;
-            font-size: 14px;
-            font-weight: 800;
+          width: 80px;
+          height: 80px;
         }
 
         .order-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        .order-payment {
-            color: #777;
-            font-size: 13px;
-        }
-
-        .order-payment strong {
-            color: #333;
+          align-items: flex-start;
+          flex-direction: column;
         }
 
         .order-total {
-            text-align: right;
-        }
-
-        .order-total span {
-            display: block;
-            margin-bottom: 6px;
-            color: #777;
-            font-size: 12px;
+          text-align: left;
         }
 
         .order-total strong {
-            color: #d71920;
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .cancel-reason-display {
-            margin-top: 18px;
-            padding: 14px 16px;
-            background: #fff5f5;
-            border-left: 3px solid #d71920;
-            color: #555;
-            font-size: 13px;
-            overflow-wrap: anywhere;
-        }
-
-        .cancel-reason-display strong {
-            color: #b91c1c;
+          font-size: 22px;
         }
 
         .order-actions {
-            display: flex;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 22px;
+          justify-content: stretch;
         }
 
-        .cancel-order-btn {
-            border: 1px solid #d71920;
-            padding: 13px 20px;
-            background: #fff;
-            color: #d71920;
-            font-size: 12px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .cancel-order-btn:hover {
-            background: #d71920;
-            color: #fff;
-        }
-
-        /* ===== ĐƠN HÀNG TRỐNG ===== */
-        .empty-order {
-            padding: 65px 20px;
-            text-align: center;
-            background: #fafafa;
-            border: 1px dashed #ccc;
-        }
-
-        .empty-order .empty-icon {
-            font-size: 52px;
-            margin-bottom: 15px;
-        }
-
-        .empty-order h2 {
-            margin: 0 0 10px;
-            font-size: 23px;
-            color: #111;
-        }
-
-        .empty-order p {
-            margin: 0 0 22px;
-            color: #777;
-            font-size: 14px;
-        }
-
-        .empty-order a {
-            display: inline-block;
-            padding: 13px 23px;
-            background: #111;
-            color: #fff;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .empty-order a:hover {
-            background: #333;
-        }
-
-        /* ===== POPUP HỦY ĐƠN ===== */
-        .cancel-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            background: rgba(0, 0, 0, .62);
-            backdrop-filter: blur(4px);
+        .order-actions button {
+          flex: 1;
         }
 
         .cancel-box {
-            width: 100%;
-            max-width: 490px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 27px;
-            background: #fff;
-            box-shadow: 0 20px 70px rgba(0, 0, 0, .25);
-            animation: popupShow .2s ease;
-        }
-
-        @keyframes popupShow {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .cancel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
+          padding: 20px;
         }
 
         .cancel-header h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-            color: #111;
+          font-size: 21px;
         }
-
-        .close-modal {
-            width: 35px;
-            height: 35px;
-            border: none;
-            background: #f1f1f1;
-            color: #333;
-            font-size: 25px;
-            cursor: pointer;
-        }
-
-        .close-modal:hover {
-            background: #e2e2e2;
-        }
-
-        .cancel-description {
-            margin: 12px 0 20px;
-            color: #777;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .cancel-reasons {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .cancel-reason {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            width: 100%;
-            padding: 13px;
-            text-align: left;
-            border: 1px solid #e6e6e6;
-            background: #fff;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .cancel-reason:hover {
-            border-color: #999;
-            background: #fafafa;
-        }
-
-        .cancel-reason.selected {
-            border-color: #111;
-            background: #f5f5f5;
-            box-shadow: inset 3px 0 #111;
-        }
-
-        .reason-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            background: #f1f1f1;
-            font-size: 17px;
-        }
-
-        .cancel-reason strong {
-            display: block;
-            margin-bottom: 4px;
-            color: #222;
-            font-size: 13px;
-        }
-
-        .cancel-reason small {
-            display: block;
-            color: #888;
-            font-size: 11px;
-        }
-
-        .other-reason {
-            margin-top: 20px;
-        }
-
-        .other-reason label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .other-reason textarea {
-            width: 100%;
-            min-height: 85px;
-            padding: 12px;
-            resize: vertical;
-            border: 1px solid #ddd;
-            outline: none;
-            font-family: inherit;
-            font-size: 13px;
-            box-sizing: border-box;
-        }
-
-        .other-reason textarea:focus {
-            border-color: #111;
-        }
-
-        .cancel-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 23px;
-        }
-
-        .cancel-back,
-        .confirm-cancel {
-            flex: 1;
-            padding: 13px 10px;
-            font-size: 12px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .cancel-back {
-            background: #fff;
-            border: 1px solid #ddd;
-            color: #333;
-        }
-
-        .cancel-back:hover {
-            background: #f5f5f5;
-        }
-
-        .confirm-cancel {
-            background: #d71920;
-            border: 1px solid #d71920;
-            color: #fff;
-        }
-
-        .confirm-cancel:hover {
-            background: #b51218;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 650px) {
-            .orders-page {
-                width: calc(100% - 24px);
-                margin: 22px auto 45px;
-            }
-
-            .orders-heading {
-                align-items: flex-start;
-                flex-direction: column;
-                padding: 23px 20px;
-                gap: 18px;
-            }
-
-            .orders-heading h1 {
-                font-size: 26px;
-            }
-
-            .orders-heading p {
-                font-size: 13px;
-            }
-
-            .continue-shopping {
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .orders-summary {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                margin-bottom: 24px;
-            }
-
-            .summary-card {
-                padding: 17px 20px;
-            }
-
-            .summary-card span {
-                margin-bottom: 8px;
-            }
-
-            .summary-card strong {
-                font-size: 25px;
-            }
-
-            .order-top,
-            .order-body {
-                padding: 17px;
-            }
-
-            .customer-info {
-                grid-template-columns: 1fr;
-                gap: 13px;
-            }
-
-            .order-product {
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .order-product img {
-                width: 80px;
-                height: 80px;
-            }
-
-            .order-bottom {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .order-total {
-                text-align: left;
-            }
-
-            .order-total strong {
-                font-size: 22px;
-            }
-
-            .order-actions {
-                justify-content: stretch;
-            }
-
-            .order-actions button {
-                flex: 1;
-            }
-
-            .cancel-box {
-                padding: 20px;
-            }
-
-            .cancel-header h2 {
-                font-size: 21px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <header class="header">
-        <div class="logo">adidas</div>
+      <div class="logo">adidas</div>
 
-        <nav class="menu">
-            <a href="index.html">Trang chủ</a>
-            <a href="product.html">Sản phẩm</a>
-            <a href="nam.html">Nam</a>
-            <a href="nu.html">Nữ</a>
-            <a href="the-thao.html">Thể thao</a>
-            <a href="sale.html">Sale</a>
-        </nav>
+      <nav class="menu">
+        <a href="index.html">Trang chủ</a>
+        <a href="product.html">Sản phẩm</a>
+        <a href="nam.html">Nam</a>
+        <a href="nu.html">Nữ</a>
+        <a href="the-thao.html">Thể thao</a>
+        <a href="sale.html">Sale</a>
+      </nav>
 
-        <div class="header-right">
-            <a href="cart.html" class="icon" aria-label="Giỏ hàng">🛒</a>
-            <a href="orders.html" class="icon" aria-label="Đơn hàng">📦</a>
-        </div>
+      <div class="header-right">
+        <a href="cart.html" class="icon" aria-label="Giỏ hàng">🛒</a>
+        <a href="orders.html" class="icon" aria-label="Đơn hàng">📦</a>
+      </div>
     </header>
 
     <main class="orders-page">
-
-        <div class="orders-heading">
-            <div>
-                <h1>Đơn hàng của tôi</h1>
-                <p>Theo dõi đơn hàng và quản lý lịch sử mua sắm của bạn.</p>
-            </div>
-
-            <a href="product.html" class="continue-shopping">
-                ← TIẾP TỤC MUA SẮM
-            </a>
+      <div class="orders-heading">
+        <div>
+          <h1>Đơn hàng của tôi</h1>
+          <p>Theo dõi đơn hàng và quản lý lịch sử mua sắm của bạn.</p>
         </div>
 
-        <div id="orderNotice" class="order-notice" hidden></div>
+        <a href="product.html" class="continue-shopping">
+          ← TIẾP TỤC MUA SẮM
+        </a>
+      </div>
 
-        <div id="ordersSummary" class="orders-summary"></div>
+      <div id="orderNotice" class="order-notice" hidden></div>
 
-        <div id="orderList" class="order-list"></div>
+      <div id="ordersSummary" class="orders-summary"></div>
 
+      <div id="orderList" class="order-list"></div>
     </main>
 
     <!-- POPUP HỦY ĐƠN -->
-    <div id="cancelModal" class="cancel-modal"
-        role="dialog" aria-modal="true" aria-labelledby="cancelTitle">
+    <div
+      id="cancelModal"
+      class="cancel-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cancelTitle"
+    >
+      <div class="cancel-box">
+        <div class="cancel-header">
+          <h2 id="cancelTitle">Hủy đơn hàng</h2>
 
-        <div class="cancel-box">
-
-            <div class="cancel-header">
-                <h2 id="cancelTitle">Hủy đơn hàng</h2>
-
-                <button type="button" id="closeCancelModal"
-                    class="close-modal" aria-label="Đóng">
-                    ×
-                </button>
-            </div>
-
-            <p class="cancel-description">
-                Vui lòng chọn lý do bạn muốn hủy đơn hàng.
-            </p>
-
-            <div class="cancel-reasons">
-
-                <button type="button" class="cancel-reason"
-                    data-reason="Tôi đổi ý">
-                    <span class="reason-icon">↩</span>
-                    <div>
-                        <strong>Tôi đổi ý</strong>
-                        <small>Tôi không muốn mua sản phẩm nữa</small>
-                    </div>
-                </button>
-
-                <button type="button" class="cancel-reason"
-                    data-reason="Đặt nhầm sản phẩm">
-                    <span class="reason-icon">🛒</span>
-                    <div>
-                        <strong>Đặt nhầm sản phẩm</strong>
-                        <small>Tôi đã chọn nhầm sản phẩm</small>
-                    </div>
-                </button>
-
-                <button type="button" class="cancel-reason"
-                    data-reason="Muốn thay đổi sản phẩm">
-                    <span class="reason-icon">✏️</span>
-                    <div>
-                        <strong>Muốn thay đổi sản phẩm</strong>
-                        <small>Tôi muốn thay đổi sản phẩm đã đặt</small>
-                    </div>
-                </button>
-
-                <button type="button" class="cancel-reason"
-                    data-reason="Không muốn mua nữa">
-                    <span class="reason-icon">✕</span>
-                    <div>
-                        <strong>Không muốn mua nữa</strong>
-                        <small>Tôi không có nhu cầu mua nữa</small>
-                    </div>
-                </button>
-
-            </div>
-
-            <div class="other-reason">
-                <label for="otherReason">Hoặc nhập lý do khác</label>
-                <textarea id="otherReason"
-                    placeholder="Nhập lý do của bạn..."></textarea>
-            </div>
-
-            <div class="cancel-actions">
-                <button type="button" id="cancelBack" class="cancel-back">
-                    Quay lại
-                </button>
-
-                <button type="button" id="confirmCancel"
-                    class="confirm-cancel">
-                    XÁC NHẬN HỦY
-                </button>
-            </div>
-
+          <button
+            type="button"
+            id="closeCancelModal"
+            class="close-modal"
+            aria-label="Đóng"
+          >
+            ×
+          </button>
         </div>
+
+        <p class="cancel-description">
+          Vui lòng chọn lý do bạn muốn hủy đơn hàng.
+        </p>
+
+        <div class="cancel-reasons">
+          <button type="button" class="cancel-reason" data-reason="Tôi đổi ý">
+            <span class="reason-icon">↩</span>
+            <div>
+              <strong>Tôi đổi ý</strong>
+              <small>Tôi không muốn mua sản phẩm nữa</small>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            class="cancel-reason"
+            data-reason="Đặt nhầm sản phẩm"
+          >
+            <span class="reason-icon">🛒</span>
+            <div>
+              <strong>Đặt nhầm sản phẩm</strong>
+              <small>Tôi đã chọn nhầm sản phẩm</small>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            class="cancel-reason"
+            data-reason="Muốn thay đổi sản phẩm"
+          >
+            <span class="reason-icon">✏️</span>
+            <div>
+              <strong>Muốn thay đổi sản phẩm</strong>
+              <small>Tôi muốn thay đổi sản phẩm đã đặt</small>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            class="cancel-reason"
+            data-reason="Không muốn mua nữa"
+          >
+            <span class="reason-icon">✕</span>
+            <div>
+              <strong>Không muốn mua nữa</strong>
+              <small>Tôi không có nhu cầu mua nữa</small>
+            </div>
+          </button>
+        </div>
+
+        <div class="other-reason">
+          <label for="otherReason">Hoặc nhập lý do khác</label>
+          <textarea
+            id="otherReason"
+            placeholder="Nhập lý do của bạn..."
+          ></textarea>
+        </div>
+
+        <div class="cancel-actions">
+          <button type="button" id="cancelBack" class="cancel-back">
+            Quay lại
+          </button>
+
+          <button type="button" id="confirmCancel" class="confirm-cancel">
+            XÁC NHẬN HỦY
+          </button>
+        </div>
+      </div>
     </div>
 
     <footer class="footer">
-        <p>© 2026 Adidas</p>
+      <p>© 2026 Adidas</p>
     </footer>
-
+    <script src="./js/sv3-order-owner.js"></script>
     <script src="./js/orders.js"></script>
-
-</body>
+  </body>
 </html>
