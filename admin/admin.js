@@ -93,9 +93,28 @@
         order.customerName ||
         order.name ||
         "Khách hàng",
-      email: c.email || order.email || "",
-      phone: c.phone || c.phoneNumber || order.phone || order.phoneNumber || "",
-      address: c.address || order.address || order.shippingAddress || "",
+      email:
+        c.email ||
+        order.email ||
+        order.ownerEmail ||
+        order.userEmail ||
+        order.customerEmail ||
+        "",
+      phone:
+        c.phone ||
+        c.phoneNumber ||
+        c.mobile ||
+        order.phone ||
+        order.phoneNumber ||
+        order.customerPhone ||
+        "",
+      address:
+        c.address ||
+        c.shippingAddress ||
+        order.address ||
+        order.shippingAddress ||
+        order.deliveryAddress ||
+        "",
     };
   }
   function orderTotal(order) {
@@ -361,16 +380,34 @@
       alert("Vui lòng kiểm tra tên, giá, giá khuyến mãi và tồn kho.");
       return;
     }
+    const items = getProducts();
+    const idx = id
+      ? items.findIndex((p) => String(p.id ?? p._id ?? "") === String(id))
+      : -1;
+
+    // Sản phẩm mới nhận mã số tiếp theo dựa trên các mã số đang có.
+    // Khi sửa sản phẩm, giữ nguyên mã cũ và các trường dữ liệu không nằm trên form.
+    const numericIds = items
+      .map((p) => Number(p.id ?? p._id))
+      .filter((n) => Number.isInteger(n) && n > 0);
+    const nextId = String(Math.max(0, ...numericIds) + 1);
+    const oldProduct = idx >= 0 ? items[idx] : {};
     const product = {
-      id: id || "product-" + Date.now(),
+      ...oldProduct,
+      id: idx >= 0 ? (oldProduct.id ?? oldProduct._id) : nextId,
       name,
+      title: oldProduct.title ? name : oldProduct.title,
       price,
       category: $("productCategory")?.value || "",
       gender: $("productGender")?.value || "",
       image: $("productImage")?.value.trim() || "",
+      imageUrl: oldProduct.imageUrl
+        ? $("productImage")?.value.trim() || ""
+        : oldProduct.imageUrl,
       description: $("productDescription")?.value.trim() || "",
       salePrice: salePrice || null,
       stock,
+      quantity: oldProduct.quantity != null ? stock : oldProduct.quantity,
       sizes: ($("productSizes")?.value || "")
         .split(",")
         .map((x) => x.trim())
@@ -380,9 +417,7 @@
         .map((x) => x.trim())
         .filter(Boolean),
     };
-    const items = getProducts(),
-      idx = items.findIndex((p) => String(p.id ?? p._id ?? "") === String(id));
-    if (idx >= 0) items[idx] = { ...items[idx], ...product };
+    if (idx >= 0) items[idx] = product;
     else items.push(product);
     saveProducts(items);
     renderProducts();
@@ -394,45 +429,125 @@
   function renderOrders() {
     const body = $("ordersBody");
     if (!body) return;
-    const search = ($("orderSearch")?.value || "").toLowerCase().trim(),
-      status = $("orderStatusFilter")?.value || "";
-    const orders = getOrders().filter((o) => {
-      const c = customerOf(o),
-        items = o.products || o.items || o.cart || [];
-      const productNames = Array.isArray(items)
-        ? items.map((i) => i.name || i.title || i.productName || "").join(" ")
-        : "";
-      const text = [
-        orderId(o),
-        c.name,
-        c.email,
-        c.phone,
-        c.address,
-        productNames,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return (
-        text.includes(search) &&
-        (!status || statusKey(orderStatus(o)) === status)
-      );
-    });
+
+    const search = ($("orderSearch")?.value || "").toLowerCase().trim();
+    const selectedStatus = $("orderStatusFilter")?.value || "";
+
+    const orders = getOrders()
+      .filter((o) => {
+        const c = customerOf(o);
+        const items = o.products || o.items || o.cart || [];
+        const productNames = Array.isArray(items)
+          ? items
+              .map(
+                (i) =>
+                  i.name ||
+                  i.title ||
+                  i.productName ||
+                  i.product_name ||
+                  "Sản phẩm",
+              )
+              .join(" ")
+          : "";
+
+        const searchable = [
+          orderId(o),
+          c.name,
+          c.email,
+          c.phone,
+          c.address,
+          productNames,
+        ]
+
+          .join(" ")
+          .toLowerCase();
+
+        return (
+          searchable.includes(search) &&
+          (!selectedStatus ||
+            statusKey(orderStatus(o)) === statusKey(selectedStatus))
+        );
+      })
+      .sort((a, b) => {
+        const dateA = parseOrderDate(orderDate(a))?.getTime() || 0;
+        const dateB = parseOrderDate(orderDate(b))?.getTime() || 0;
+        return dateB - dateA;
+      });
+
     body.innerHTML =
       orders
         .map((o) => {
-          const c = customerOf(o),
-            id = orderId(o),
-            items = o.products || o.items || o.cart || [],
-            itemText = Array.isArray(items)
-              ? items
-                  .map(
-                    (i) =>
-                      `${i.name || i.title || i.productName || "Sản phẩm"} × ${i.quantity || i.qty || 1}`,
-                  )
-                  .join(", ")
-              : "",
-            protectedOrder = isProtectedOrder(o);
-          return `<tr><td>${escapeHTML(id || "—")}</td><td><strong>${escapeHTML(c.name)}</strong><br><small>${escapeHTML(c.email)}</small><br><small>${escapeHTML(c.phone)}</small><br><small>${escapeHTML(c.address)}</small><br><small>${escapeHTML(itemText)}</small></td><td>${escapeHTML(orderDate(o))}</td><td>${money(orderTotal(o))}</td><td><select data-order-status="${escapeHTML(id)}" data-current-status="${escapeHTML(statusKey(orderStatus(o)))}">${["Chờ xử lý", "Đã xác nhận", "Đang giao", "Đã giao", "Đã hủy"].map((v) => `<option value="${v}" ${orderStatus(o) === v ? "selected" : ""} ${v === "Đã hủy" && protectedOrder ? "disabled" : ""}>${v}${v === "Đã hủy" && protectedOrder ? " (không khả dụng)" : ""}</option>`).join("")}</select></td><td><button class="button button-small button-danger" type="button" data-delete-order="${escapeHTML(id)}" ${protectedOrder ? 'disabled title="Không thể xóa đơn hàng đã xác nhận, đang giao hoặc đã giao/hoàn thành"' : ""}>${protectedOrder ? "Không thể xóa" : "Xóa"}</button></td></tr>`;
+          const c = customerOf(o);
+          const id = orderId(o);
+          const items = o.products || o.items || o.cart || [];
+          const itemText = Array.isArray(items)
+            ? items
+                .map((i) => {
+                  const name =
+                    i.name ||
+                    i.title ||
+                    i.productName ||
+                    i.product_name ||
+                    "Sản phẩm";
+                  const quantity = Number(i.quantity ?? i.qty ?? 1) || 1;
+                  const price =
+                    Number(i.price ?? i.unitPrice ?? i.unit_price ?? 0) || 0;
+                  const size = i.size ? ` · Size ${i.size}` : "";
+                  const color = i.color ? ` · Màu ${i.color}` : "";
+                  return `${name} × ${quantity} — ${money(price * quantity)}${size}${color}`;
+                })
+                .join("; ")
+            : "";
+          const currentStatus = orderStatus(o);
+          const protectedOrder = isProtectedOrder(o);
+          const email =
+            c.email || o.ownerEmail || o.userEmail || o.customerEmail || "—";
+          const phone = c.phone || o.phoneNumber || o.customerPhone || "—";
+          const address =
+            c.address || o.shippingAddress || o.deliveryAddress || "—";
+
+          return `<tr>
+        <td><strong>${escapeHTML(id || "Chưa có mã đơn")}</strong></td>
+       
+                <td>
+          <strong>${escapeHTML(c.name || "Khách hàng")}</strong><br>
+          <small>Email: ${escapeHTML(email)}</small><br>
+          <small>SĐT: ${escapeHTML(phone)}</small>
+        </td>
+
+        <td>${escapeHTML(orderDate(o))}</td>
+        <td>
+          ${Number(o.subtotal) > 0 ? `<small>Tạm tính: ${money(o.subtotal)}</small><br>` : ""}
+          ${Number(o.discount) > 0 ? `<small>Giảm giá: −${money(o.discount)}</small><br>` : ""}
+          <strong>${money(orderTotal(o))}</strong>
+          ${o.voucherCode ? `<br><small>Mã giảm giá: ${escapeHTML(o.voucherCode)}</small>` : ""}
+        </td>
+        <td>
+          <select data-order-status="${escapeHTML(id)}" data-current-status="${escapeHTML(statusKey(currentStatus))}">
+            ${["Chờ xử lý", "Đã xác nhận", "Đang giao", "Đã giao", "Đã hủy"]
+              .map(
+                (v) =>
+                  `<option value="${v}" ${statusKey(currentStatus) === statusKey(v) ? "selected" : ""} ${v === "Đã hủy" && protectedOrder ? "disabled" : ""}>${v}</option>`,
+              )
+              .join("")}
+          </select>
+        </td>
+       
+        <td>
+          <button
+            class="button button-small"
+            type="button"
+            data-view-order="${escapeHTML(id)}"
+          >
+            Xem thông tin đơn hàng
+          </button>
+          <br><br>
+          <button class="button button-small button-danger" type="button" data-delete-order="${escapeHTML(id)}" ${protectedOrder ? 'disabled title="Không thể xóa đơn hàng đã xác nhận, đang giao hoặc đã giao"' : ""}>
+            ${protectedOrder ? "Không thể xóa" : "Xóa đơn"}
+          </button>
+        </td>
+
+      </tr>`;
         })
         .join("") ||
       `<tr><td colspan="6" class="empty-state">Chưa có đơn hàng phù hợp.</td></tr>`;
@@ -562,85 +677,108 @@
     alert(lines.join("\n"));
   }
   function adjustMemberBalance(email) {
-    const users = getUsers(),
-      u = users.find(
-        (x) =>
-          String(x.email || "").toLowerCase() ===
-          String(email || "").toLowerCase(),
-      );
+    const users = getUsers();
+    const u = users.find(
+      (x) =>
+        String(x.email || "").toLowerCase() ===
+        String(email || "").toLowerCase(),
+    );
+
     if (!u) return;
+
     const amountText = prompt(
       `Số dư hiện tại: ${money(memberBalance(u))}\nNhập số tiền cần điều chỉnh (ví dụ 50000 hoặc -20000):`,
     );
+
     if (amountText === null) return;
+
     const amount = Number(amountText);
+
     if (!Number.isFinite(amount) || amount === 0) {
       alert("Vui lòng nhập số tiền khác 0 hợp lệ.");
       return;
     }
+
     const next = memberBalance(u) + amount;
+
     if (next < 0) {
       alert("Số dư sau điều chỉnh không thể âm.");
       return;
     }
+
     u.balance = next;
     u.transactions = Array.isArray(u.transactions) ? u.transactions : [];
+
     u.transactions.unshift({
       type: amount > 0 ? "admin_credit" : "admin_debit",
-      amount,
+      amount: amount,
       createdAt: new Date().toISOString(),
       note: "Điều chỉnh bởi quản trị viên",
     });
+
     save(KEYS.users, users);
     renderCustomers();
+
     setMessage(
       `Đã ${amount > 0 ? "cộng" : "trừ"} ${money(Math.abs(amount))} cho ${email}.`,
     );
   }
+
   function showMemberHistory(email) {
     const u = memberByEmail(email);
+
     if (!u) return;
-    const orders = getOrders().filter(
-      (o) => customerOf(o).email.toLowerCase() === String(email).toLowerCase(),
-    );
-    const tx = Array.isArray(u.transactions) ? u.transactions : [];
+
+    const orders = getOrders().filter((o) => orderBelongsToUser(o, u));
+    const transactions = Array.isArray(u.transactions) ? u.transactions : [];
+
     const lines = [
-      `LỊCH SỬ GIAO DỊCH — ${email}`,
+      `Lịch sử của: ${email}`,
       "",
-      ...orders.map(
-        (o) =>
-          `${orderDate(o)} | Đơn ${orderId(o) || "—"} | ${money(orderTotal(o))} | ${orderStatus(o)}`,
-      ),
-      ...tx.map(
-        (t) =>
-          `${t.createdAt || t.date || "—"} | ${t.type || "Giao dịch"} | ${Number(t.amount) >= 0 ? "+" : ""}${money(t.amount)} | ${t.note || ""}`,
-      ),
+      "=== ĐƠN HÀNG ===",
+      ...orders.map((o) => {
+        return `${orderDate(o)} | Mã đơn: ${orderId(o) || "—"} | ${orderStatus(o)} | ${money(orderTotal(o))}`;
+      }),
+      "",
+      "=== GIAO DỊCH SỐ DƯ ===",
+      ...transactions.map((t) => {
+        return `${t.createdAt || t.date || "—"} | ${t.type || "Giao dịch"} | ${
+          Number(t.amount) >= 0 ? "+" : ""
+        }${money(t.amount)} | ${t.note || ""}`;
+      }),
     ];
+
     alert(
-      lines.length > 2
+      orders.length || transactions.length
         ? lines.join("\n")
-        : "Chưa có lịch sử đơn hàng hoặc giao dịch cho thành viên này.",
+        : "Khách hàng chưa có đơn hàng hoặc giao dịch số dư.",
     );
   }
+
   function toggleMemberStatus(email) {
-    const users = getUsers(),
-      u = users.find(
-        (x) =>
-          String(x.email || "").toLowerCase() ===
-          String(email || "").toLowerCase(),
-      );
+    const users = getUsers();
+    const u = users.find(
+      (x) =>
+        String(x.email || "").toLowerCase() ===
+        String(email || "").toLowerCase(),
+    );
+
     if (!u) return;
+
     if (isPrimaryAdmin(u)) {
       alert(
         "Không được phép khóa hoặc thay đổi trạng thái tài khoản Admin chính (admin@gmail.com).",
       );
       return;
     }
+
     const next = memberStatus(u) === "active" ? "locked" : "active";
+
     if (next === "locked") {
       const related = getOrders().filter((order) =>
         orderBelongsToUser(order, u),
       );
+
       if (related.length) {
         alert(
           `Không thể khóa tài khoản ${email} vì khách hàng đang có ${related.length} đơn hàng trong hệ thống. Hãy xử lý các đơn hàng trước khi khóa tài khoản.`,
@@ -648,20 +786,26 @@
         return;
       }
     }
+
     if (
       !confirm(`${next === "locked" ? "Khóa" : "Mở khóa"} tài khoản ${email}?`)
-    )
+    ) {
       return;
+    }
+
     u.status = next;
     u.active = next === "active";
     u.isBlocked = next === "locked";
+
     save(KEYS.users, users);
     renderCustomers();
     renderDashboard();
+
     setMessage(
       `Đã ${next === "locked" ? "khóa" : "mở khóa"} tài khoản ${email}.`,
     );
   }
+
   function deleteCustomer(email) {
     const users = getUsers(),
       user = users.find(
@@ -1079,7 +1223,54 @@
       setMessage("Đã cập nhật trạng thái đơn hàng.");
     });
     $("ordersBody")?.addEventListener("click", (e) => {
+      const view = e.target.closest("[data-view-order]");
+      if (view) {
+        const order = getOrders().find(
+          (o) => orderId(o) === view.dataset.viewOrder,
+        );
+        if (!order) {
+          alert("Không tìm thấy đơn hàng.");
+          return;
+        }
+
+        const c = customerOf(order);
+        const items = order.products || order.items || order.cart || [];
+        const productText = Array.isArray(items)
+          ? items
+              .map((i) => {
+                const name =
+                  i.name ||
+                  i.title ||
+                  i.productName ||
+                  i.product_name ||
+                  "Sản phẩm";
+                const quantity = Number(i.quantity ?? i.qty ?? 1) || 1;
+                const price =
+                  Number(i.price ?? i.unitPrice ?? i.unit_price ?? 0) || 0;
+                return `${name} × ${quantity} — ${money(price * quantity)}`;
+              })
+              .join("\n")
+          : "Chưa có chi tiết sản phẩm";
+
+        alert(
+          `THÔNG TIN ĐƠN HÀNG\n\n` +
+            `Mã đơn: ${orderId(order)}\n` +
+            `Khách hàng: ${c.name || "—"}\n` +
+            `Email: ${c.email || order.ownerEmail || order.userEmail || order.customerEmail || "—"}\n` +
+            `Số điện thoại: ${c.phone || order.phoneNumber || order.customerPhone || "—"}\n` +
+            `Địa chỉ: ${c.address || order.shippingAddress || order.deliveryAddress || "—"}\n\n` +
+            `Sản phẩm:\n${productText}\n\n` +
+            `Thanh toán: ${order.payment || "—"}\n` +
+            `Mã thanh toán: ${order.paymentCode || "—"}\n` +
+            `Trạng thái: ${orderStatus(order)}\n` +
+            `Tổng tiền: ${money(orderTotal(order))}\n` +
+            `Ghi chú: ${order.note || "—"}`,
+        );
+        return;
+      }
+
       const b = e.target.closest("[data-delete-order]");
+
       if (!b) return;
       const orders = getOrders(),
         order = orders.find((o) => orderId(o) === b.dataset.deleteOrder);
