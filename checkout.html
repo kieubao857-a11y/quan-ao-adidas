@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="vi">
   <head>
@@ -16,8 +17,7 @@
         display: none !important;
       }
 
-      .address-section,
-      .voucher-section {
+      .address-section {
         margin: 24px 0;
       }
 
@@ -40,9 +40,7 @@
         background: #fff;
       }
 
-      .location-actions,
-      .voucher-row,
-      .voucher-options {
+      .location-actions {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
@@ -54,8 +52,13 @@
         border-radius: 5px;
         padding: 12px 15px;
         background: #111;
-        color: white;
+        color: #fff;
         cursor: pointer;
+      }
+
+      .location-actions button:disabled {
+        opacity: 0.6;
+        cursor: wait;
       }
 
       #addressMap {
@@ -65,8 +68,7 @@
         border-radius: 8px;
       }
 
-      #addressStatus,
-      #voucherMessage {
+      #addressStatus {
         font-size: 13px;
         line-height: 1.6;
       }
@@ -77,49 +79,16 @@
         line-height: 1.5;
       }
 
-      .voucher-section {
+      .checkout-summary-section {
+        margin: 24px 0;
         padding: 20px;
         border: 1px solid #e5e5e5;
         border-radius: 8px;
         background: #fff;
       }
 
-      .voucher-section h2 {
+      .checkout-summary-section h2 {
         margin-top: 0;
-      }
-
-      .voucher-row input {
-        flex: 1;
-        min-width: 180px;
-        box-sizing: border-box;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        text-transform: uppercase;
-      }
-
-      .voucher-row button {
-        padding: 12px 16px;
-        border: none;
-        border-radius: 5px;
-        background: #111;
-        color: #fff;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      .voucher-chip {
-        padding: 10px;
-        border: 1px dashed #d71920;
-        border-radius: 5px;
-        background: #fff7f7;
-        color: #b5121b;
-        cursor: pointer;
-        text-align: left;
-      }
-
-      .voucher-chip:hover {
-        background: #ffe8e8;
       }
 
       .checkout-summary {
@@ -148,18 +117,45 @@
         color: #d71920;
       }
 
+      .payment-method {
+        margin: 15px 0;
+        line-height: 2;
+      }
+
+      .bank-info {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .qr-box {
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      .qr-box img {
+        max-width: 250px;
+        width: 100%;
+        height: auto;
+      }
+
+      .qr-note {
+        font-size: 13px;
+        color: #666;
+      }
+
       @media (max-width: 600px) {
-        .voucher-section {
+        .checkout-summary-section {
           padding: 14px;
         }
 
-        .voucher-row {
-          flex-direction: column;
+        .location-actions button {
+          width: 100%;
         }
 
-        .voucher-row input,
-        .voucher-row button {
-          width: 100%;
+        .summary-line.total {
+          font-size: 16px;
         }
       }
     </style>
@@ -176,6 +172,7 @@
         <a href="nu.html">Nữ</a>
         <a href="the-thao.html">Thể thao</a>
         <a href="sale.html">Sale</a>
+        <a href="voucher.html">Voucher</a>
       </nav>
 
       <div class="header-right">
@@ -192,7 +189,12 @@
 
         <div class="form-group">
           <label for="name">Họ và tên</label>
-          <input type="text" id="name" placeholder="Nhập họ và tên" required />
+          <input
+            type="text"
+            id="name"
+            placeholder="Nhập họ và tên"
+            required
+          />
         </div>
 
         <div class="form-group">
@@ -242,7 +244,9 @@
               📍 Lấy địa chỉ hiện tại
             </button>
 
-            <button type="button" id="showMap">🗺️ Chọn trên bản đồ</button>
+            <button type="button" id="showMap">
+              🗺️ Chọn trên bản đồ
+            </button>
           </div>
 
           <p id="addressStatus" role="status" aria-live="polite">
@@ -257,50 +261,17 @@
 
           <div id="mapWrap" hidden>
             <div id="addressMap"></div>
-            <p class="address-help">Bấm vào bản đồ để tìm địa chỉ gần nhất.</p>
+            <p class="address-help">
+              Bấm vào bản đồ để tìm địa chỉ gần nhất.
+            </p>
           </div>
 
           <input type="hidden" id="address" />
         </section>
 
-        <!-- VOUCHER -->
-        <section class="voucher-section">
-          <h2>🎟️ Mã giảm giá</h2>
-          <p>Nhập mã voucher hoặc chọn một mã bên dưới.</p>
-
-          <div class="voucher-row">
-            <input
-              type="text"
-              id="voucherCode"
-              placeholder="Nhập mã: ADIDAS10"
-              aria-label="Mã giảm giá"
-              autocomplete="off"
-            />
-
-            <button type="button" id="applyVoucher">ÁP DỤNG</button>
-
-            <button type="button" id="removeVoucher" hidden>GỠ MÃ</button>
-          </div>
-
-          <div class="voucher-options">
-            <button type="button" class="voucher-chip" data-voucher="ADIDAS10">
-              ADIDAS10 - Giảm 10% từ 1.000.000đ
-            </button>
-
-            <button type="button" class="voucher-chip" data-voucher="ADIDAS15">
-              ADIDAS15 - Giảm 15% từ 2.000.000đ
-            </button>
-
-            <button type="button" class="voucher-chip" data-voucher="ADIDAS20">
-              ADIDAS20 - Giảm 20% từ 3.000.000đ
-            </button>
-
-            <button type="button" class="voucher-chip" data-voucher="FREESHIP">
-              FREESHIP - Giảm 30.000đ
-            </button>
-          </div>
-
-          <p id="voucherMessage" role="status" aria-live="polite"></p>
+        <!-- TỔNG THANH TOÁN: ĐÃ BỎ NHẬP VÀ CHỌN MÃ VOUCHER -->
+        <section class="checkout-summary-section">
+          <h2>Tổng thanh toán</h2>
 
           <div class="checkout-summary">
             <div class="summary-line">
@@ -338,28 +309,38 @@
 
         <div id="bankInfo" class="bank-info" style="display: none">
           <h3>Thông tin chuyển khoản</h3>
+
           <p>Ngân hàng: <strong>Vietcombank</strong></p>
           <p>Số tài khoản: <strong>0778366446</strong></p>
+
           <p>
             Chủ tài khoản:
             <strong>NGUYỄN CÔNG ĐỨC ANH</strong>
           </p>
-          <p>Số tiền: <strong id="qrAmount">0 VNĐ</strong></p>
+
+          <p>
+            Số tiền:
+            <strong id="qrAmount">0 VNĐ</strong>
+          </p>
+
           <p>
             Nội dung chuyển khoản:
             <strong>ADIDAS + SỐ ĐIỆN THOẠI</strong>
           </p>
 
           <h3>Quét mã QR để thanh toán</h3>
+
           <div class="qr-box">
             <img id="bankQR" src="" alt="Mã QR chuyển khoản" />
           </div>
+
           <p class="qr-note">
             Vui lòng kiểm tra đúng số tiền trước khi chuyển khoản.
           </p>
         </div>
 
         <br />
+
         <button type="submit" class="btn">ĐẶT HÀNG</button>
       </form>
     </main>
@@ -408,9 +389,11 @@
 
         async function fetchJSON(url) {
           const response = await fetch(url);
+
           if (!response.ok) {
             throw new Error("Lỗi HTTP " + response.status);
           }
+
           return response.json();
         }
 
@@ -439,18 +422,21 @@
             showStatus("Đã tải danh sách tỉnh/thành phố.");
           } catch (error) {
             console.error(error);
+
             provinceSelect.innerHTML =
               '<option value="">Không tải được dữ liệu</option>';
+
             showStatus(
               "Không tải được tỉnh/thành phố. Kiểm tra mạng hoặc API.",
-              true,
+              true
             );
           }
         }
 
         function getSelectedProvince() {
           return provinces.find(
-            (province) => String(province.code) === provinceSelect.value,
+            (province) =>
+              String(province.code) === provinceSelect.value
           );
         }
 
@@ -467,19 +453,31 @@
 
           try {
             const detail = await fetchJSON(
-              API + "p/" + encodeURIComponent(province.code) + "?depth=2",
+              API +
+                "p/" +
+                encodeURIComponent(province.code) +
+                "?depth=2"
             );
 
-            const wards = Array.isArray(detail.wards) ? detail.wards : [];
+            const wards = Array.isArray(detail.wards)
+              ? detail.wards
+              : [];
 
-            if (String(provinceSelect.value) !== String(province.code)) {
+            if (
+              String(provinceSelect.value) !== String(province.code)
+            ) {
               return false;
             }
 
             if (!wards.length) {
               wardSelect.innerHTML =
                 '<option value="">Không có dữ liệu phường/xã</option>';
-              showStatus("Không có dữ liệu phường/xã cho tỉnh này.", true);
+
+              showStatus(
+                "Không có dữ liệu phường/xã cho tỉnh này.",
+                true
+              );
+
               return false;
             }
 
@@ -497,21 +495,25 @@
 
             for (const name of preferredNames) {
               const wanted = normalize(name);
+
               if (!wanted) continue;
 
               const options = Array.from(wardSelect.options).filter(
-                (option) => option.value,
+                (option) => option.value
               );
 
               const match =
                 options.find(
-                  (option) => normalize(option.textContent) === wanted,
+                  (option) =>
+                    normalize(option.textContent) === wanted
                 ) ||
                 options.find((option) => {
                   const current = normalize(option.textContent);
+
                   return (
                     current &&
-                    (current.includes(wanted) || wanted.includes(current))
+                    (current.includes(wanted) ||
+                      wanted.includes(current))
                   );
                 });
 
@@ -524,9 +526,15 @@
             return true;
           } catch (error) {
             console.error(error);
+
             wardSelect.innerHTML =
               '<option value="">Không tải được phường/xã</option>';
-            showStatus("Không tải được phường/xã. Hãy thử lại.", true);
+
+            showStatus(
+              "Không tải được phường/xã. Hãy thử lại.",
+              true
+            );
+
             return false;
           }
         }
@@ -553,7 +561,9 @@
         streetInput.addEventListener("input", syncAddress);
 
         async function reverseGeocode(latitude, longitude) {
-          const photonURL = new URL("https://photon.komoot.io/reverse");
+          const photonURL = new URL(
+            "https://photon.komoot.io/reverse"
+          );
 
           photonURL.search = new URLSearchParams({
             lat: String(latitude),
@@ -577,6 +587,7 @@
                 ]
                   .filter(Boolean)
                   .join(", "),
+
                 address: {
                   house_number: p.housenumber || "",
                   road: p.street || "",
@@ -595,7 +606,9 @@
             console.warn("Photon lỗi, thử Nominatim:", error);
           }
 
-          const url = new URL("https://nominatim.openstreetmap.org/reverse");
+          const url = new URL(
+            "https://nominatim.openstreetmap.org/reverse"
+          );
 
           url.search = new URLSearchParams({
             format: "jsonv2",
@@ -621,7 +634,7 @@
             .map(normalize);
 
           let province = provinces.find((item) =>
-            names.includes(normalize(item.name)),
+            names.includes(normalize(item.name))
           );
 
           if (province) return province;
@@ -631,14 +644,18 @@
             .map(normalize);
 
           province = provinces.find((item) =>
-            fallbackNames.includes(normalize(item.name)),
+            fallbackNames.includes(normalize(item.name))
           );
 
           return province || null;
         }
 
-        async function fillAddressFromCoordinates(latitude, longitude) {
+        async function fillAddressFromCoordinates(
+          latitude,
+          longitude
+        ) {
           const currentSearch = ++searchSequence;
+
           showStatus("Đang tìm địa chỉ gần vị trí bạn chọn...");
 
           if (mapReady && map) {
@@ -655,7 +672,10 @@
           }
 
           try {
-            const result = await reverseGeocode(latitude, longitude);
+            const result = await reverseGeocode(
+              latitude,
+              longitude
+            );
 
             if (currentSearch !== searchSequence) return;
 
@@ -676,6 +696,7 @@
 
             if (province) {
               provinceSelect.value = String(province.code);
+
               await loadWards(province, wardNames);
 
               if (currentSearch !== searchSequence) return;
@@ -683,7 +704,9 @@
 
             const street = [
               address.house_number,
-              address.road || address.pedestrian || address.residential,
+              address.road ||
+                address.pedestrian ||
+                address.residential,
             ]
               .filter(Boolean)
               .join(" ");
@@ -698,20 +721,23 @@
 
             if (mapReady && marker) {
               marker
-                .bindPopup(result.display_name || "Vị trí đã chọn")
+                .bindPopup(
+                  result.display_name || "Vị trí đã chọn"
+                )
                 .openPopup();
             }
 
             showStatus(
               province
                 ? "Đã tìm địa chỉ gần nhất. Hãy kiểm tra trước khi đặt hàng."
-                : "Chưa xác định được tỉnh/thành phố. Vui lòng chọn thủ công.",
+                : "Chưa xác định được tỉnh/thành phố. Vui lòng chọn thủ công."
             );
           } catch (error) {
             console.error(error);
+
             showStatus(
               "Không tìm được địa chỉ. Hãy thử lại hoặc nhập thủ công.",
-              true,
+              true
             );
           }
         }
@@ -720,19 +746,31 @@
           if (mapReady) return true;
 
           if (!window.L) {
-            showStatus("Không tải được thư viện bản đồ.", true);
+            showStatus(
+              "Không tải được thư viện bản đồ.",
+              true
+            );
             return false;
           }
 
-          map = L.map("addressMap").setView([21.0285, 105.8542], 12);
+          map = L.map("addressMap").setView(
+            [21.0285, 105.8542],
+            12
+          );
 
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            attribution: "&copy; OpenStreetMap contributors",
-          }).addTo(map);
+          L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+              maxZoom: 19,
+              attribution: "&copy; OpenStreetMap contributors",
+            }
+          ).addTo(map);
 
           map.on("click", (event) => {
-            fillAddressFromCoordinates(event.latlng.lat, event.latlng.lng);
+            fillAddressFromCoordinates(
+              event.latlng.lat,
+              event.latlng.lng
+            );
           });
 
           mapReady = true;
@@ -741,7 +779,10 @@
 
         gpsButton.addEventListener("click", () => {
           if (!navigator.geolocation) {
-            showStatus("Trình duyệt không hỗ trợ GPS.", true);
+            showStatus(
+              "Trình duyệt không hỗ trợ GPS.",
+              true
+            );
             return;
           }
 
@@ -754,17 +795,21 @@
                 mapWrap.hidden = false;
 
                 if (initializeMap()) {
-                  setTimeout(() => map?.invalidateSize(), 150);
+                  setTimeout(
+                    () => map?.invalidateSize(),
+                    150
+                  );
                 }
 
                 await fillAddressFromCoordinates(
                   position.coords.latitude,
-                  position.coords.longitude,
+                  position.coords.longitude
                 );
               } finally {
                 gpsButton.disabled = false;
               }
             },
+
             (error) => {
               gpsButton.disabled = false;
 
@@ -774,13 +819,18 @@
                 3: "Lấy vị trí quá lâu. Hãy thử lại.",
               };
 
-              showStatus(messages[error.code] || "Không lấy được GPS.", true);
+              showStatus(
+                messages[error.code] ||
+                  "Không lấy được GPS.",
+                true
+              );
             },
+
             {
               enableHighAccuracy: true,
               timeout: 20000,
               maximumAge: 60000,
-            },
+            }
           );
         });
 
@@ -788,12 +838,19 @@
           mapWrap.hidden = !mapWrap.hidden;
 
           if (!mapWrap.hidden && initializeMap()) {
-            setTimeout(() => map.invalidateSize(), 150);
-            showStatus("Bấm vào bản đồ để tìm địa chỉ gần nhất.");
+            setTimeout(
+              () => map.invalidateSize(),
+              150
+            );
+
+            showStatus(
+              "Bấm vào bản đồ để tìm địa chỉ gần nhất."
+            );
           }
         });
 
         gpsButton.dataset.locationBound = "true";
+
         loadProvinces();
       })();
     </script>

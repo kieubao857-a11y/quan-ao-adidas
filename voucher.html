@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Spin | Adidas Store</title>
+    <meta name="theme-color" content="#111111">
+    <link rel="stylesheet" href="./src/voucher.css">
+</head>
+<body>
+
+<header class="header">
+    <a href="./index.html" class="logo">
+        <span class="logo-mark">adidas</span>
+        <span class="logo-text">STORE</span>
+    </a>
+
+    <nav class="nav">
+        <a href="./index.html">Trang chủ</a>
+        <a href="./products.html">Sản phẩm</a>
+        <a href="./nam.html">Nam</a>
+        <a href="./nu.html">Nữ</a>
+        <a href="the-thao.html">Thể thao</a>
+        <a href="./sale.html">Sale</a>
+        <a href="./voucher.html" class="active">Săn voucher</a>
+    </nav>
+
+    <a href="./cart.html" class="cart-button">
+        🛒 <span>Giỏ hàng</span>
+    </a>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="campaign-tag">
+                <span class="live-dot"></span>
+                ADIDAS REWARDS
+            </span>
+
+            <h1>
+                SPIN IT.<br>
+                <span>WIN IT.</span>
+            </h1>
+
+            <p class="hero-description">
+                Một vòng quay, một bất ngờ.
+                Thử vận may của bạn và săn mã ưu đãi
+                cho lần mua sắm tiếp theo tại Adidas Store.
+            </p>
+
+            <div class="hero-features">
+                <div>
+                    <strong>04</strong>
+                    <span>Loại ưu đãi</span>
+                </div>
+
+                <div>
+                    <strong>01</strong>
+                    <span>Lượt quay</span>
+                </div>
+
+                <div>
+                    <strong>100%</strong>
+                    <span>Giải trí</span>
+                </div>
+            </div>
+
+            <button class="primary-button" id="scrollToWheel">
+                QUAY NGAY <span>↗</span>
+            </button>
+        </div>
+
+        <div class="hero-decoration" aria-hidden="true">
+            <span class="deco-circle circle-one"></span>
+            <span class="deco-circle circle-two"></span>
+            <span class="deco-number">01</span>
+            <span class="deco-text">YOUR LUCK. YOUR STYLE.</span>
+        </div>
+    </section>
+
+    <section class="spin-section" id="spinSection">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">THE REWARD MACHINE</p>
+                <h2>Vòng quay may mắn</h2>
+                <p>Quay một lần để khám phá ưu đãi của bạn.</p>
+            </div>
+
+            <span class="round-label">LUCKY SPIN / 2026</span>
+        </div>
+
+        <div class="spin-layout">
+            <div class="wheel-area">
+                <div class="wheel-glow"></div>
+
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+
+                    <div class="wheel" id="wheel">
+                        <canvas id="wheelCanvas"
+                            width="700"
+                            height="700"
+                            aria-label="Vòng quay tám ô voucher">
+                        </canvas>
+
+                        <div class="wheel-center">
+                            <span>ADIDAS</span>
+                            <strong>SPIN</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="wheel-caption">
+                    <span class="caption-dot"></span>
+                    MAY MẮN ĐANG CHỜ BẠN
+                </p>
+            </div>
+
+            <div class="spin-info">
+                <div class="info-card">
+                    <span class="info-number">01</span>
+                    <h3>Sẵn sàng chưa?</h3>
+                    <p>
+                        Nhấn nút bên dưới để bắt đầu.
+                        Vòng quay sẽ chọn ngẫu nhiên một trong
+                        tám ô phần thưởng.
+                    </p>
+
+                    <button id="spinButton" class="spin-button">
+                        <span>↻</span> QUAY VÒNG QUAY
+                    </button>
+
+                    <p class="spin-status" id="spinStatus" role="status">
+                        Bạn đang có 1 lượt quay.
+                    </p>
+                </div>
+
+                <div class="prize-list">
+                    <h3>PHẦN THƯỞNG</h3>
+
+                    <div class="prize-row">
+                        <span class="prize-icon red">10%</span>
+                        <div>
+                            <strong>ADIDAS10</strong>
+                            <p>Giảm 10% đơn từ 1.000.000đ</p>
+                        </div>
+                    </div>
+
+                    <div class="prize-row">
+                        <span class="prize-icon black">15%</span>
+                        <div>
+                            <strong>ADIDAS15</strong>
+                            <p>Giảm 15% đơn từ 2.000.000đ</p>
+                        </div>
+                    </div>
+
+                    <div class="prize-row">
+                        <span class="prize-icon red">20%</span>
+                        <div>
+                            <strong>ADIDAS20</strong>
+                            <p>Giảm 20% đơn từ 3.000.000đ</p>
+                        </div>
+                    </div>
+
+                    <div class="prize-row">
+                        <span class="prize-icon black">SHIP</span>
+                        <div>
+                            <strong>FREESHIP</strong>
+                            <p>Giảm 30.000đ đơn từ 1.000.000đ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reward-section" id="rewardSection" hidden>
+        <div class="reward-top">
+            <span class="reward-check">✓</span>
+            <p class="eyebrow">CONGRATULATIONS</p>
+            <h2>Ưu đãi đã được mở!</h2>
+            <p id="rewardMessage">
+                Đây là mã voucher bạn nhận được.
+            </p>
+        </div>
+
+        <div class="reward-ticket">
+            <div class="ticket-left">
+                <span class="ticket-label">YOUR REWARD</span>
+                <h3 id="rewardCode">ADIDAS10</h3>
+                <p id="rewardDescription"></p>
+                <small id="rewardCondition"></small>
+            </div>
+
+            <div class="ticket-right">
+                <button id="copyCodeButton" class="copy-button">
+                    SAO CHÉP MÃ
+                </button>
+
+                <a href="./checkout.html" class="checkout-button">
+                    ĐẾN THANH TOÁN ↗
+                </a>
+            </div>
+        </div>
+
+        <p id="copyStatus" class="copy-status" role="status"></p>
+    </section>
+
+    <section class="rules-section">
+        <div class="rules-heading">
+            <p class="eyebrow">GOOD TO KNOW</p>
+            <h2>Thể lệ chương trình</h2>
+        </div>
+
+        <div class="rules-grid">
+            <article class="rule-card">
+                <span>01 / LƯỢT QUAY</span>
+                <h3>Một lượt duy nhất</h3>
+                <p>
+                    Lượt quay được lưu trên trình duyệt hiện tại.
+                    Làm mới trang không tự cấp thêm lượt.
+                </p>
+            </article>
+
+            <article class="rule-card">
+                <span>02 / ĐIỀU KIỆN</span>
+                <h3>Tối thiểu 2 sản phẩm</h3>
+                <p>
+                    Voucher chỉ được áp dụng khi giỏ hàng có
+                    ít nhất hai sản phẩm và đạt giá trị đơn
+                    hàng tối thiểu theo mã.
+                </p>
+            </article>
+
+            <article class="rule-card">
+                <span>03 / THANH TOÁN</span>
+                <h3>Kiểm tra trước khi đặt</h3>
+                <p>
+                    Hệ thống thanh toán cần xác minh mã, số lượng
+                    sản phẩm và tổng tiền trước khi trừ ưu đãi.
+                </p>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <a href="./index.html" class="footer-logo">ADIDAS STORE</a>
+    <p>© 2026 Adidas Store · Student project</p>
+    <a href="./index.html">Quay về trang chủ ↑</a>
+</footer>
+
+<script src="./js/voucher.js"></script>
+</body>
+</html>
